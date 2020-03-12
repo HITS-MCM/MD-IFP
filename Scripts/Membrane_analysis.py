@@ -99,7 +99,7 @@ def pbc(u,Rgr0):
 
 class Membrane_properties:
     
-    def __init__(self,ref_pdb,sel_ligands = "",interval=(0,-1,1),dz=3,sel_m = "(not type H ) and ( resname CHL PC PA PE )" ):     
+    def __init__(self,ref_pdb,sel_ligands = "",interval=(0,-1,1),d=3,dh = 3,sel_m = ["CHL", "PC", "PA", "PE"]):     
         """
         PARAMETERS:
         ref - file with a reference pdb structure
@@ -111,14 +111,27 @@ class Membrane_properties:
             particularly, OL and PA are two chains of POPC or POPE lipid that are placed in the same z - interval
             PC or PE are on the top of the lipid and practically do not overlap with PA/OL
             Thus, OL should be omitted to avouid double counting of lipid residues
-        """
+        d=6 Angstrom over x/y and dh = 3 Angstrom over z 
+        Important: 
+            - there is no overaging over z, so the best selection for dh is a vdW distance
+            - for large x/y steps (dh > 3 A)  the area in x/y plane occupied by ligand/protein will be overestimated
+                and atom density will be underestimated because the unit sell is assuming to be completely ocupied by a single atom 
+       """
         # input parameters
         self.ref_pdb = ref_pdb
         self.sel_ligands = sel_ligands
         self.interval = interval # defines frames of the trajectory to be processed ( first, last, stirde)
-        self.dz = dz
-        self.sel_m = sel_m  
-        self.margin = 2  # additional margin used for each side of the box in the case if box size increases along the trajectory
+        self.dz = d
+        self.dh = dh # approximate vdW distance that defines a unit slab 
+        "(not type H ) and ( resname CHL PC PA PE )"
+        self.sel_m = "(not type H ) and ( resname "   # for computing lipid number
+        self.sel_m_a = "(not type H ) and ( resname "  # for computing all atom number
+        for s in sel_m:
+            if s != "OL":  self.sel_m = self.sel_m + " " + s 
+            self.sel_m_a = self.sel_m_a + " " + s 
+        self.sel_m = self.sel_m +" )"
+        self.sel_m_a = self.sel_m_a +" )"
+        self.margin = max(2,int(4.0/d)+1)  # additional margin used for each side of the box in the case if box size increases along the trajectory
         
         # per-frame data:
             # arrays of numpy 3D matrices: [frame][z, x, y] 
@@ -194,7 +207,7 @@ class Membrane_properties:
         u_length = len(u.trajectory)
         u_size = int(os.path.getsize(traj)/(1024.*1024.))    
         # box parameters
-        self.nz = int(u.dimensions[2]/self.dz)+1+self.margin
+        self.nz = int(u.dimensions[2]/self.dh)+1+self.margin
         self.nx = int(u.dimensions[0]/self.dz)+self.margin
         self.ny = int(u.dimensions[1]/self.dz)+self.margin
         print("DIM (from traj): ",u.dimensions)
@@ -211,14 +224,14 @@ class Membrane_properties:
         nx = self.nx
         ny = self.ny
         nz = self.nz
-        dz = self.dz
         print("number of frames= %s; file size %s M" %(u_length,u_size))
         print("will be analyzed  %s frames" %(frames))
 
         wat_slab = []
         #sel_m = "(not type H Cl Na NA CL Cl- Na+) and (not protein) and (not resname WAT "+sel_ligands+" 2CU)  "
-#        sel_m = "(not type H ) and ( resname CHL PC PA PE )  "  # PA + OL + PC makes POPC; PA and OL are two tails of POPC
+        #sel_m = "(not type H ) and ( resname CHL PC PA PE )  "  # PA + OL + PC makes POPC; PA and OL are two tails of POPC
         sel_m = self.sel_m
+        sel_m_a = self.sel_m_a
         sel_w = "(not type H ) and(resname WAT)"
         if len(self.sel_ligands) > 1:
             sel_p = "(not type H) and  (protein  or  (resname "+self.sel_ligands+"))"
@@ -232,6 +245,7 @@ class Membrane_properties:
             u_mem.trajectory[i]
             self.Rgr.append(pbc(u_mem,Rgr0))
             u_mem_sel_m = u_mem.select_atoms(sel_m)
+            u_mem_sel_m_a = u_mem.select_atoms(sel_m_a)
             u_mem_sel_p = u_mem.select_atoms(sel_p)            
             u_mem_sel_w = u_mem.select_atoms(sel_w)                    
             
@@ -242,49 +256,77 @@ class Membrane_properties:
                 resid_list.append([])
                 resid_list_zx.append([])
                 for t in range(0,nx): resid_list_zx[-1].append([])
-
-            for at,t in zip(u_mem_sel_m.positions,u_mem_sel_m):
+            if(sel_m_a != sel_m):
+                for at,t in zip(u_mem_sel_m.positions,u_mem_sel_m):
                     n = t.resid
-                    ix = (int)(at[0]/dz)
-                    iy =  (int)(at[1]/dz)
-                    iz = (int)(at[2]/dz)
+                    ix = (int)(at[0]/self.dz)
+                    iy =  (int)(at[1]/self.dz)
+                    iz = (int)(at[2]/self.dh)
                     try:
-                            mem_slab0[iz,ix,iy] += 1
-                            if n not in resid_list[iz]: 
-                                resid_list[iz].append(n)
-                                resid_list_zx[iz][ix].append(n)
+                        mem_slab0[iz,ix,iy] += 1
                     except:
-                        print("Membrane error",at," ",nx,ny,nz," ",ix,iy,iz)
+                        print("Membrane is out of the box ",at," ",nx,ny,nz," ",ix,iy,iz)
+                for at,t in zip(u_mem_sel_m_a.positions,u_mem_sel_m_a):
+                    n = t.resid
+                    ix = (int)(at[0]/self.dz)
+                    iy =  (int)(at[1]/self.dz)
+                    iz = (int)(at[2]/self.dh)
+                    try:
+                        if n not in resid_list[iz]: 
+                            resid_list[iz].append(n)
+                            resid_list_zx[iz][ix].append(n)
+                    except:
+                        pass
+            else:
+                for at,t in zip(u_mem_sel_m.positions,u_mem_sel_m):
+                    n = t.resid
+                    ix = (int)(at[0]/self.dz)
+                    iy =  (int)(at[1]/self.dz)
+                    iz = (int)(at[2]/self.dh)
+                    try:
+                        mem_slab0[iz,ix,iy] += 1
+                        if n not in resid_list[iz]: 
+                            resid_list[iz].append(n)
+                            resid_list_zx[iz][ix].append(n)
+                    except:
+                        print("Membrane is out of the box ",at," ",nx,ny,nz," ",ix,iy,iz)
+               
             prot_slab1 = np.zeros((nz,nx,ny),dtype = int)
             for at,t in zip(u_mem_sel_p.positions,u_mem_sel_p):
-                    ix = (int)(at[0]/dz)
-                    iy =  (int)(at[1]/dz)
-                    iz = (int)(at[2]/dz)
+                    ix = (int)(at[0]/self.dz)
+                    iy =  (int)(at[1]/self.dz)
+                    iz = (int)(at[2]/self.dh)
                     try:
                         prot_slab1[iz,ix,iy] += 1
                     except:
-                        print("Protein error",at," ",nx,ny,nz," ",ix,iy,iz)
+                        print("Protein is out of the box ",at," ",nx,ny,nz," ",ix,iy,iz)
                         
             wat_slab2 = np.zeros((nz,nx,ny),dtype = int)
             for at,t in zip(u_mem_sel_w.positions,u_mem_sel_w):
-                    ix = (int)(at[0]/dz)
-                    iy = (int)(at[1]/dz)
-                    iz = (int)(at[2]/dz)
+                    ix = (int)(at[0]/self.dz)
+                    iy = (int)(at[1]/self.dz)
+                    iz = (int)(at[2]/self.dh)
                     try:
                         wat_slab2[iz,ix,iy] = 1
                     except:
                         if iz < nz:  # wather at box boundary is not important, just skip it
-                            print("Water error",at," ",nx,ny,nz," ",ix,iy,iz)
+                            print("Water is out of the box ",at," ",nx,ny,nz," ",ix,iy,iz)
                         
             mem_area1 = np.zeros((nz),dtype = int)
             prot_area1 = np.zeros((nz),dtype = int)
             resid_array0 = np.zeros((nz),dtype = int)
             resid_array_zx0 = np.zeros((nz,nx),dtype = int)
             wat_area1 = np.zeros((nz),dtype = int)
+            #---- ToDo - computing of the area can be done more accurately by taking into account just the area occupied by a single atom
             for iz in range(0,nz): 
-                prot_area1[iz] = np.count_nonzero(prot_slab1[iz])
-                mem_area1[iz] = np.count_nonzero(mem_slab0[iz])
-                wat_area1[iz] = np.count_nonzero(wat_slab2[iz])
+                """
+                prot_area1[iz] =  np.sum(prot_slab1[iz]) *4.0
+                mem_area1[iz] =  np.sum(mem_slab0[iz]) *4.0
+                wat_area1[iz] =  np.sum(wat_slab2[iz]) *4.0
+                """
+                prot_area1[iz] = np.count_nonzero(prot_slab1[iz])*self.dz*self.dz
+                mem_area1[iz] = np.count_nonzero(mem_slab0[iz])*self.dz*self.dz
+                wat_area1[iz] = np.count_nonzero(wat_slab2[iz])*self.dz*self.dz
                 resid_array0[iz] = len(resid_list[iz])
                 for ix in range(0,nx):
                     resid_array_zx0[iz][ix] = len(resid_list_zx[iz][ix])
@@ -322,14 +364,14 @@ class Membrane_properties:
         
         """
   
-        area_xy = self.nx*self.ny
+        area_xy = self.nx*self.ny*self.dz*self.dz
 
-        # firsst we will estimate the position of the membrane center
+        # first we will estimate the position of the membrane center
         self.start_mem = np.argwhere(self.resid_array[0] > 0)[0][0]+1
         self.stop_mem = np.argwhere(self.resid_array[0] > 0)[-1][0]-1
         self.step_mem = 2
 
-        area_p = self.dz*self.dz*self.prot_area
+        area_p = self.prot_area
         frames = len(self.resid_array)
     
         for frame in range(0,frames):
@@ -337,26 +379,29 @@ class Membrane_properties:
             number_p = np.sum(np.sum(self.prot_slab[frame], axis=2),axis=1)
             dens_p0 = []
             for n,(a,d) in enumerate(zip(area_p[frame],number_p)):
-                if(a > 0 and d>5): dens_p0.append(d/a)
+                if(a > 0 ): dens_p0.append(d/a)
                 else: dens_p0.append(0)           
-            self.dens_p.append(np.asarray(dens_p0)/self.dz)
+            self.dens_p.append(np.asarray(dens_p0))
     
-            area_m = self.dz*self.dz*(area_xy-self.prot_area[frame]) #-wat_area[frame])
+            area_m = (area_xy-self.prot_area[frame]) #-wat_area[frame])
             number_m = np.sum(np.sum(self.mem_slab[frame], axis=2),axis=1)
             dens_m0 = []
             dens_r0 = []
     
             # ---- density of membrane atoms and residues as function of z   
             for n,(a,d,r) in enumerate(zip(area_m,number_m,self.resid_array[frame])): # loop over z
-                if(a> 0 and r > 75 and d > 10):
+                # dencity is non-zero only if area is non-zero, the number of lipids is more than 10 and the number of atoms is more than 75
+                if(a > 0 ):  #and r > 75 d > 10
                     dens_m0.append(d/a)
-                    dens_r0.append(a/r)
+                    if(d/a > 0.025):  dens_r0.append(a/r)
+                    else:  dens_r0.append(0)
                 else: 
                     dens_m0.append(0)
                     dens_r0.append(0)
 
-            self.dens_m.append(np.asarray(dens_m0)/self.dz)
-            self.dens_m_r.append(np.asarray(dens_r0)/self.dz)
+
+            self.dens_m.append(np.asarray(dens_m0))
+            self.dens_m_r.append(np.asarray(dens_r0))
         
             # ---- density of membrane residues as function of z and x
             for i,z in enumerate(range(self.start_mem ,self.stop_mem,self.step_mem)): # loop over z and average over frames
@@ -364,21 +409,30 @@ class Membrane_properties:
                     self.mem_slab_frame.append(self.mem_slab[frame][z])
                     self.prot_slab_frame.append(self.prot_slab[frame][z])  
                     self.area_x.append(self.dz*self.dz*(self.nx-np.count_nonzero(self.prot_slab[frame][z],axis=1)))
+#                    self.area_x.append(self.dz*self.dz*self.nx-4*np.sum(self.prot_slab[frame][z],axis=1))
                     self.mem_slab_frame_zx.append(self.resid_array_zx[frame][z])  # dencity of lipids
                 else: 
                     self.mem_slab_frame[i] = np.add(self.mem_slab_frame[i],self.mem_slab[frame][z])
                     self.prot_slab_frame[i] = np.add(self.prot_slab_frame[i],self.prot_slab[frame][z])
+#                    self.area_x[i]  = np.add(self.area_x[i],self.dz*self.dz*self.nx-4*np.sum(self.prot_slab[frame][z],axis=1))
                     self.area_x[i]  = np.add(self.area_x[i],self.dz*self.dz*(self.nx-np.count_nonzero(self.prot_slab[frame][z],axis=1)))
                     self.mem_slab_frame_zx[i] = np.add(self.mem_slab_frame_zx[i] ,self.resid_array_zx[frame][z])
         return
 
+    ###########################################
+    #
     # check if vectors for xz is in agreement for vectors for z;
+    #
+    ###########################################
     def Check(self):
-        plt.plot(self.resid_array[0])
-        plt.plot(self.prot_area[0])
+        plt.plot(self.resid_array[0], label="lipids")
+        plt.plot(self.prot_area[0], label="prot. area")
 
-        plt.plot(np.sum(self.resid_array_zx[0],axis=1), alpha = 0.2,lw = 10)
-        plt.plot(np.sum(np.count_nonzero(self.prot_slab[0],axis=1),axis=1), alpha = 0.2,lw =10)
+        plt.plot(np.sum(self.resid_array_zx[0],axis=1), alpha = 0.2,lw = 10,  label="lipids from xy")
+        plt.plot(np.sum(np.count_nonzero(self.prot_slab[0],axis=1),axis=1), alpha = 0.2,lw =10, label="protein atoms")
+        plt.legend(framealpha = 0.0,edgecolor ='None',loc='best')
+        plt.ylabel('arb.un.', fontsize=14)
+        plt.xlabel('z', fontsize=14)
         plt.show()
         return
 
@@ -404,17 +458,16 @@ class Membrane_properties:
         prot_area = self.prot_area
         mem_area = self.mem_area
         wat_area = self.wat_area
-        dz = self.dz
     
-        X = dz*np.asarray(range(0,len(dens_p[0])))            
+        X = self.dh*np.asarray(range(0,len(dens_p[0])))            
         fig = plt.figure(figsize=(12, 6))
         gs = gridspec.GridSpec(2, 2,hspace=0.5) #height_ratios=[2,2,1]) #,width_ratios=[2,2,1,1])
         ax2 = plt.subplot(gs[0])
         plt.errorbar(x=X,y=np.mean(np.asarray(dens_p),axis=0),             yerr= np.std(np.asarray(dens_p),axis=0), color = "gray" , fmt='o--', markersize=1)
         plt.scatter(x=X,y=np.mean(np.asarray(dens_p),axis=0),color = 'red',alpha=0.5,s=50, label="protein")
 
-        plt.errorbar(x=X,y=10*np.mean(np.asarray(dens_m),axis=0),             yerr= np.std(np.asarray(dens_m),axis=0), color = "gray" , fmt='o--', markersize=1 )
-        plt.scatter(x=X,y=10*np.mean(np.asarray(dens_m),axis=0),color = 'green',alpha=0.5,s=50, label="membrane x 10")
+        plt.errorbar(x=X,y=np.mean(np.asarray(dens_m),axis=0),             yerr= np.std(np.asarray(dens_m),axis=0), color = "gray" , fmt='o--', markersize=1 )
+        plt.scatter(x=X,y=np.mean(np.asarray(dens_m),axis=0),color = 'green',alpha=0.5,s=50, label="membr.")
 
         ax2.legend(framealpha = 0.0,edgecolor ='None',loc='best')
         ax2.set_ylabel('[atoms/A^2]', fontsize=14)
@@ -425,10 +478,10 @@ class Membrane_properties:
         ax4 = plt.subplot(gs[1])
 
         plt.errorbar(x=X,y=np.mean(np.asarray(dens_m_r),axis=0),             yerr= np.std(np.asarray(dens_m_r),axis=0), color = "gray" , fmt='o', markersize=1)
-        plt.scatter(x=X,y=np.mean(np.asarray(dens_m_r),axis=0),color = 'green',alpha=0.5,s=50, label="membrane")
+        plt.scatter(x=X,y=np.mean(np.asarray(dens_m_r),axis=0),color = 'green',alpha=0.5,s=50, label="membr.")
         ysmoothed = gaussian_filter1d(np.mean(np.asarray(dens_m_r),axis=0), sigma=1)
         plt.plot(X,ysmoothed,color = "green" , lw = 1)
-        ax4.set_ylim(0,100)
+        ax4.set_ylim(0,max(np.mean(np.asarray(dens_m_r),axis=0)))
         ax4.legend(framealpha = 0.0,edgecolor ='None',loc='best')
         ax4.set_ylabel('area [A^2]', fontsize=14)
         ax4.set_xlabel('z-distance', fontsize=14)
@@ -440,10 +493,10 @@ class Membrane_properties:
         plt.scatter(x=X,y=np.mean(np.asarray(prot_area),axis=0),color = 'red',alpha=0.5,s=50, label="protein")
 
         plt.errorbar(x=X,y=np.mean(np.asarray(mem_area),axis=0),             yerr= np.std(np.asarray(mem_area),axis=0), color = "gray" , fmt='o--', markersize=1 )
-        plt.scatter(x=X,y=np.mean(np.asarray(mem_area),axis=0),color = 'green',alpha=0.5,s=50, label="membrane ")
+        plt.scatter(x=X,y=np.mean(np.asarray(mem_area),axis=0),color = 'green',alpha=0.5,s=50, label="membr. ")
 
         plt.errorbar(x=X,y=np.mean(np.asarray(wat_area),axis=0),             yerr= np.std(np.asarray(wat_area),axis=0), color = "gray" , fmt='o--', markersize=1 )
-        plt.scatter(x=X,y=np.mean(np.asarray(wat_area),axis=0),color = 'blue',alpha=0.5,s=50, label="membrane ")
+        plt.scatter(x=X,y=np.mean(np.asarray(wat_area),axis=0),color = 'blue',alpha=0.5,s=50, label="membr. ")
 
         ax3.legend(framealpha = 0.0,edgecolor ='None',loc='best')
         ax3.set_ylabel('[A^2]', fontsize=14)
@@ -455,7 +508,7 @@ class Membrane_properties:
         plt.scatter(x = self.interval[2]*np.asarray(range(0,len(self.Rgr))),y=self.Rgr,color = 'blue',alpha=0.5,s=50)
         ax5.set_ylabel('Rad. of gyration [A]', fontsize=14)
         ax5.set_xlabel('frame', fontsize=14)
-        ax5.set_title('Radius of Gyration (protein) ')
+        ax5.set_title('Rad. of Gyration (protein) ')
         ax5.grid(color='gray', linestyle='-', linewidth=0.2)
         ax5.set_ylim(0.5*max(self.Rgr),1.2*max(self.Rgr))
         plt.show()  
@@ -482,7 +535,7 @@ class Membrane_properties:
         mem_slab_frame = self.mem_slab_frame
         mem_slab_frame_zx = self.mem_slab_frame_zx
         area_x = self.area_x
-        dz = self.dz
+
         start_mem = self.start_mem
         stop_mem = self.stop_mem
         step_mem = self.step_mem
@@ -498,7 +551,7 @@ class Membrane_properties:
         for i,z in enumerate(range(start_mem ,stop_mem,step_mem)):
             ax1 = plt.subplot(gs[pl])    
             ax1.imshow(prot_slab_frame[i], interpolation='hamming', cmap="Reds")
-            ax1.set_title('z='+str(dz*z))
+            ax1.set_title('z='+str(self.dh*z))
             ax1.set_ylabel('protein', fontsize=16)
             plt.yticks([])
             plt.xticks([])
@@ -511,9 +564,9 @@ class Membrane_properties:
 
             ax4 = plt.subplot(gs[pl+2*plots])
             Y = np.divide(area_x[i][self.margin:-self.margin],mem_slab_frame_zx[i][self.margin:-self.margin])
-            plt.scatter(x=dz*np.asarray(range(0,Y.shape[0])),y=Y,color = 'green',alpha=0.5,s=30)
+            plt.scatter(x=self.dz*np.asarray(range(0,Y.shape[0])),y=Y,color = 'green',alpha=0.5,s=30)
             ysmoothed = gaussian_filter1d(Y, sigma=1)
-            plt.plot(dz*np.asarray(range(0,Y.shape[0])),ysmoothed,color = "green" , lw = 3,alpha=0.5)
+            plt.plot(self.dz*np.asarray(range(0,Y.shape[0])),ysmoothed,color = "green" , lw = 3,alpha=0.5)
             ax4.set_ylim(0,zmax)
             ax4.grid(color='gray', linestyle='-', linewidth=0.2)
             if(i == 0): 
