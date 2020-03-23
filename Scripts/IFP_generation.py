@@ -130,7 +130,7 @@ def IFP_list(property_list, sel_ligands, RE=True, Lipids = []):
     IFP_prop_list = []
     try:  # hydrophobic
         line = ""
-        if "Hydrophobe" in property_list:
+        if "Hydrophobe" in property_list.keys():
             for l in tuple(set(property_list["Hydrophobe"])): line = line + l + " "
             sel_a = " protein and (type C and (not  (name CG and resname ASN ASP))   and (not  (name CD and resname GLU GLN ARG))  and (not  (name CZ and resname TYR ARG))  and (not  (name CE and resname LYS)) and (not  (name CB and resname SER THR))   and (not  (name C and backbone)) and (not resname "+sel_ligands+" ))"                 
             sel_b = '((resname '+sel_ligands+") and (name "+line+") )"
@@ -140,7 +140,7 @@ def IFP_list(property_list, sel_ligands, RE=True, Lipids = []):
         pass
     try:  #--- salt bridge with posetively-charged residues 
         line = ""
-        if "PosIonizable" in property_list:
+        if "PosIonizable" in property_list.keys():
             for l in tuple(set(property_list["PosIonizable"])): line = line + l +" "
             sel_a = "((resname ASP GLU) and (name OE* OD*)) "
             sel_b = '((resname '+sel_ligands+") and (name "+line+") )"
@@ -151,7 +151,7 @@ def IFP_list(property_list, sel_ligands, RE=True, Lipids = []):
     
     try: #--- salt bridges with negatively charged residues  
         line = ""
-        if "NegIonizable" in property_list:
+        if "NegIonizable" in property_list.keys():
             for l in tuple(set(property_list["NegIonizable"])): line = line + l +" "
             sel_a = "((resname ARG LYS ) and (name NH* NZ)) or ((resname HI2 ) and (name HD HE))"
             sel_b = '((resname '+sel_ligands+") and (name "+line+") )"
@@ -162,13 +162,13 @@ def IFP_list(property_list, sel_ligands, RE=True, Lipids = []):
     
     try:  #--- cation-aril interactions  and aromatic stacking
         line = ""
-        if "PosIonizable" in property_list:
+        if "PosIonizable" in property_list.keys():
             for l in tuple(set(property_list["PosIonizable"])): line = line + l +" "
-        if "Aromatic" in property_list:
+        if "Aromatic" in property_list.keys():
             for l in tuple(set(property_list["Aromatic"])): line = line + l +" "
-        sel_b = '((resname '+sel_ligands+" ) and (name "+line+"))"
-        sel_a = "((resname PHE TRP TYR HIS HIE HID) and (name CZ* CD* CE* CG* CH* NE* ND*))"
-        IFP_prop_list.append(IFP_prop("AR",line,sel_a,sel_b,5.5))
+            sel_b = '((resname '+sel_ligands+" ) and (name "+line+"))"
+            sel_a = "((resname PHE TRP TYR HIS HIE HID) and (name CZ* CD* CE* CG* CH* NE* ND*))"
+            IFP_prop_list.append(IFP_prop("AR",line,sel_a,sel_b,5.5))
     except:
         print("AR1 failed")
         pass
@@ -183,7 +183,7 @@ def IFP_list(property_list, sel_ligands, RE=True, Lipids = []):
     
     try: #--- aromatic ligand - cation , amide, or S interactions
         line = ""
-        if "Aromatic" in property_list:
+        if "Aromatic" in property_list.keys():
             for l in tuple(set(property_list["Aromatic"])): line = line + l +" "
             sel_b = '((resname '+sel_ligands+" ) and (name "+line+") )"
             sel_a = "((resname ARG LYZ ) and (name NH* NZ* )) or  (backbone and type N) or ((type S) and (resname MET CYS))"
@@ -193,7 +193,7 @@ def IFP_list(property_list, sel_ligands, RE=True, Lipids = []):
         pass
     
     try: #--- hylogen bonds with atromatic or backbone carbonyl oxygen
-        sel_b = '((resname '+sel_ligands+" ) and ( type I CL BR F ) )"
+        sel_b = '((resname '+sel_ligands+" ) and ( type I CL BR ) )"
         sel_a = "((resname PHE TRP TYR HIS HIE HID) and (name CZ* CD* CE* CG* CH* NE* ND*)) or (backbone and name O) or ((resname ASP GLU) and (name OE* OD*))  or ((resname CYS MET) and (type S))"
         IFP_prop_list.append(IFP_prop("HL","HL",sel_a,sel_b,3.5))
     except:
@@ -332,10 +332,11 @@ def IFP(u_mem,sel_ligands,property_list, WB_analysis = True, RE = True,Lipids = 
         print("Start WB analysis",datetime.datetime.now().time())
         try:
             # will add O atom of water as an HB donor (it is concidered as acceptor by default assuming as a protein backbone atom)
-            hb.WaterBridgeAnalysis.DEFAULT_DONORS['OtherFF'] = hb.WaterBridgeAnalysis.DEFAULT_DONORS['OtherFF']+tuple(set("O"))        
-#            w = hb.WaterBridgeAnalysis(u_mem, 'resname '+sel_ligands, ' not resname WAT HOH SOL ',water_selection=" resname WAT HOH SOL ", \
+#            hb.WaterBridgeAnalysis.DEFAULT_DONORS['OtherFF'] = hb.WaterBridgeAnalysis.DEFAULT_DONORS['OtherFF']+tuple(set("O"))        
+#            hb.WaterBridgeAnalysis.DEFAULT_ACCEPTORS['OtherFF'] = hb.WaterBridgeAnalysis.DEFAULT_DONORS['OtherFF']+tuple(set("O"))        
+#            w = hb.WaterBridgeAnalysis(u_mem, 'resname '+sel_ligands, ' not resname WAT HOH SOL ',water_selection=" resname WAT HOH SOL ", 
 #                distance=3.5, angle=110, forcefield='OtherFF',output_format="donor_acceptor",order=3)
-            w = hb.WaterBridgeAnalysis(u_mem, selection1  = 'resname '+sel_ligands, selection2  = ' not resname WAT HOH SOL'+sel_ligands,water_selection=" resname WAT HOH SOL ",  distance=3.5, angle=100, forcefield='OtherFF',order=5)
+            w = hb.WaterBridgeAnalysis(u_mem, selection1  = 'resname '+sel_ligands, selection2  = ' not resname WAT HOH SOL '+sel_ligands,water_selection=" resname WAT HOH SOL ",  distance=3.5, angle=100, forcefield='OtherFF',order=5)
             w.run()
             w.generate_table()
             df_WB = pd.DataFrame.from_records(w.table)
@@ -349,7 +350,10 @@ def IFP(u_mem,sel_ligands,property_list, WB_analysis = True, RE = True,Lipids = 
     u_list_all = []
     for IFP_type  in IFP_prop_list:
         line = IFP_type.sel_a +" and around "+str(IFP_type.dist)+" "+ IFP_type.sel_b
-        u_list_all.append(u_mem.select_atoms(line, updating=True))
+        try:
+            u_list_all.append(u_mem.select_atoms(line, updating=True))
+        except:
+            print("Selection Error for the type: "+IFP_type.name+" ;  "+line)
     #--------------------------------------------------
     start = 0
     IFPs_unique_list = []
@@ -361,20 +365,27 @@ def IFP(u_mem,sel_ligands,property_list, WB_analysis = True, RE = True,Lipids = 
                 for u in u_list:   found.append(["WAT",u.name])
             elif (IFP_type.name == "LL"): 
                 for u in u_list:   found.append(["LIP",u.name])
-            else:    
-                for u in u_list:  
-                    found.append([IFP_type.name+"_"+u.resname+str(u.resid),u.name])
- #                   if(u.resid == 85) and (IFP_type.name == "IP"): print(IFP_type.name+"_"+u.resname+str(u.resid),u.name)
+            elif (IFP_type.name == "AR"):
+                u_ar = []
+                for u in u_list:  u_ar.append(u.resid)
+                if len(u_ar)> 0:
+                    ar_resid, ar_n = np.unique(u_ar,return_counts=True)
+                    for u in u_list:  
+                        if(u.resid in ar_resid[ar_n > 4]): found.append([IFP_type.name+"_"+u.resname+str(u.resid),u.name])
                 
-            if(found):  
+            else:  
+                for u in u_list:
+                        found.append([IFP_type.name+"_"+u.resname+str(u.resid),u.name])
+                        
+                
+            if(found): 
                 IFP_type.contacts.append((i,found))
                 if start == 0:  
                     IFPs_unique_list = np.unique(np.asarray(found)[:,0])
                     start += 1
                 else:  
                     IFPs_unique_list = np.unique(np.append(IFPs_unique_list,np.asarray(found)[:,0]))
-#            else:
-#                print("No water or lipid contacts were found")
+#                print(IFPs_unique_list)
 
     print("Start building IFP table: ",datetime.datetime.now().time())
     if(len(IFP_prop_list) > 0):
@@ -506,9 +517,11 @@ def table_combine(df_HB,df_WB,df_prop,ligand_name,residues_name = [],start=0,sto
         t_list = []
         column_resi = []
         # get a list of INH-WAT (sele1 - sele2)
-        df_WB_INH = df_WB[(df_WB.sele1_resnm.isin(["INH"]) & df_WB.sele2_resnm.isin(["WAT"]))]
+        df_WB_INH = df_WB[(df_WB.sele1_resnm.isin([ligand_name]) & df_WB.sele2_resnm.isin(["WAT","HOH","SOL"]))]
+#        print(df_WB_INH)
         # get a list of WAT-Prot (sele1 - sele2)
-        df_WB_Prot = df_WB[(~(df_WB.sele2_resnm.isin(["INH","WAT"])) & (df_WB.sele1_resnm.isin(["WAT"])))]
+        df_WB_Prot = df_WB[(~(df_WB.sele2_resnm.isin([ligand_name,"WAT"])) & (df_WB.sele1_resnm.isin(["WAT","HOH","SOL"])))]
+#        print(df_WB_Prot)
  #       df_WB_WAT = df_WB[((df_WB.sele2_resnm == "WAT") & (df_WB.sele1_resnm == "WAT"))]
         for t in df_WB.time.unique().tolist():
             raw = int(t)
