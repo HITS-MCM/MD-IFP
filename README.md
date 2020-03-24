@@ -34,11 +34,7 @@ This open source software code was developed in part in the Human Brain Project,
     Trajectories.py  - contains functions for building a trajectory object for reading and analysis standard MD and RAMD trajectories and computation of relative residence times
 
 2. Data:
-
-        2YKI
-        4MQT
-        6EI5
-        
+       
 3. Example jupyter notebooks :
 
          (i)jupyter notebook IFP_generation_examples_PDB.ipynb: an examples of Protein-Ligand IFP computations
