@@ -164,10 +164,10 @@ def IFP_list(property_list, sel_ligands, RE=True, Lipids = []):
         line = ""
         if "PosIonizable" in property_list.keys():
             for l in tuple(set(property_list["PosIonizable"])): line = line + l +" "
-        if "Aromatic" in property_list.keys():
+        if "Aromatic" in property_list.keys():  # pi-pi
             for l in tuple(set(property_list["Aromatic"])): line = line + l +" "
             sel_b = '((resname '+sel_ligands+" ) and (name "+line+"))"
-            sel_a = "((resname PHE TRP TYR HIS HIE HID) and (name CZ* CD* CE* CG* CH* NE* ND*))"
+            sel_a = "((resname PHE TRP TYR HIS HIE HID HE2) and (name CZ* CD* CE* CG* CH* NE* ND*))"
             IFP_prop_list.append(IFP_prop("AR",line,sel_a,sel_b,5.5))
     except:
         print("AR1 failed")
@@ -186,15 +186,15 @@ def IFP_list(property_list, sel_ligands, RE=True, Lipids = []):
         if "Aromatic" in property_list.keys():
             for l in tuple(set(property_list["Aromatic"])): line = line + l +" "
             sel_b = '((resname '+sel_ligands+" ) and (name "+line+") )"
-            sel_a = "((resname ARG LYZ ) and (name NH* NZ* )) or  (backbone and type N) or ((type S) and (resname MET CYS))"
+            sel_a = "((resname ARG LYS ) and (name NH* NZ*)) or ((resname HIS HIE HID) and (name HD* HE*)) or  (backbone and type N)" #  or ((type S) and (resname MET CYS))
             IFP_prop_list.append(IFP_prop("AR",line,sel_a,sel_b,4.5))
     except:
         print("AR3 failed")
         pass
     
     try: #--- hylogen bonds with atromatic or backbone carbonyl oxygen
-        sel_b = '((resname '+sel_ligands+" ) and ( type I CL BR ) )"
-        sel_a = "((resname PHE TRP TYR HIS HIE HID) and (name CZ* CD* CE* CG* CH* NE* ND*)) or (backbone and name O) or ((resname ASP GLU) and (name OE* OD*))  or ((resname CYS MET) and (type S))"
+        sel_b = '((resname '+sel_ligands+" ) and ( type I CL BR Br Cl) )"
+        sel_a = "((resname PHE TRP TYR HIS HIE HID ) and (name CZ* CD* CE* CG* CH* NE* ND*)) or (backbone and name O) or ((resname ASP GLU) and (name OE* OD*))  or ((resname CYS MET) and (type S))"
         IFP_prop_list.append(IFP_prop("HL","HL",sel_a,sel_b,3.5))
     except:
         print("HL failed")
@@ -372,6 +372,8 @@ def IFP(u_mem,sel_ligands,property_list, WB_analysis = True, RE = True,Lipids = 
                     ar_resid, ar_n = np.unique(u_ar,return_counts=True)
                     for u in u_list:  
                         if(u.resid in ar_resid[ar_n > 4]): found.append([IFP_type.name+"_"+u.resname+str(u.resid),u.name])
+                        elif(u.resname in ["LYS","ARG","MET","CYS", "HIS", "HIE"]): found.append([IFP_type.name+"_"+u.resname+str(u.resid),u.name])
+                    print(" aromatic contacts: ",ar_resid, ar_n)
                 
             else:  
                 for u in u_list:
