@@ -372,7 +372,7 @@ def IFP(u_mem,sel_ligands,property_list, WB_analysis = True, RE = True,Lipids = 
                     ar_resid, ar_n = np.unique(u_ar,return_counts=True)
                     for u in u_list:  
                         if(u.resid in ar_resid[ar_n > 4]): found.append([IFP_type.name+"_"+u.resname+str(u.resid),u.name])
-                        elif(u.resname in ["LYS","ARG","MET","CYS", "HIS", "HIE"]): found.append([IFP_type.name+"_"+u.resname+str(u.resid),u.name])
+                        elif(u.resname in ["LYS","ARG", "HIS", "HIE"]): found.append([IFP_type.name+"_"+u.resname+str(u.resid),u.name])
                     print(" aromatic contacts: ",ar_resid, ar_n)
                 
             else:  
