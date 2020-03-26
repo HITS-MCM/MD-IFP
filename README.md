@@ -19,7 +19,7 @@ This open source software code was developed in part in the Human Brain Project,
 
     Packages required:
     Python 3.x
-    numpy;    pandas;  matplotlib;  MDAnalysis;  RDkit;   scipy
+    numpy;    pandas;  matplotlib;  MDAnalysis;  RDkit;   scipy; ngview
     code is written on Python 3.x and tested on Python 3.7
     to configure envirement in anaconda use
     conda env create -f IFP_trajectory.yml
@@ -28,12 +28,12 @@ This open source software code was developed in part in the Human Brain Project,
 
 1. Scripts:
 
-    Clustering.py   - containes functions for analysis of trajectories using IFP data   
-    IFP_generation.py  - contains functions for generation of IFPs
-    Membrane_analysis.py
-    Trajectories.py  - contains functions for building a trajectory object for reading and analysis standard MD and RAMD trajectories and computation of relative residence times
+    Clustering.py   - functions for analysis of trajectories using IFP data   (is still under developments)
+    IFP_generation.py  -  functions for generation of IFPs
+    Membrane_analysis.py - functions for analysis of membrane-protein systems 
+    Trajectories.py  - functions for building a trajectory object for reading and analysis standard MD and RAMD trajectories and computation of relative residence times
 
-2. Data:
+2. Data: will be on Zenodo
        
 3. Example jupyter notebooks :
 
