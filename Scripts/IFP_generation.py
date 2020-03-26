@@ -186,7 +186,7 @@ def IFP_list(property_list, sel_ligands, RE=True, Lipids = []):
         if "Aromatic" in property_list.keys():
             for l in tuple(set(property_list["Aromatic"])): line = line + l +" "
             sel_b = '((resname '+sel_ligands+" ) and (name "+line+") )"
-            sel_a = "((resname ARG LYS ) and (name NH* NZ*)) or ((resname HIS HIE HID) and (name HD* HE*)) or  (backbone and type N)" #  or ((type S) and (resname MET CYS))
+            sel_a = "((resname ARG LYS ) and (name NH* NZ*)) or (backbone and name H)" #  or ((type S) and (resname MET CYS))
             IFP_prop_list.append(IFP_prop("AR",line,sel_a,sel_b,4.5))
     except:
         print("AR3 failed")
@@ -218,13 +218,13 @@ def IFP_list(property_list, sel_ligands, RE=True, Lipids = []):
             pass
         
     if len(Lipids) > 0:
-         try: # any lipid-ligand contacts 
+        try: # any lipid-ligand contacts 
             line = ""
             for l in Lipids: line = line + l +" "
             sel_a = '((resname '+line+' ) and (not type H)) '
             sel_b = '(resname '+sel_ligands+") and (not type H)"
             IFP_prop_list.append(IFP_prop("LL",line,sel_a,sel_b,4.0))
-         except:
+        except:
             pass
     return (IFP_prop_list)
 
@@ -372,8 +372,15 @@ def IFP(u_mem,sel_ligands,property_list, WB_analysis = True, RE = True,Lipids = 
                     ar_resid, ar_n = np.unique(u_ar,return_counts=True)
                     for u in u_list:  
                         if(u.resid in ar_resid[ar_n > 4]): found.append([IFP_type.name+"_"+u.resname+str(u.resid),u.name])
-                        elif(u.resname in ["LYS","ARG", "HIS", "HIE"]): found.append([IFP_type.name+"_"+u.resname+str(u.resid),u.name])
-                    print(" aromatic contacts: ",ar_resid, ar_n)
+                        # here we will check if cation (LYS or ARG) really contact an aromatic ring of the ligand
+                        elif(u.resname in ["LYS","ARG"]):
+                            if u.resname == "LYS" : cation = "LYS"
+                            else: cation = "ARG"
+                            line1 = "(resname "+sel_ligands+" and ( not type H O)) and around 4.5 (resid "+str(u.resid[u.resname == cation][0]) + " and type N)" 
+                            u1_list = (u_mem.select_atoms(line1,updating=True))
+                            if(len(u1_list) > 4): 
+                                found.append([IFP_type.name+"_"+u.resname+str(u.resid),u.name])
+                         #       print("!!!!!!!!!!!!!  Cat-Ar  interactions found",u1_list)
                 
             else:  
                 for u in u_list:
