@@ -371,7 +371,7 @@ def IFP(u_mem,sel_ligands,property_list, WB_analysis = True, RE = True,Lipids = 
                 for u in u_list:  u_ar.append(u.resid)
                 if len(u_ar)> 0:
                     ar_resid, ar_n = np.unique(u_ar,return_counts=True)
-                    print(ar_resid, ar_n)
+                    #print(ar_resid, ar_n)
                     for u in u_list:  
                         if(u.resid in ar_resid[ar_n > 4]): found.append([IFP_type.name+"_"+u.resname+str(u.resid),u.name])
                         # here we will check if cation (LYS or ARG) really contact an aromatic ring of the ligand
