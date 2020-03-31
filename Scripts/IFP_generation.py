@@ -166,8 +166,9 @@ def IFP_list(property_list, sel_ligands, RE=True, Lipids = []):
             for l in tuple(set(property_list["PosIonizable"])): line = line + l +" "
         if "Aromatic" in property_list.keys():  # pi-pi
             for l in tuple(set(property_list["Aromatic"])): line = line + l +" "
+        if("PosIonizable" in property_list.keys()) or ("Aromatic" in property_list.keys()):
             sel_b = '((resname '+sel_ligands+" ) and (name "+line+"))"
-            sel_a = "((resname PHE TRP TYR HIS HIE HID HE2) and (name CZ* CD* CE* CG* CH* NE* ND*))"
+            sel_a = "((resname PHE TRP TYR HIS HIE HID HE2) and (name CZ* CD* CE* CG* CH* NE* ND*))"      
             IFP_prop_list.append(IFP_prop("AR",line,sel_a,sel_b,5.5))
     except:
         print("AR1 failed")
@@ -319,7 +320,7 @@ def IFP(u_mem,sel_ligands,property_list, WB_analysis = True, RE = True,Lipids = 
         hb.HydrogenBondAnalysis.DEFAULT_ACCEPTORS['OtherFF'] = hb.HydrogenBondAnalysis.DEFAULT_ACCEPTORS['OtherFF']+acceptor_line
         hb.WaterBridgeAnalysis.DEFAULT_ACCEPTORS['OtherFF'] = hb.WaterBridgeAnalysis.DEFAULT_ACCEPTORS['OtherFF']+acceptor_line
     
-    h = hb.HydrogenBondAnalysis(u_mem, selection1 ='resname '+sel_ligands,selection2=' not resname WAT HOH SOL '+sel_ligands, distance=3.0, angle=110, forcefield='OtherFF')
+    h = hb.HydrogenBondAnalysis(u_mem, selection1 ='resname '+sel_ligands,selection2=' not resname WAT HOH SOL '+sel_ligands, distance=3.1, angle=110, forcefield='OtherFF')
     print("Start HB analysis",datetime.datetime.now().time())
     h.run()
     h.generate_table()
@@ -370,6 +371,7 @@ def IFP(u_mem,sel_ligands,property_list, WB_analysis = True, RE = True,Lipids = 
                 for u in u_list:  u_ar.append(u.resid)
                 if len(u_ar)> 0:
                     ar_resid, ar_n = np.unique(u_ar,return_counts=True)
+                    print(ar_resid, ar_n)
                     for u in u_list:  
                         if(u.resid in ar_resid[ar_n > 4]): found.append([IFP_type.name+"_"+u.resname+str(u.resid),u.name])
                         # here we will check if cation (LYS or ARG) really contact an aromatic ring of the ligand
@@ -381,7 +383,6 @@ def IFP(u_mem,sel_ligands,property_list, WB_analysis = True, RE = True,Lipids = 
                             if(len(u1_list) > 4): 
                                 found.append([IFP_type.name+"_"+u.resname+str(u.resid),u.name])
                          #       print("!!!!!!!!!!!!!  Cat-Ar  interactions found",u1_list)
-                
             else:  
                 for u in u_list:
                         found.append([IFP_type.name+"_"+u.resname+str(u.resid),u.name])

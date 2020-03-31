@@ -271,6 +271,10 @@ class trajectories:
         self.timestep = timestep
         
         self.ligand = Ligand(PRJ_DIR,ligand_pdb,ligand_mol2)
+# check if ligand can be found in the trajectory 
+        u = mda.Universe(self.PRJ_DIR+self.pdb)
+        u.select_atoms(self.ligand.ligands_names[0])
+        print("Ligand atoms found in the trajectory ",u.select_atoms(self.ligand.ligands_names[0]))
         
 #        self.ligand = self.createLigand(PRJ_DIR,ligand_pdb,ligand_mol2) 
         self.namd = self.createNamd() 
@@ -920,7 +924,7 @@ class trajectories:
             self.namd.traj[j].rmsd_auxi = rmsd_auxi
  #           print(j,rmsd_auxi[0][:3],self.namd.traj[j].rmsd_auxi[0][:3])
  #           if(j > 0): print("....",j-1,self.namd.traj[j-1].rmsd_auxi[0][:3])
-            Plot_IFP(df_prop_complete)
+            Plot_IFP(df_prop_complete,out_name="namd-"+str(j)+".png")
             sys.stdout.flush()
 
         return
@@ -985,7 +989,7 @@ class trajectories:
                     self.ramd.traj[j1][j2].Rgr_lig = Rgr_lig
                     self.ramd.traj[j1][j2].com_lig = com_lig
                     self.ramd.traj[j1][j2].rmsd_auxi = rmsd_auxi
-                    Plot_IFP(df_prop_complete)
+                    Plot_IFP(df_prop_complete,out_name="ramd-"+str(j2)+".png")
                 except:
                     print("\nERROR: IFP either were not generated or could not be stored in the traj object!\n")
                     pass
@@ -1000,7 +1004,7 @@ class  Ligand:
                 Functions:
                     _int__(self,PRJ_DIR,ligand_pdb,ligand_mol2="moe.mol2")
                 Variable:
-                    ligand_names
+                    ligands_names
                     property_list
                     mol
                     ligand_2D
@@ -1057,7 +1061,7 @@ class  Ligand:
                         print (k,properties_list[k])
                 else:
                     print("ERROR:   RDKit cannot generate ligand property list")
-                self.ligands_names = np.unique(resnames)
+
                 try:
                     self.ligand_2D=ligand_2D
                     self.mol = mol
@@ -1072,6 +1076,7 @@ class  Ligand:
                         except:
                             print("ERROR: RDKit cannot read file- some errors found in the ligand structure")
                             sys.exit()
+                self.ligands_names = np.unique(resnames)
                             
                         
             else: print(" ligand PDB and Mol2 are not defined")
@@ -1105,8 +1110,7 @@ class  Ligand:
                     if start == 1:  
                         list_labels.append(key[1]) 
                         resnames.append(key[7])
-            
-            mol = Chem.rdmolfiles.MolFromMol2File(ligand_mol2,removeHs=False)   
+            mol = Chem.rdmolfiles.MolFromMol2File(ligand_mol2,removeHs=False) 
             return(mol,list_labels,resnames)
 
         ########################################
@@ -1157,9 +1161,10 @@ class  Ligand:
             list_labels = []
 
             for line in lines:
-                if (line.split()[0] == 'ATOM' or line.split()[0] == 'HETATM'):
-                    if (line.split()[2][0] == "F"):
-                        list_labels.append(line.split()[2]) 
+                if len(line.split()) > 5:
+                    if (line.split()[0] == 'ATOM' or line.split()[0] == 'HETATM'):
+                        if (line.split()[2][0] == "F"):
+                            list_labels.append(line.split()[2]) 
  #           print(list_labels)            
             return(list_labels)
 
