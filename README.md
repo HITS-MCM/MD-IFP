@@ -33,7 +33,7 @@ This open source software code was developed in part in the Human Brain Project,
     Membrane_analysis.py - functions for analysis of membrane-protein systems 
     Trajectories.py  - functions for building a trajectory object for reading and analysis standard MD and RAMD trajectories and computation of relative residence times
 
-2. Data: will be on Zenodo
+2. Data: https://zenodo.org/record/3755337#.XrF-iGgzaUk
        
 3. Example jupyter notebooks :
 
