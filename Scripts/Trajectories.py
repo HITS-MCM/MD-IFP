@@ -269,12 +269,13 @@ class trajectories:
         self.ramd_tmpl ="/"+ramd_tmpl
         self.namd_tmpl = "/"+namd_tmpl
         self.timestep = timestep
-        
-        self.ligand = Ligand(PRJ_DIR,ligand_pdb,ligand_mol2)
-# check if ligand can be found in the trajectory 
-        u = mda.Universe(self.PRJ_DIR+self.pdb)
-        u.select_atoms(self.ligand.ligands_names[0])
-        print("Ligand atoms found in the trajectory ",u.select_atoms(self.ligand.ligands_names[0]))
+        try:
+            self.ligand = Ligand(PRJ_DIR,ligand_pdb,ligand_mol2)
+            # check if ligand can be found in the trajectory 
+            u = mda.Universe(self.PRJ_DIR+self.pdb)
+            print("Ligand atoms found in the trajectory ",self.ligand.ligands_names[0])
+            print(u.select_atoms(self.ligand.ligands_names[0]))
+        except: print("ligand name:      ",self.ligand.ligands_names[0])
         
 #        self.ligand = self.createLigand(PRJ_DIR,ligand_pdb,ligand_mol2) 
         self.namd = self.createNamd() 
@@ -924,7 +925,7 @@ class trajectories:
             self.namd.traj[j].rmsd_auxi = rmsd_auxi
  #           print(j,rmsd_auxi[0][:3],self.namd.traj[j].rmsd_auxi[0][:3])
  #           if(j > 0): print("....",j-1,self.namd.traj[j-1].rmsd_auxi[0][:3])
-            Plot_IFP(df_prop_complete,out_name="namd-"+str(j)+".png")
+            Plot_IFP(df_prop_complete,out_name="") # "namd-"+str(j)+".png")
             sys.stdout.flush()
 
         return
@@ -989,7 +990,7 @@ class trajectories:
                     self.ramd.traj[j1][j2].Rgr_lig = Rgr_lig
                     self.ramd.traj[j1][j2].com_lig = com_lig
                     self.ramd.traj[j1][j2].rmsd_auxi = rmsd_auxi
-                    Plot_IFP(df_prop_complete,out_name="ramd-"+str(j2)+".png")
+                    Plot_IFP(df_prop_complete,out_name="") #"ramd-"+str(j2)+".png")
                 except:
                     print("\nERROR: IFP either were not generated or could not be stored in the traj object!\n")
                     pass
@@ -1472,9 +1473,13 @@ def  ligand_properties(ligand_pdb,ligand_mol2):
     ff.close()
     list_labels = []
     for line in lines:
-        if line.split()[0] == 'ATOM': list_labels.append(line.split()[2]) 
-
-    mol = Chem.rdmolfiles.MolFromMol2File(ligand_mol2,removeHs=False)   
+        if (line.split()[0] in ['ATOM',"HETATM"]): list_labels.append(line.split()[2]) 
+            
+    if os.path.exists(ligand_mol2):
+        mol = Chem.rdmolfiles.MolFromMol2File(ligand_mol2,removeHs=False)   
+    else:
+        print("MOL2 does not exist!   ligand properties will be derived from the PDB file i.e. aromatic properties will be missed")
+        mol = Chem.rdmolfiles.MolFromPDBFile(ligand_pdb,removeHs=False)
     fdefName = os.path.join(RDConfig.RDDataDir,'BaseFeatures.fdef')
     factory = ChemicalFeatures.BuildFeatureFactory(fdefName)
     feats = factory.GetFeaturesForMol(mol)
