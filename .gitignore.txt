@@ -1,0 +1,10 @@
+venv/
+
+Data/
+
+idea/
+
+ipynb_checkpoints/
+
+Scripts/_pycache_/
+
