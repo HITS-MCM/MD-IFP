@@ -6,5 +6,4 @@ Data/
 
 .ipynb_checkpoints/
 
-Scripts/_pycache_/
-
+Scripts/__pycache__/
