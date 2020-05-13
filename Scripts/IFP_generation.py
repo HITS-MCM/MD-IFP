@@ -56,7 +56,7 @@ import pandas as pd
 from pandas import ExcelFile 
 
 from matplotlib import *
-#from matplotlib import cm
+from matplotlib import cm
 #import matplotlib.ticker
 from matplotlib import gridspec
 import  pylab as plt
@@ -132,9 +132,9 @@ def IFP_list(property_list, sel_ligands, RE=True, Lipids = []):
         line = ""
         if "Hydrophobe" in property_list.keys():
             for l in tuple(set(property_list["Hydrophobe"])): line = line + l + " "
-            sel_a = " protein and (type C and (not  (name CG and resname ASN ASP))   and (not  (name CD and resname GLU GLN ARG))  and (not  (name CZ and resname TYR ARG))  and (not  (name CE and resname LYS)) and (not  (name CB and resname SER THR))   and (not  (name C and backbone)) and (not resname "+sel_ligands+" ))"                 
+            sel_a = " protein and ((type C or S) and (not  (name CG and resname ASN ASP))   and (not  (name CD and resname GLU GLN ARG))  and (not  (name CZ and resname TYR ARG))  and (not  (name CE and resname LYS)) and (not  (name CB and resname SER THR))   and (not backbone) and (not resname "+sel_ligands+" ))"                 
             sel_b = '((resname '+sel_ligands+") and (name "+line+") )"
-            IFP_prop_list.append(IFP_prop("HY",line,sel_a,sel_b,4.5))
+            IFP_prop_list.append(IFP_prop("HY",line,sel_a,sel_b,4.0))
     except:
         print("HY failed")
         pass
@@ -166,9 +166,11 @@ def IFP_list(property_list, sel_ligands, RE=True, Lipids = []):
             for l in tuple(set(property_list["PosIonizable"])): line = line + l +" "
         if "Aromatic" in property_list.keys():  # pi-pi
             for l in tuple(set(property_list["Aromatic"])): line = line + l +" "
-        if("PosIonizable" in property_list.keys()) or ("Aromatic" in property_list.keys()):
-            sel_b = '((resname '+sel_ligands+" ) and (name "+line+"))"
-            sel_a = "((resname PHE TRP TYR HIS HIE HID HE2) and (name CZ* CD* CE* CG* CH* NE* ND*))"      
+        sel_b = '((resname '+sel_ligands+" ) and (name "+line+"))"
+        sel_a = "((resname PHE TRP TYR HIS HIE HID HE2) and (name CZ* CD* CE* CG* CH* NE* ND*))"      
+        if("PosIonizable" in property_list.keys()): 
+            IFP_prop_list.append(IFP_prop("AR",line,sel_a,sel_b,4.5))
+        if("Aromatic" in property_list.keys()):
             IFP_prop_list.append(IFP_prop("AR",line,sel_a,sel_b,5.5))
     except:
         print("AR1 failed")
@@ -320,7 +322,7 @@ def IFP(u_mem,sel_ligands,property_list, WB_analysis = True, RE = True,Lipids = 
         hb.HydrogenBondAnalysis.DEFAULT_ACCEPTORS['OtherFF'] = hb.HydrogenBondAnalysis.DEFAULT_ACCEPTORS['OtherFF']+acceptor_line
         hb.WaterBridgeAnalysis.DEFAULT_ACCEPTORS['OtherFF'] = hb.WaterBridgeAnalysis.DEFAULT_ACCEPTORS['OtherFF']+acceptor_line
     
-    h = hb.HydrogenBondAnalysis(u_mem, selection1 ='resname '+sel_ligands,selection2=' not resname WAT HOH SOL '+sel_ligands, distance=3.1, angle=110, forcefield='OtherFF')
+    h = hb.HydrogenBondAnalysis(u_mem, selection1 ='resname '+sel_ligands,selection2=' not resname WAT HOH SOL '+sel_ligands, distance=3.3, angle=110, forcefield='OtherFF')
     print("Start HB analysis",datetime.datetime.now().time())
     h.run()
     h.generate_table()
@@ -333,7 +335,7 @@ def IFP(u_mem,sel_ligands,property_list, WB_analysis = True, RE = True,Lipids = 
         print("Start WB analysis",datetime.datetime.now().time())
         try:
             # will add O atom of water as an HB donor (it is concidered as acceptor by default assuming as a protein backbone atom)
-#            hb.WaterBridgeAnalysis.DEFAULT_DONORS['OtherFF'] = hb.WaterBridgeAnalysis.DEFAULT_DONORS['OtherFF']+tuple(set("O"))        
+            hb.WaterBridgeAnalysis.DEFAULT_DONORS['OtherFF'] = hb.WaterBridgeAnalysis.DEFAULT_DONORS['OtherFF']+tuple(set("O"))        
 #            hb.WaterBridgeAnalysis.DEFAULT_ACCEPTORS['OtherFF'] = hb.WaterBridgeAnalysis.DEFAULT_DONORS['OtherFF']+tuple(set("O"))        
 #            w = hb.WaterBridgeAnalysis(u_mem, 'resname '+sel_ligands, ' not resname WAT HOH SOL ',water_selection=" resname WAT HOH SOL ", 
 #                distance=3.5, angle=110, forcefield='OtherFF',output_format="donor_acceptor",order=3)
@@ -371,9 +373,10 @@ def IFP(u_mem,sel_ligands,property_list, WB_analysis = True, RE = True,Lipids = 
                 for u in u_list:  u_ar.append(u.resid)
                 if len(u_ar)> 0:
                     ar_resid, ar_n = np.unique(u_ar,return_counts=True)
-                    #print(ar_resid, ar_n)
+     #               print(ar_resid, ar_n)
                     for u in u_list:  
-                        if(u.resid in ar_resid[ar_n > 4]): found.append([IFP_type.name+"_"+u.resname+str(u.resid),u.name])
+                        if(u.resid in ar_resid[ar_n > 4]): 
+                                found.append([IFP_type.name+"_"+u.resname+str(u.resid),u.name])
                         # here we will check if cation (LYS or ARG) really contact an aromatic ring of the ligand
                         elif(u.resname in ["LYS","ARG"]):
                             if u.resname == "LYS" : cation = "LYS"
@@ -385,8 +388,8 @@ def IFP(u_mem,sel_ligands,property_list, WB_analysis = True, RE = True,Lipids = 
                          #       print("!!!!!!!!!!!!!  Cat-Ar  interactions found",u1_list)
             else:  
                 for u in u_list:
-                        found.append([IFP_type.name+"_"+u.resname+str(u.resid),u.name])
-                        
+                        found.append([IFP_type.name+"_"+u.resname+str(u.resid),u.name]) 
+                        if IFP_type.name == "HL": print("HAL:",u.resname,u.resid,u.name)
                 
             if(found): 
                 IFP_type.contacts.append((i,found))
@@ -417,7 +420,7 @@ def IFP(u_mem,sel_ligands,property_list, WB_analysis = True, RE = True,Lipids = 
 ####################################################################################################
 def table_combine(df_HB,df_WB,df_prop,ligand_name,residues_name = [],start=0,stop=None,step=1):
     """
-    Patameters:
+    Parameters:
     df_HB - H-bond table
     df_prop - IFP table 
     ligand_name      - ligand nale
@@ -530,7 +533,7 @@ def table_combine(df_HB,df_WB,df_prop,ligand_name,residues_name = [],start=0,sto
         df_WB_INH = df_WB[(df_WB.sele1_resnm.isin([ligand_name]) & df_WB.sele2_resnm.isin(["WAT","HOH","SOL"]))]
 #        print(df_WB_INH)
         # get a list of WAT-Prot (sele1 - sele2)
-        df_WB_Prot = df_WB[(~(df_WB.sele2_resnm.isin([ligand_name,"WAT"])) & (df_WB.sele1_resnm.isin(["WAT","HOH","SOL"])))]
+        df_WB_Prot = df_WB[(~(df_WB.sele2_resnm.isin([ligand_name,"WAT","HOH","SOL"])) & (df_WB.sele1_resnm.isin(["WAT","HOH","SOL"])))]
 #        print(df_WB_Prot)
  #       df_WB_WAT = df_WB[((df_WB.sele2_resnm == "WAT") & (df_WB.sele1_resnm == "WAT"))]
         for t in df_WB.time.unique().tolist():
@@ -647,7 +650,11 @@ def Plot_IFP(df,contact_collection=None,out_name=""):
     contact_collection - set of IFP to be shown
     Returns:
     """
-    color = ['r','b','forestgreen','lime','m','c','teal','orange','yellow','goldenrod','olive','tomato','salmon','seagreen']
+ #   color = ['r','b','forestgreen','lime','m','c','teal','orange','yellow','goldenrod','olive','tomato','salmon','seagreen']
+    top = cm.get_cmap('Oranges_r', 128)
+    bottom = cm.get_cmap('Blues', 128)
+    color = np.vstack((top(np.linspace(0, 1, 128)),
+                       bottom(np.linspace(0, 1, 128))))
     ifp_list = ["HY","AR","HD","HA","HL","IP","IN","WB","LIP"]
     columns_IFP = []  # standard IFP
     columns_CONT = []  # just contacts
@@ -665,7 +672,8 @@ def Plot_IFP(df,contact_collection=None,out_name=""):
     ax.set_title('IFP')
     df1 = df[columns_IFP].values
     xticklabels = columns_IFP
-    sns.heatmap(np.float32(df1), cmap="YlGnBu", xticklabels=xticklabels)
+    if len(columns_IFP) < 10:  sns.heatmap(np.float32(df1), cmap="YlGnBu", xticklabels=xticklabels)
+    else:  sns.heatmap(np.float32(df1), cmap="YlGnBu")
     ax.set_title('IFP')
     
     if( df[columns_CONT].shape[1] > 0):
@@ -681,7 +689,8 @@ def Plot_IFP(df,contact_collection=None,out_name=""):
         if ("Repl"  in df.columns.tolist()):
             for i,r in  enumerate(np.unique(df.Repl.tolist())):
                 plt.plot(df[df.Repl == r]["WAT"], marker='o', linewidth = 0,color = color[i],label=r)
-            plt.legend()
+            if np.unique(df.Repl.tolist()).shape[0] < 10:
+                plt.legend()
         else:
             plt.plot(df["WAT"],'go')
         ax.set_title('Water shell')
