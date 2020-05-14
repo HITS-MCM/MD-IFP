@@ -4,9 +4,8 @@
 
 __Authors:__
 
-Daria Kokh
-
-Fabian Ormersbach preprocessing PDB files using Chimera (Process_pdb.py, chimera_hydrogen_mol2.py; test examples revised) 
+* Daria Kokh
+* Fabian Ormersbach - preprocessing PDB files using Chimera (Process_pdb.py, chimera_hydrogen_mol2.py; test examples revised) 
 
 v.1.0
 Daria.Kokh@h-its.org
@@ -46,6 +45,8 @@ __Process_pdb.py__   - preprocessing PDB files (splitting into ligand and protei
 
 __chimera_hydrogen_mol2.py__  - generation ligand mole2 file
 
+__Membrane_analysis.py__ - computation of the membrane surface area per lipid and membrane/protein/water atom density distribution  
+
 
 ## Data employed in test examples: 
 https://zenodo.org/record/3755337#.XrF-iGgzaUk
@@ -54,14 +55,14 @@ https://zenodo.org/record/3755337#.XrF-iGgzaUk
 
 I. __IFP_generation_examples_PDB.ipynb:__
 
-examples of Protein-Ligand IFP computations (only function of IFP_generation.py are used) for:
+Protein-Ligand IFP computations (only function of IFP_generation.py are used) for:
    1. a single structure prepared for MD simulations (HSP90; PDB ID 6EI5, dcd format)
    2. a trajectory (for selected frames; dcd format)
    3. a PDB structure
 
 II. __IFP_generation_examples_TRAJ.ipynb:__ 
 
-examples of generation and analysis of  IFPs for plain MD simulations and RAMD trajectories for Muscarinic Receptor M2 in a membrane
+generation and analysis of  IFPs for plain MD simulations and RAMD trajectories for Muscarinic Receptor M2 in a membrane
 in this example Trajectories.py is used for pre-processing trajectories and  IFP_generation.py for computing IFPs
    1. Computing IFPs for equilibrated trajectories in dcd format
    3. Computing IFPs for ligand dissociation trajectories
@@ -69,6 +70,10 @@ in this example Trajectories.py is used for pre-processing trajectories and  IFP
 
 III. __IFP_generation_examples_Analysis.ipynb:__ 
 
-example of RAMD dissociation trajectories analysis using pre-generated IFP database 
+RAMD dissociation trajectories analysis using pre-generated IFP database 
 
-   1. Example of HSP90
+   
+IV. __membrane_analysis_example.ipynb__
+
+Exploring behavior of a membrane-protein system in MD simulations
+
