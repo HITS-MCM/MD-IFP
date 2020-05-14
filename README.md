@@ -6,7 +6,7 @@ __Authors:__
 
 Daria Kokh
 
-Fabian Ormersbach (chimera_hydrogen_mol2.py; test examples revised) 
+Fabian Ormersbach preprocessing PDB files using Chimera (Process_pdb.py, chimera_hydrogen_mol2.py; test examples revised) 
 
 v.1.0
 Daria.Kokh@h-its.org
@@ -20,9 +20,10 @@ Schloss-Wolfsbrunnenweg 35
 ## __Packages requirements:__
     Python 3.x
     numpy;    pandas;  matplotlib;  MDAnalysis;  RDkit;   scipy; ngview
-    for 
+    Chimera - only for the scripts used for preprocessing pdb files (structure protonation and generation of the ligand mol2 file); not requared if protonation and mol2 file are already prepared by a user)
     
 __Codes were written on Python 3.x and tested on Python 3.7__
+
 __To configure envirement in anaconda use__
 conda env create -f IFP_trajectory.yml
 
@@ -30,25 +31,40 @@ conda env create -f IFP_trajectory.yml
 
 ## Scripts:
 
-__Clustering.py__   - functions for analysis of trajectories using IFP data   (is still under developments)
+
+__Trajectories.py__  - functions for building a trajectory object for reading and analysis standard MD and RAMD trajectories and computation of relative residence times
 
 __IFP_generation.py__  -  functions for generation of IFPs
+
 __Membrane_analysis.py__ - functions for analysis of membrane-protein systems 
-__Trajectories.py__  - functions for building a trajectory object for reading and analysis standard MD and RAMD trajectories and computation of relative residence times
+
+__Clustering.py__   - functions for analysis of trajectories using IFP data   (is still under developments)
+
+
 
 ## Data employed in test examples: 
 https://zenodo.org/record/3755337#.XrF-iGgzaUk
        
-## Example jupyter notebooks :
+## Test example as jupyter notebooks :
 
-1. __IFP_generation_examples_PDB.ipynb:__
+I. __IFP_generation_examples_PDB.ipynb:__
 
 an examples of Protein-Ligand IFP computations for
-  ** a single structure prepared for MD simulations (HSP90; PDB ID 6EI5, dcd format)
-  ** a trajectory (for selected frames; dcd format)
-  ** a PDB structure
+   1. a single structure prepared for MD simulations (HSP90; PDB ID 6EI5, dcd format)
+   2. a trajectory (for selected frames; dcd format)
+   3. a PDB structure
 
-2. __IFP_generation_example_TRAJ.ipynb: example of generation and analysis of Ligand-Protein IFPs for RAMD simulations (dcd trajectories):__
-  ** Computing interaction fingerprints (IFP) for
-  ** system equilibration trajectory
-  ** ligand dissociation trajectories
+II. __IFP_generation_examples_TRAJ.ipynb:__ 
+
+example of generation and analysis of Ligand-Protein IFPs for RAMD simulations (dcd trajectories)
+
+   1. Computing interaction fingerprints (IFP) for
+   2. system equilibration trajectory
+   3. ligand dissociation trajectories
+
+
+III. __IFP_generation_examples_Analysis.ipynb:__ 
+
+example of RAMD dissociation trajectories analysis using pre-generated IFP database 
+
+   1. Example of HSP90
