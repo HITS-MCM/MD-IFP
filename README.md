@@ -55,7 +55,7 @@ https://zenodo.org/record/3755337#.XrF-iGgzaUk
 
 I. __IFP_generation_examples_PDB.ipynb:__
 
-Protein-Ligand IFP computations (only function of IFP_generation.py are used) for:
+Protein-Ligand interaction fingerprint (IFP) computations (only function of IFP_generation.py are used) for:
    1. a single structure prepared for MD simulations (HSP90; PDB ID 6EI5, dcd format)
    2. a trajectory (for selected frames; dcd format)
    3. a PDB structure
@@ -64,9 +64,8 @@ II. __IFP_generation_examples_TRAJ.ipynb:__
 
 generation and analysis of  IFPs for plain MD simulations and RAMD trajectories for Muscarinic Receptor M2 in a membrane
 in this example Trajectories.py is used for pre-processing trajectories and  IFP_generation.py for computing IFPs
-   1. Computing IFPs for equilibrated trajectories in dcd format
-   3. Computing IFPs for ligand dissociation trajectories
-
+   1. Computing IFPs for system equilibration trajectory (dcd format)
+   3. Computing IFPs for ligand dissociation trajectories (dcd format)
 
 III. __IFP_generation_examples_Analysis.ipynb:__ 
 
