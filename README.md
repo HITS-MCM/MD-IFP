@@ -8,9 +8,13 @@ __Authors:__
 * Fabian Ormersbach - preprocessing PDB files using Chimera (Process_pdb.py, chimera_hydrogen_mol2.py; test examples revised) 
 
 v.1.0
+
 Daria.Kokh@h-its.org
+
 Heidelberg Institute of Theoretical Studies (HITS, www.h-its.org)
+
 Schloss-Wolfsbrunnenweg 35
+
 69118 Heidelberg, Germany
     
 
@@ -19,7 +23,7 @@ Schloss-Wolfsbrunnenweg 35
 ## __Packages requirements:__
 __Python 3.x__
 
-__Python Libraries:__ numpy;    pandas;  matplotlib;  MDAnalysis;  RDkit;   scipy; ngview
+__Python Libraries:__ numpy;    pandas;  matplotlib;  MDAnalysis;  seaborn; RDkit; sklearn;  scipy; ngview 
 
 __Chimera__ - only for the scripts used for preprocessing pdb files (structure protonation and generation of the ligand mol2 file); not requared if protonation and mol2 file are already prepared by a user)
     
@@ -69,8 +73,9 @@ in this example Trajectories.py is used for pre-processing trajectories and  IFP
 
 III. __IFP_generation_examples_Analysis.ipynb:__ 
 
-RAMD dissociation trajectories analysis using pre-generated IFP database 
-
+This example shows how RAMD dissociation trajectories can be analyzed usinf pre-generated IFP database 
+![HSP90](/images/cluster-traj.png)
+*This plot visualizes ligand dissociation pathways in a graph representation*
    
 IV. __membrane_analysis_example.ipynb__
 
