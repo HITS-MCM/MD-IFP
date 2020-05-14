@@ -1,3 +1,23 @@
+#!/usr/bin/env python
+# coding: utf-8
+#
+# # Package for analysis of RAMD dissociation tarjectories using Interaction Fingerprints 
+#############################
+### v 1.0
+#
+#    Copyright (c) 2020
+#    Released under the GNU Public Licence, v2 or any higher version
+#    
+### Author: Daria Kokh
+#    Daria.Kokh@h-its.org
+#    Heidelberg Institute of Theoretical Studies (HITS, www.h-its.org)
+#    Schloss-Wolfsbrunnenweg 35
+#    69118 Heidelberg, Germany
+################################# 
+
+
+
+
 import glob, os
 import sys
 import subprocess
@@ -26,762 +46,6 @@ from sklearn import linear_model
 from sklearn import preprocessing
 from sklearn.cluster import KMeans
 
-from kmodes.kmodes import KModes
-
-
-########################################
-#
-#  PLOT results of the clastering analysis
-#  plot only trajectories where ligand completely dissociated (RMSD of the last snapshot is > 10A) 
-#  plot only trajectories where ligand  started with RMSD < 10A
-#
-########################################
-
-def plot_graph(df_ext,cluster_show=-1,replica_show = False):
-    """
-    Parameters:
-    df_ext - IFP database
-    cluster_show - cluster of trajectories to be highlighed 
-    Returns:
-    """
-    """   
-    label_time = []
-    label_timeSD = []
-    label_rmsd = []
-    label_rmsdSD = []
-    label_wat = []
-    label_watSD = []
-    label_repl = []
-    label_size = []
-    label_rgyr = []
-    label_rgyrSD = []
-    label_length = []
-    label_lengthSD = []
-
-
-    labels_list = np.unique(df_ext.label.tolist())
-    for l in labels_list:
-        t = df_ext[df_ext.label == l]
-        label_time.append(int(t.time.mean()))
-        if(len(t.time.tolist())>1):     label_timeSD.append(int(t.time.std()))
-        else:  label_timeSD.append(0)
-        label_length.append(int(t.length.mean()))
-        if(len(t.time.tolist())>1):     label_lengthSD.append(int(t.length.std()))
-        else:  label_lengthSD.append(0)
-        label_rmsd.append(t.RMSDl.mean())
-        if(len(t.time.tolist())>1):     label_rmsdSD.append(t.RMSDl.std())
-        else:  label_rmsdSD.append(0)
-        label_wat.append(int(t.WAT.mean()))
-        if(len(t.time.tolist())>1):     label_watSD.append(int(t.WAT.std()))
-        else:  label_watSD.append(0)
-        label_rgyr.append(t.RGyr.mean())
-        if(len(t.time.tolist())>1):     label_rgyrSD.append(t.RGyr.std())
-        else:  label_rgyrSD.append(0)
-        label_repl.append(np.unique(t.Repl.tolist(), return_counts=True))
-        label_size.append(t.shape[0])
-
-    
-    starting_labels = df_ext[df_ext.time == 0].label.tolist() # list of clusters of all first frames in all trajectories
-    starting_list, starting_count = np.unique(starting_labels, return_counts=True) # list of clusters that appear as first frame
-
-    label2scale = label_rmsd # what value will be on x
-
-    index_x_t = np.argsort(label2scale)
-    # x and y positions of each cluster in the plot
-    label_y = labels_list
-    label_x = np.zeros((len(labels_list)),dtype = float)  
-
-    max_x = max(label2scale)
-    step_x = 1.0*max_x/max(label2scale)
-    
-    # order label_x: 
-    # firt clasters that contain first frames of trajectories
-    for i,s in enumerate(starting_list):
-        label_x[s] = label2scale[s]*step_x
-        label_y[s] = labels_list[s]
-    # then the rest 
-    j = 0
-    for l in index_x_t:
-        if (labels_list[l] not in starting_list):
-            while (label_x[j] != 0):
-                j += 1
-                if(j == len(labels_list)): break
-            if(j == len(labels_list)):break
-            label_x[labels_list[l]] = label2scale[l]*step_x 
-            label_y[labels_list[l]] = labels_list[l] #5+20*np.random.rand(1)[0]
-        
-    # s in label_x: print("x-position",s)    
-    #color = ['r','b','forestgreen','lime','m','c','teal','orange','yellow','goldenrod','olive','tomato','salmon','seagreen']
-    label_x = np.log10(label_x)
-    x_tick_lable = []
-    x_tick_pos = []
-    for k in range(0,2):
-        for ii,i in enumerate(range(pow(10,k),pow(10,k+1),pow(10,k))):  
-            if(ii == 0): x_tick_lable.append(str(i))
-            else: x_tick_lable.append("")
-            x_tick_pos.append(np.log10(i))
-            if(i > 25): break
-
-               
-    if "ligand" in df_ext.columns.tolist():
-        if replica_show:
-            lig_repl_list = np.unique(np.asarray(tuple(zip(df_ext.ligand,df_ext.Repl))),axis=0)
-        else:
-            lig_repl_list = np.unique(np.asarray(df_ext.ligand))
-    else:
-        lig_repl_list = np.unique(df_ext.Repl.tolist())
-        
-    #------------------------------------------    
-    for i,r in  enumerate(lig_repl_list):# loop over ligand/replicas or ligand
-        if "ligand" in df_ext.columns.tolist(): 
-            if replica_show:
-                rr0 = df_ext[df_ext.ligand == r[0]]  
-                rr = rr0[rr0.Repl == r[1]]  
-                name = r[0]+" "+r[1]
-            else:
-                rr = df_ext[df_ext.ligand == r]
-                name = r
-        else:   
-            rr = df_ext[df_ext.Repl == r]
-            name = r
-        
-        fig = plt.figure(figsize=(16, 5))
-        gs = gridspec.GridSpec(1, 3, width_ratios=[6, 1, 1]) 
-        ax = plt.subplot(gs[0])
-        subset_labels = np.unique(rr.label.tolist())
-        #  firs plot all cluster nodes
-        ax.scatter(label_x[subset_labels],label_y[subset_labels],\
-                   facecolors='none',color ='orange',marker='o',alpha=0.8,\
-               s=2*np.asarray(label_size)[subset_labels])
-        
-        for txt in labels_list[subset_labels]:
-            ax.annotate(txt, (label_x[txt],label_y[txt]),fontsize=12)
-        
-        for j,traj in  enumerate(np.unique(rr.Traj.tolist())): # loop over trajectories
-            # select only trajectories where ligand completely dissociated
-            rr_traj_r = rr[rr.Traj == traj]
-            
-            for repl  in np.unique(rr_traj_r.Repl.tolist()):
-                rr_traj = rr_traj_r[rr_traj_r.Repl == repl] 
-                if((np.asarray(rr_traj.RMSDl.tolist())[-1] > 10 ) \
-                        and (np.asarray(rr_traj.RMSDl.tolist())[0] < 2.5)):
-                    traj_list = np.asarray(rr_traj.label.tolist())  # list of the lables for all frame sequentially
-                    traj_x = []
-                    traj_y = []
-                    for t in traj_list: # list of the cluster visited in the trajectory
-                        traj_x.append(label_x[t])
-                        traj_y.append(label_y[t])
-                    color = "k"
-                # show one selected trajectory (replica, trajectory)
-                    lw = 0.5 # line width in the plot
-                    color = 'k'
-                    if cluster_show >= 0:
-                        if (rr_traj.traj_cluster.tolist()[0] == cluster_show): 
-                            lw ,color = 5,"dodgerblue"
-                    ax.plot(traj_x,traj_y, color = color,linewidth=lw,alpha=0.5)
-                # # let us plot final point in the trajectory
-                    ax.scatter(traj_x[-1],traj_y[-1], color ='red',alpha=0.3,s=500)
-                    ax.scatter(traj_x[0],traj_y[0], color ='green',alpha=0.3,s=500)
-                
-        ax.set_ylabel('Cluster', fontsize=20)
-        ax.set_xlabel('log10(<RMSD>) /a.u.', fontsize=16) 
-        plt.xticks(x_tick_pos,x_tick_lable, fontsize=16)
-        ax.tick_params(labelsize=16)
-        plt.title(name, fontsize=20)
-        ax1 = plt.subplot(gs[1])
-        ax1.errorbar(x=np.asarray(label_wat)[subset_labels],y=np.asarray(labels_list)[subset_labels],\
-                 xerr=np.asarray(label_watSD)[subset_labels],color = 'k', alpha=0.6,marker='o',lw=0.5)
-        ax1.set_xlabel('water #', fontsize=16) 
-        ax1.tick_params(labelsize=16)
-        ax2 = plt.subplot(gs[2])
-        ax2.errorbar(x=np.asarray(label_rgyr)[subset_labels],y=np.asarray(labels_list)[subset_labels],\
-                 xerr=np.asarray(label_rgyrSD)[subset_labels],color = 'k', alpha=0.6,marker='o',lw=0.5)
-        ax2.set_xlabel('RGyr #', fontsize=16) 
-        ax2.tick_params(labelsize=16)
-#    plt.savefig(tr.PRJ_DIR+name+"-ifp.png")
-    plt.show()
-    return 
-    """
-
-   
-    label_time = []
-    label_timeSD = []
-    label_rmsd = []
-    label_rmsdSD = []
-    label_wat = []
-    label_watSD = []
-    label_repl = []
-    label_size = []
-    label_rgyr = []
-    label_rgyrSD = []
-    label_length = []
-    label_lengthSD = []
-
-
-    labels_list = np.unique(df_ext.label.tolist())
-    for l in labels_list:
-        t = df_ext[df_ext.label == l]
-        label_time.append(int(t.time.mean()))
-        if(len(t.time.tolist())>1):     label_timeSD.append(int(t.time.std()))
-        else:  label_timeSD.append(0)
-        label_length.append(int(t.length.mean()))
-        if(len(t.time.tolist())>1):     label_lengthSD.append(int(t.length.std()))
-        else:  label_lengthSD.append(0)
-        label_rmsd.append(t.RMSDl.mean())
-        if(len(t.time.tolist())>1):     label_rmsdSD.append(t.RMSDl.std())
-        else:  label_rmsdSD.append(0)
-        label_wat.append(int(t.WAT.mean()))
-        if(len(t.time.tolist())>1):     label_watSD.append(int(t.WAT.std()))
-        else:  label_watSD.append(0)
-        label_rgyr.append(t.RGyr.mean())
-        if(len(t.time.tolist())>1):     label_rgyrSD.append(t.RGyr.std())
-        else:  label_rgyrSD.append(0)
-        label_repl.append(np.unique(t.Repl.tolist(), return_counts=True))
-        label_size.append(t.shape[0])
-
-    
-    starting_labels = df_ext[df_ext.time == 0].label.tolist() # list of clusters of all first frames in all trajectories
-    starting_list, starting_count = np.unique(starting_labels, return_counts=True) # list of clusters that appear as first frame
-
-    label2scale = label_rmsd # what value will be on x
-
-    index_x_t = np.argsort(label2scale)
-    # x and y positions of each cluster in the plot
-    label_y = labels_list
-    label_x = np.zeros((len(labels_list)),dtype = float)  
-
-    max_x = max(label2scale)
-    step_x = 1.0*max_x/max(label2scale)
-    
-    # order label_x: 
-    # firt clasters that contain first frames of trajectories
-    for i,s in enumerate(starting_list):
-        label_x[s] = label2scale[s]*step_x
-        label_y[s] = labels_list[s]
-    # then the rest 
-    j = 0
-    for l in index_x_t:
-        if (labels_list[l] not in starting_list):
-            while (label_x[j] != 0):
-                j += 1
-                if(j == len(labels_list)): break
-            if(j == len(labels_list)):break
-            label_x[labels_list[l]] = label2scale[l]*step_x 
-            label_y[labels_list[l]] = labels_list[l] #5+20*np.random.rand(1)[0]
-        
-    # s in label_x: print("x-position",s)    
-    #color = ['r','b','forestgreen','lime','m','c','teal','orange','yellow','goldenrod','olive','tomato','salmon','seagreen']
-    label_x = np.log10(label_x)
-    x_tick_lable = []
-    x_tick_pos = []
-    for k in range(0,2):
-        for ii,i in enumerate(range(pow(10,k),pow(10,k+1),pow(10,k))):  
-            if(ii == 0): x_tick_lable.append(str(i))
-            else: x_tick_lable.append("")
-            x_tick_pos.append(np.log10(i))
-            if(i > 25): break
-
-               
-    if "ligand" in df_ext.columns.tolist():
-        if replica_show:
-            lig_repl_list = np.unique(np.asarray(tuple(zip(df_ext.ligand,df_ext.Repl))),axis=0)
-        else:
-            lig_repl_list = np.unique(np.asarray(df_ext.ligand))
-    else:
-        lig_repl_list = np.unique(df_ext.Repl.tolist())
-        
-    #------------------------------------------    
-    for i,r in  enumerate(lig_repl_list):# loop over ligand/replicas or ligand
-        if "ligand" in df_ext.columns.tolist(): 
-            if replica_show:
-                rr0 = df_ext[df_ext.ligand == r[0]]  
-                rr = rr0[rr0.Repl == r[1]]  
-                name = r[0]+" "+r[1]
-            else:
-                rr = df_ext[df_ext.ligand == r]
-                name = r
-        else:   
-            rr = df_ext[df_ext.Repl == r]
-            name = r
-        
-        fig = plt.figure(figsize=(16, 5))
-        gs = gridspec.GridSpec(1, 4, width_ratios=[1, 6, 1, 1]) 
-        ax = plt.subplot(gs[1])
-        subset_labels = np.unique(rr.label.tolist())
-        #  firs plot all cluster nodes
-        ax.scatter(label_x[subset_labels],label_y[subset_labels],\
-                   facecolors='none',color ='orange',marker='o',alpha=0.8,\
-               s=2*np.asarray(label_size)[subset_labels])
-        
-        for txt in labels_list[subset_labels]:
-            ax.annotate(txt, (label_x[txt],label_y[txt]),fontsize=18)
-        
-        for j,traj in  enumerate(np.unique(rr.Traj.tolist())): # loop over trajectories
-            # select only trajectories where ligand completely dissociated
-            rr_traj_r = rr[rr.Traj == traj]
-            for repl  in np.unique(rr_traj_r.Repl.tolist()):
-                rr_traj = rr_traj_r[rr_traj_r.Repl == repl] 
-#                print("----",traj,np.asarray(rr_traj.RMSDl.tolist())[-1],\
-#                                             np.asarray(rr_traj.RMSDl.tolist())[0])
-                if((np.asarray(rr_traj.RMSDl.tolist())[-1] > 10 ) \
-                        and (np.asarray(rr_traj.RMSDl.tolist())[0] < 5)):
-                    traj_list = np.asarray(rr_traj.label.tolist())  # list of the lables for all frame sequentially
-                    traj_x = []
-                    traj_y = []
-                    for t in traj_list: # list of the cluster visited in the trajectory
-                        traj_x.append(label_x[t])
-                        traj_y.append(label_y[t])
-                    color = "k"
-                # show one selected trajectory (replica, trajectory)
-                    lw = 2 # line width in the plot
-                    color = 'k'
-                    if cluster_show >= 0:
-                        if (rr_traj.traj_cluster.tolist()[0] == cluster_show): 
-                            lw ,color = 5,"dodgerblue"
-                    ax.plot(traj_x,traj_y, color = color,linewidth=lw,alpha=0.3)
-                # # let us plot final point in the trajectory
-                    ax.scatter(traj_x[-1],traj_y[-1], color ='red',alpha=0.3,s=500)
-                    ax.scatter(traj_x[0],traj_y[0], color ='green',alpha=0.3,s=500)
-
-                
-        ax.set_ylabel('Cluster', fontsize=20)
-        ax.set_xlabel('log10(<RMSD>) /a.u.', fontsize=20) 
-        plt.xticks(x_tick_pos,x_tick_lable, fontsize=20)
-        ax.tick_params(labelsize=20)
-        plt.title(name, fontsize=20)
-        plt.grid()
-        
-        ax1 = plt.subplot(gs[2])
-        ax1.errorbar(x=np.asarray(label_wat)[subset_labels],y=np.asarray(labels_list)[subset_labels],\
-                 xerr=np.asarray(label_watSD)[subset_labels],color = 'k', alpha=0.6,marker='o',lw=0.5)
-        ax1.set_xlabel('water #', fontsize=20) 
-        ax1.tick_params(labelsize=20)
-        plt.grid()
-        
-        ax2 = plt.subplot(gs[3])
-        ax2.errorbar(x=np.asarray(label_rgyr)[subset_labels],y=np.asarray(labels_list)[subset_labels],\
-                 xerr=np.asarray(label_rgyrSD)[subset_labels],color = 'k', alpha=0.6,marker='o',lw=0.5)
-        ax2.set_xlabel('RGyr #', fontsize=20) 
-        ax2.tick_params(labelsize=20)
-        plt.grid()
-        
-        ax0 = plt.subplot(gs[0])
-        population = np.zeros((len(labels_list)))
-        for lab in np.sort(np.unique(subset_labels)):
-            population[lab] = rr[rr.label==lab].shape[0]
-        ax0.errorbar(x=population/np.max(population),y=np.asarray(labels_list)\
-                 ,color = 'k', alpha=0.6,marker='o',lw=1)
-        ax0.set_xlabel('population', fontsize=20) 
-        ax0.tick_params(labelsize=20)
-        plt.grid()
-
-#    plt.savefig(tr.PRJ_DIR+name+"-ifp.png")
-    plt.show()
-    return  (index_x_t)
-
-######################################
-#
-#
-#####################################
-def Plot_cluster_IFP(df_ext,ligand,label_list,resi_name_list_sorted,ind_part_resi,delta_list=[0,0],chain_length = -1,file_save=""):  #[18,164]):
-
-
-
-    df_ext_lig = df_ext[df_ext.ligand == ligand]
-
-    contact_list = []
-    population_list = []
-    for label in label_list:
-        df_ext_lig_lab = df_ext_lig[df_ext_lig.label == label]
-        c = []
-        p = []
-        for l in df_ext_lig_lab.columns.tolist():
-            try:
-                if(chain_length > 0 and int(l[6:]) > chain_length): delta=delta_list[1]
-                else: delta = delta_list[0]
-                delta = 0
-                new_list_col= l[3:6]+str(int(l[6:])+delta)
-                if new_list_col in resi_name_list_sorted[ind_part_resi]:
-                    if(df_ext_lig_lab[l].sum(axis=0)> 5):
- #                   print(l,new_list_col,df_ext_lig_lab[l].sum(axis=0))
-                        c.append(new_list_col)
-                        p.append(df_ext_lig_lab[l].sum(axis=0))
-            except:
-                pass
-        contact_list.append(c)
-        population_list.append(p)
-    
-    resi_list = []
-    for l in contact_list:
-        for c in l: resi_list.append(c)
-        
-    resi_list = np.unique(np.asarray(resi_list))
-
-    n = []
-    for t in resi_list:  n.append(t[3:])
-    ind_sorted = np.argsort(np.asarray(n))  
-
-
-    ar = np.zeros((len(label_list), len(resi_list)))
-    for i,l in enumerate(label_list):
-        for c,p in zip(contact_list[i],population_list[i]):
-            ind = np.argwhere(resi_list[ind_sorted] == c)[0][0]
-            ar[i,ind]=p
-        
-    fig = plt.figure(figsize = (16, 8),facecolor='w')
-    ax = plt.subplot(1,1,1)
-    plt.imshow(ar,cmap='Blues')
-    plt.xticks(range(0,len(resi_list)),resi_list[ind_sorted],rotation=90,fontsize=16)
-    plt.yticks(range(0,len(label_list)),label_list,rotation=90,fontsize=16)
-    if file_save !="":plt.savefig(file_save,dpi=300)  
-    else: plt.show()
-#ax.set_yticklabels(label_list)
-    return
-
-
-########################################
-#
-#     Clusterign of trajectories based on the list of graph set for all trajectories
-#
-########################################
-   
-def cluster_trajectories(df_ext,labels_list, n_CL=10, RMSD_threshold=3,transition_matrix = False):
-    """
-    Parameters:
-    df_ext - IFP database
-    labels_list- practically a list of cluster numbers obtained from clastaring of all snapshots
-    n_CL - number of clusters
-    RMSD_threshold - RMSD threshold setting  which snapshot should be considered
-    transition_matrix - defines either transition matrix between states (True) 
-                        or just the frequency of visiting a state should be used  for clustering
-    
-    Returns:
-    traj_all_clusters
-    kmeansT - list of labels
-    similarity_summary -  mean and std of pair-wise similarity in the cluster 
-    """
-
-    similarity_summary = []
-    #  database may contain "ligand" column
-    if "ligand" in df_ext.columns.tolist():
-        lig_repl_list = np.unique(np.asarray(tuple(zip(df_ext.ligand,df_ext.Repl))),axis=0)
-    else:
-        lig_repl_list = np.unique(df_ext.Repl.tolist())
-            
-    graph = []  # will accomulate transition matrixes for all trajectories
-    complete_name = []
-    l = 0
-    save_x = []  # in this array we will save exactly ligand, replica, and traj to be able to asign trajectory to a particular cluster
-    
-    for i,r in  enumerate(lig_repl_list):# loop over ligands and replicas
-        if "ligand" in df_ext.columns.tolist(): 
-            rr0 = df_ext[df_ext.ligand == r[0]]  # ligand sub-set
-            rr = rr0[rr0.Repl == r[1]]           # ligand-replica sub-set
-            name = r[0]+" "+r[1]
-        else:   
-            print("Error: missing column ligand in the database! ")  # just replica sub-set in the case if "ligand" column is absent
-
-        for j,traj in  enumerate(np.unique(rr.Traj.tolist())): # loop over trajectories
-            tt_all = rr[rr.Traj== traj] # trajectory sub-set
-            tt = tt_all[tt_all.RMSDl > RMSD_threshold]  # part of the trajectory with RMSD above a certain threshold
-            cluster, dens = np.unique(tt.label.tolist(), return_counts=True)  # clusters and their population
-            if transition_matrix:
-                #----------- transition matrix-----------------
-                graph_traj = np.zeros((len(labels_list),len(labels_list)),dtype = float)  # transition matrix for one trajeectory
-                for c,d in zip(cluster, dens):
-                    graph_traj[c,c] = 1 #1.0*d/length   # cluster visited (diogonal terms of the transition matrix)
-                for i,t in enumerate(tt.label.tolist()):
-                    if(i > 0):
-                        graph_traj[tt.label.tolist()[i],tt.label.tolist()[i-1]] = 1# += 1.0/length
-                #------------------------------------------------
-            else:
-                #--------------- visiting matrix ------------------
-                graph_traj = np.zeros((len(labels_list)),dtype = float) 
-                for c,d in zip(cluster, dens):
-                    graph_traj[c] = d/tt.shape[0]
-                
-            graph.append(graph_traj.flatten()) 
-            complete_name.append(name+"_"+str(j))
-            l += 1
-            save_x.append(r[0]+" "+r[1]+" "+traj)
-    
-    X = np.asarray(graph)
-    
-    print("===== Matrix for clustering ====")
-    print("that containes flattered graphs matrixes for all RAMD trajectories (shape: X.shape)")
-    print("Database:",df_ext.shape,"Matrix",X.shape,"altougether trajectoies:",l)
-    
-    similarity_matrix = np.zeros((X.shape[0],X.shape[0]),dtype = float)
-    # compute and plot similarity matrix
-    for i in range(0,X.shape[0]):
-        sim = []
-        for j in range(i+1,X.shape[0]):
-            similarity_matrix[i,j] = np.linalg.norm(graph[i]-graph[j])#np.sum(np.multiply(graph[i],graph[j]))
-            similarity_matrix[j,i] = similarity_matrix[i,j] 
-
-            
-
-    kmeansT = KMeans(n_clusters=n_CL, random_state=0, n_init = 20, max_iter = 500).fit(X)
-    
-    Y = []
-    for l in np.unique(kmeansT.labels_):
-        x0 = []
-        for i in range(0,X.shape[0]):
-            if(kmeansT.labels_[i] == l): x0.append(X[i])  
-        Y.append(np.mean(np.asarray(x0),axis = 0))
-    plt.figure(figsize = (10,10))
-    g = sns.heatmap(np.asarray(Y).T,linewidth = 0, cmap ="YlGnBu")
-    plt.show()
-    
-    # now we will make a list that asigns labels to each snapshot in the database
-    traj_clust_labels = np.zeros((df_ext.shape[0]),dtype = np.int8)
-    save_x = np.asarray(save_x)
-    j = 0
-    for i in range(0,df_ext.shape[0]):
-        l_r_t = df_ext.iloc[i]["ligand"]+" "+df_ext.iloc[i]["Repl"]+" "+df_ext.iloc[i]["Traj"]
-        if(l_r_t in save_x):
-            traj_clust_labels[i] = kmeansT.labels_[np.argwhere(save_x == l_r_t)]
-    
-    # Visualize clusters
-
-    mask = kmeansT.labels_
-    sim_p_w_m_mean = []
-    sim_p_w_m_std = []  
-    sim_p_w_d_mean = []
-    sim_p_w_d_std = []  
-    for l in np.unique(kmeansT.labels_):
-            index = np.argwhere(kmeansT.labels_ == l).flatten()
-            indexF = np.argwhere(kmeansT.labels_ != l).flatten()
-            m = similarity_matrix[index].T[index].T
-            d = similarity_matrix[index].T[indexF].T
-            sim_p_w_m_mean.append(np.round(np.mean(m.flatten()),1))
-            sim_p_w_m_std.append(np.round(np.std(m.flatten()),1))
-            sim_p_w_d_mean.append(np.round(np.mean(d.flatten()),1))
-            sim_p_w_d_std.append(np.round(np.std(d.flatten()),1))
-            similarity_summary.append( (np.round(np.mean(m.flatten()),1),np.round(np.std(m.flatten()),1)))
-            md = np.concatenate((m,d),axis=1)
-    fig = plt.figure(figsize=(16, 8))
-    gs = gridspec.GridSpec(2, 2,hspace=0.3,height_ratios=[1,1],width_ratios=[8,1]) 
-    ax1 = plt.subplot(gs[0])
-    ax1.errorbar(x=np.unique(kmeansT.labels_),y=sim_p_w_m_mean,yerr=sim_p_w_m_std,color ="red", \
-             alpha=0.6,marker='o',lw=0.5,ms = 3, label = "in cluster",linestyle = "")
-    ax1.errorbar(x=np.unique(kmeansT.labels_),y=sim_p_w_d_mean,yerr=sim_p_w_d_std,color ="blue", \
-             alpha=0.6,marker='o',lw=0.5,ms = 3, label = "off",linestyle = "")
-    ax1.tick_params(labelsize=16)
-    ax1.legend()
-    plt.show()
-        
-
-    l = 0
-    all_traj_labels = []
-    
-    for i,r in  enumerate(lig_repl_list):# loop over replica
-        if "ligand" in df_ext.columns.tolist(): 
-            rr0 = df_ext[df_ext.ligand == r[0]]  
-            rr = rr0[rr0.Repl == r[1]]  
-            name = r[0]+" "+r[1]
-        else:   
-            rr = df_ext[df_ext.Repl == r]
-            name = r
-        traj_labels = []
-        for j,traj in  enumerate(np.unique(rr.Traj.tolist())): # loop over trajectories
-            for frame in range(0,len(rr[rr.Traj == traj].Traj.tolist())): 
-                all_traj_labels.append(kmeansT.labels_[l])
-                traj_labels.append(kmeansT.labels_[l])
-            l += 1
- #       print(name,np.unique(np.asarray(traj_labels))
-    
-    df_ext["traj_cluster"] = np.asarray(all_traj_labels)
-
-    return (traj_clust_labels,similarity_summary)   
-
-########################################################################
-# Plotting trajectories 
-########################################################################
-
-def plot_graph_test(df_ext,cluster_show=-1,replica_show = False,file_save = ""):
-    """
-    Parameters:
-    df_ext - IFP database
-    cluster_show - cluster of trajectories to be highlighed 
-    Returns:
-    """
-   
-    label_time = []
-    label_timeSD = []
-    label_rmsd = []
-    label_rmsdSD = []
-    label_wat = []
-    label_watSD = []
-    label_repl = []
-    label_size = []
-    label_rgyr = []
-    label_rgyrSD = []
-    label_length = []
-    label_lengthSD = []
-
-
-    labels_list = np.unique(df_ext.label.tolist())
-    for l in labels_list:
-        t = df_ext[df_ext.label == l]
-        label_time.append(int(t.time.mean()))
-        if(len(t.time.tolist())>1):     label_timeSD.append(int(t.time.std()))
-        else:  label_timeSD.append(0)
-        label_length.append(int(t.length.mean()))
-        if(len(t.time.tolist())>1):     label_lengthSD.append(int(t.length.std()))
-        else:  label_lengthSD.append(0)
-        label_rmsd.append(t.RMSDl.mean())
-        if(len(t.time.tolist())>1):     label_rmsdSD.append(t.RMSDl.std())
-        else:  label_rmsdSD.append(0)
-        label_wat.append(int(t.WAT.mean()))
-        if(len(t.time.tolist())>1):     label_watSD.append(int(t.WAT.std()))
-        else:  label_watSD.append(0)
-        label_rgyr.append(t.RGyr.mean())
-        if(len(t.time.tolist())>1):     label_rgyrSD.append(t.RGyr.std())
-        else:  label_rgyrSD.append(0)
-        label_repl.append(np.unique(t.Repl.tolist(), return_counts=True))
-        label_size.append(t.shape[0])
-
-    
-    starting_labels = df_ext[df_ext.time == 0].label.tolist() # list of clusters of all first frames in all trajectories
-    starting_list, starting_count = np.unique(starting_labels, return_counts=True) # list of clusters that appear as first frame
-
-    label2scale = label_rmsd # what value will be on x
-
-    index_x_t = np.argsort(label2scale)
-    # x and y positions of each cluster in the plot
-    label_y = labels_list
-    label_x = np.zeros((len(labels_list)),dtype = float)  
-
-    max_x = max(label2scale)
-    step_x = 1.0*max_x/max(label2scale)
-    
-    # order label_x: 
-    # firt clasters that contain first frames of trajectories
-    for i,s in enumerate(starting_list):
-        label_x[s] = label2scale[s]*step_x
-        label_y[s] = labels_list[s]
-    # then the rest 
-    j = 0
-    for l in index_x_t:
-        if (labels_list[l] not in starting_list):
-            while (label_x[j] != 0):
-                j += 1
-                if(j == len(labels_list)): break
-            if(j == len(labels_list)):break
-            label_x[labels_list[l]] = label2scale[l]*step_x 
-            label_y[labels_list[l]] = labels_list[l] #5+20*np.random.rand(1)[0]
-        
-    # s in label_x: print("x-position",s)    
-    #color = ['r','b','forestgreen','lime','m','c','teal','orange','yellow','goldenrod','olive','tomato','salmon','seagreen']
-    label_x = np.log10(label_x)
-    x_tick_lable = []
-    x_tick_pos = []
-    for k in range(0,2):
-        for ii,i in enumerate(range(pow(10,k),pow(10,k+1),pow(10,k))):  
-            if(ii == 0): x_tick_lable.append(str(i))
-            else: x_tick_lable.append("")
-            x_tick_pos.append(np.log10(i))
-            if(i > 25): break
-
-               
-    if "ligand" in df_ext.columns.tolist():
-        if replica_show:
-            lig_repl_list = np.unique(np.asarray(tuple(zip(df_ext.ligand,df_ext.Repl))),axis=0)
-        else:
-            lig_repl_list = np.unique(np.asarray(df_ext.ligand))
-    else:
-        lig_repl_list = np.unique(df_ext.Repl.tolist())
-        
-    #------------------------------------------    
-    for i,r in  enumerate(lig_repl_list):# loop over ligand/replicas or ligand
-        if "ligand" in df_ext.columns.tolist(): 
-            if replica_show:
-                rr0 = df_ext[df_ext.ligand == r[0]]  
-                rr = rr0[rr0.Repl == r[1]]  
-                name = r[0]+" "+r[1]
-            else:
-                rr = df_ext[df_ext.ligand == r]
-                name = r
-        else:   
-            rr = df_ext[df_ext.Repl == r]
-            name = r
-        
-        fig = plt.figure(figsize=(16, 5))
-        gs = gridspec.GridSpec(1, 4, width_ratios=[1, 6, 1, 1]) 
-        ax = plt.subplot(gs[1])
-        subset_labels = np.unique(rr.label.tolist())
-        #  firs plot all cluster nodes
-        ax.scatter(label_x[subset_labels],label_y[subset_labels],\
-                   facecolors='none',color ='orange',marker='o',alpha=0.8,\
-               s=2*np.asarray(label_size)[subset_labels])
-        
-        for txt in labels_list[subset_labels]:
-            ax.annotate(txt, (label_x[txt],label_y[txt]),fontsize=18)
-        
-        for j,traj in  enumerate(np.unique(rr.Traj.tolist())): # loop over trajectories
-            # select only trajectories where ligand completely dissociated
-            rr_traj_r = rr[rr.Traj == traj]
-            for repl  in np.unique(rr_traj_r.Repl.tolist()):
-                rr_traj = rr_traj_r[rr_traj_r.Repl == repl] 
-#                print("----",traj,np.asarray(rr_traj.RMSDl.tolist())[-1],\
-#                                             np.asarray(rr_traj.RMSDl.tolist())[0])
-                if((np.asarray(rr_traj.RMSDl.tolist())[-1] > 10 ) \
-                        and (np.asarray(rr_traj.RMSDl.tolist())[0] < 5)):
-                    traj_list = np.asarray(rr_traj.label.tolist())  # list of the lables for all frame sequentially
-                    traj_x = []
-                    traj_y = []
-                    for t in traj_list: # list of the cluster visited in the trajectory
-                        traj_x.append(label_x[t])
-                        traj_y.append(label_y[t])
-                    color = "k"
-                # show one selected trajectory (replica, trajectory)
-                    lw = 0.5 # line width in the plot
-                    color = 'k'
-                    if cluster_show >= 0:
-                        if (rr_traj.traj_cluster.tolist()[0] == cluster_show): 
-                            lw ,color = 5,"dodgerblue"
-                    ax.plot(traj_x,traj_y, color = color,linewidth=lw,alpha=0.5)
-                # # let us plot final point in the trajectory
-                    ax.scatter(traj_x[-1],traj_y[-1], color ='red',alpha=0.3,s=500)
-                    ax.scatter(traj_x[0],traj_y[0], color ='green',alpha=0.3,s=500)
-
-                
-        ax.set_ylabel('Cluster', fontsize=18)
-        ax.set_xlabel('log10(<RMSD>) /a.u.', fontsize=18) 
-        plt.xticks(x_tick_pos,x_tick_lable, fontsize=18)
-        ax.tick_params(labelsize=18)
-        plt.title(name, fontsize=18)
-        plt.grid()
-        
-        ax1 = plt.subplot(gs[2])
-        ax1.errorbar(x=np.asarray(label_wat)[subset_labels],y=np.asarray(labels_list)[subset_labels],\
-                 xerr=np.asarray(label_watSD)[subset_labels],color = 'k', alpha=0.6,marker='o',lw=0.5)
-        ax1.set_xlabel('water #', fontsize=18) 
-        ax1.tick_params(labelsize=18)
-        plt.grid()
-        
-        ax2 = plt.subplot(gs[3])
-        ax2.errorbar(x=np.asarray(label_rgyr)[subset_labels],y=np.asarray(labels_list)[subset_labels],\
-                 xerr=np.asarray(label_rgyrSD)[subset_labels],color = 'k', alpha=0.6,marker='o',lw=0.5)
-        ax2.set_xlabel('RGyr #', fontsize=18) 
-        ax2.tick_params(labelsize=18)
-        plt.grid()
-        
-        ax0 = plt.subplot(gs[0])
-        population = np.zeros((len(labels_list)))
-        for lab in np.sort(np.unique(subset_labels)):
-            population[lab] = rr[rr.label==lab].shape[0]
-        ax0.errorbar(x=population/np.max(population),y=np.asarray(labels_list)\
-                 ,color = 'k', alpha=0.6,marker='o',lw=1)
-        ax0.set_xlabel('population', fontsize=18) 
-        ax0.tick_params(labelsize=18)
-        plt.grid()
-
-#    plt.savefig(tr.PRJ_DIR+name+"-ifp.png")
-    if file_save != "": plt.savefig(file_save,dpi=300)  
-    else:    plt.show()
-    return  (index_x_t)
 
 
 
@@ -809,15 +73,10 @@ def get_resn_list(li,lab):
 def standard_IFP(unpickled_dfi,ligandsi):
     """
     Parameters:
-    dictionary of files with ITP databases {name1:file_path1[,name2:filepath2],...}
+    dictionary of files with IFP databases {name1:file_path1[,name2:filepath2],...}
     Returns:
     combined IFP database
     """
-#    unpickled_dfi = []
-#    ligandsi = []
-#    for lig in list_IFP:
-#        unpickled_dfi.append(pd.read_pickle(list_IFP[lig]))
-#        ligandsi.append(lig)
 
     # add ligand names and make a joint list of columns
     intersect = []
@@ -990,7 +249,7 @@ def ar_complete_ligand(ligand,df_tot,resi_list_sorted,properties=["RE","AR","HD"
 
 ########################################################################
 ########################################################################
-def read_databases(d,name_template,delta_list=[0,0],res_ren=-1):
+def read_databases(d,name_template,name_len = 8):
     unpickled_dfi = []
     ligandsi = []
     list_IFP = {}    
@@ -1005,9 +264,7 @@ def read_databases(d,name_template,delta_list=[0,0],res_ren=-1):
         #--- to re-number residues
         for l in list_col:
             if(l[2] == "_"):  
-                if((res_ren > 0) and (int(l[res_ren:]) > 200)): delta=delta_list[1]
-                else: delta = delta_list[0]
-                new_list_col.append(l[:6]+str(int(l[6:])+delta))
+                new_list_col.append(l[:6]+str(int(l[6:])))
             else: new_list_col.append(l)
         df_lig.columns = new_list_col
         unpickled_dfi.append( df_lig)
@@ -1021,21 +278,39 @@ def read_databases(d,name_template,delta_list=[0,0],res_ren=-1):
 
 ########################################################################
 ########################################################################
-def clean_ramd(df_tot,threshold = 0.9):
+def clean_ramd(df_tot,threshold = 0.9,check_z = False):
+    """
+    check_z - check if z coordinate is changed and drop trajectories where it did not
+    """
     df_tot_new = pd.DataFrame(columns=df_tot.columns.tolist())
-    for ligand in np.unique(df_tot.ligand):
-        df_tot_ligand= df_tot[df_tot.ligand == ligand]
-        for Repl in np.unique(df_tot_ligand.Repl):
-            df_tot_ligand_Repl = df_tot_ligand[df_tot_ligand.Repl == Repl]
-            list_out = 0
-            for Traj in np.unique(df_tot_ligand_Repl.Traj):
-                df_tot_ligand_Repl_Traj = df_tot_ligand_Repl[df_tot_ligand_Repl.Traj == Traj]
-                if((df_tot_ligand_Repl_Traj.COM_z.tolist()[0])*threshold > df_tot_ligand_Repl_Traj.COM_z.tolist()[-1]):
-                    print("Dropped",ligand, Repl, Traj)
-                    list_out += 1
-                else:
-                    df_tot_new = pd.concat([df_tot_new,df_tot_ligand_Repl_Traj])
-            if(list_out > 5): print(ligand,":   ",Repl)
+    if "ligand" in np.unique(df_tot.columns.values):
+        for ligand in np.unique(df_tot.ligand):
+            df_tot_ligand= df_tot[df_tot.ligand == ligand]
+            for Repl in np.unique(df_tot_ligand.Repl):
+                df_tot_ligand_Repl = df_tot_ligand[df_tot_ligand.Repl == Repl]
+                list_out = 0
+                for Traj in np.unique(df_tot_ligand_Repl.Traj):
+                    df_tot_ligand_Repl_Traj = df_tot_ligand_Repl[df_tot_ligand_Repl.Traj == Traj]
+                    if check_z:  
+                        if((df_tot_ligand_Repl_Traj.COM_z.tolist()[0])*threshold > df_tot_ligand_Repl_Traj.COM_z.tolist()[-1]):
+                            print("Dropped",ligand, Repl, Traj)
+                            list_out += 1
+                    else:
+                        df_tot_new = pd.concat([df_tot_new,df_tot_ligand_Repl_Traj])
+                if(list_out > 5): print(ligand,":   ",Repl)
+    else:
+             for Repl in np.unique(df_tot.Repl):
+                df_tot_Repl = df_tot[df_tot.Repl == Repl]
+                list_out = 0
+                for Traj in np.unique(df_tot_Repl.Traj):
+                    df_tot_Repl_Traj = df_tot_Repl[df_tot_Repl.Traj == Traj]
+                    if check_z:
+                        if((df_tot_Repl_Traj.COM_z.tolist()[0])*threshold > df_tot_Repl_Traj.COM_z.tolist()[-1]):
+                            list_out += 1
+                        else:
+                            df_tot_new = pd.concat([df_tot_new,df_tot_Repl_Traj])
+                if(list_out > 5): print(ligand,":   ",Repl)
+       
     print(df_tot.shape, df_tot_new.shape)
     return(df_tot_new)
 
@@ -1105,16 +380,24 @@ def Map_3D_grid(df_tot_to_save,filename):
 from matplotlib.patches import ArrowStyle
 from matplotlib.patches import Ellipse
 from scipy.spatial import distance
-def plot_graph_New(df_ext,file_save = "",draw_round = False,merge=True):
+def plot_graph_New(df_ext,file_save = "",ligand = "",draw_round = False,water = False):
     """
     Parameters:
     df_ext - IFP database
     Returns:
     """
+    df_ext_ligand = df_ext
+    if len(ligand)> 0:
+        try:
+            df_ext_ligand = df_ext[df_ext.ligand.isin(ligand)]
+            print("Eidges will be shown for one ligand:",ligand)
+        except:
+            print("ligand "+ligand+" was not found in the database. Whole database will be analized")
    
     label_rmsd = []    # rmsd
     label_com = []    # COM
     label_size = []
+    label_water = []
 
 
     labels_list,nodes = np.unique(df_ext.label.values,return_counts= True)
@@ -1124,18 +407,20 @@ def plot_graph_New(df_ext,file_save = "",draw_round = False,merge=True):
     
     for i,l in enumerate(labels_list):
         t = df_ext[df_ext.label == l]
+        t_lig = df_ext[df_ext.label == l]
         label_rmsd.append(t.RMSDl.mean())
         label_com.append(np.array((t.COM_x.mean(),t.COM_y.mean(),t.COM_z.mean())))
-        label_size.append(t.shape[0])
+        print("STD: ",l,t.COM_x.std(),t.COM_y.std(),t.COM_z.std(),t.RMSDl.std())
+        label_size.append(100*t_lig.shape[0]/df_ext.shape[0])
+        label_water.append(int(t.WAT.mean()))
         for j in range(0,i):
             coms[i,j] = distance.euclidean(label_com[i],label_com[j])
     
-    for l,(df_label,df_time) in enumerate(zip(df_ext.label.values,df_ext.time.values)):
+    for l,(df_label,df_time) in enumerate(zip(df_ext_ligand.label.values,df_ext_ligand.time.values)):
         if df_time != 0: 
-            if(df_ext.label.values[l-1] != df_label):
-                eidges[df_ext.label.values[l-1],df_label] += labels_list.shape[0]/df_ext.label.values.shape[0] 
-    
-            
+            if(df_ext_ligand.label.values[l-1] != df_label):
+                eidges[df_ext_ligand.label.values[l-1],df_label] += labels_list.shape[0]/df_ext_ligand.label.values.shape[0] 
+         
  #   print(np.max(eidges), eidges[eidges > 0.5*np.max(eidges)])
     indx_first_com = np.argwhere((np.asarray(label_rmsd) == min(label_rmsd)))[0][0]
     dist_com = []
@@ -1158,8 +443,8 @@ def plot_graph_New(df_ext,file_save = "",draw_round = False,merge=True):
     starting_labels = df_ext[df_ext.time == 0].label.values # list of clusters of all first frames in all trajectories
     starting_list, starting_count = np.unique(starting_labels, return_counts=True) # list of clusters that appear as first frame
 
-    #------------ oeder cluater position-------------
-
+    #------------ older cluster position-------------
+    print("RMSD: ",np.sort(label_rmsd))
     label2scale = label_rmsd # what value will be on x
     label2order = labels_list #nodes #np.roll(labels_list,1) #nodes # what value will be on y
 
@@ -1196,8 +481,6 @@ def plot_graph_New(df_ext,file_save = "",draw_round = False,merge=True):
     x_tick_pos = []
     for k in range(0,2):
         for ii,i in enumerate(range(pow(10,k),pow(10,k+1),pow(10,k))):  
- #           if(ii == 0): x_tick_lable.append(str(i))
- #           else: x_tick_lable.append("")
             x_tick_lable.append(str(i))
             x_tick_pos.append(np.log10(i))
             if(i > 25): break
@@ -1208,7 +491,7 @@ def plot_graph_New(df_ext,file_save = "",draw_round = False,merge=True):
         alpha_regular = 0.9*2*3.14*np.asarray(x_tick_pos)/max(x_tick_pos)
         label_y = np.sin(alpha)
         label_x = np.cos(alpha)
-        fig = plt.figure(figsize=(10, 10))
+        fig = plt.figure(figsize=(8, 8))
         gs = gridspec.GridSpec(1, 1) #, width_ratios=[1, 1]) 
         ax = plt.subplot(gs[0])
         plt.scatter(x=np.cos(alpha_regular),y=np.sin(alpha_regular), c='k',s=10)
@@ -1217,14 +500,14 @@ def plot_graph_New(df_ext,file_save = "",draw_round = False,merge=True):
         plt.xlim(-1.3,1.3)
         plt.ylim(-1.3,1.3)
     else:
-        fig = plt.figure(figsize=(14, 10))
+        fig = plt.figure(figsize=(10, 6))
         gs = gridspec.GridSpec(1, 1) #, width_ratios=[1, 1]) 
         ax = plt.subplot(gs[0])
         ax.set_ylabel('Cluster', fontsize=18)
         ax.set_xlabel('<RMSD> /Angstrom', fontsize=18) 
         plt.xticks(x_tick_pos,x_tick_lable, fontsize=18)
         ax.tick_params(labelsize=18)
-        plt.grid()
+ #       plt.grid()
 
     
     el = Ellipse((2, -1), 0.4, 0.4)    
@@ -1276,9 +559,156 @@ def plot_graph_New(df_ext,file_save = "",draw_round = False,merge=True):
 
     for i,txt in enumerate(labels_list):
             ax.annotate(txt, (label_x[txt],label_y[txt]+0.05*pow(i,0.5)),fontsize=18)
-            
-    ax.scatter(label_x,label_y,facecolors='none',c =color_com,edgecolors="k", s=2*np.asarray(label_size), cmap='Oranges')
-    
+    if water:         
+        ax.scatter(label_x,label_y,facecolors='none',c=color_com,edgecolors="lightskyblue",s=500*np.asarray(label_size),cmap='Oranges',\
+               linewidths=np.asarray(label_water))
+        print("WATERS:",np.asarray(label_water))
+    else:
+        ax.scatter(label_x,label_y,facecolors='none',c=color_com,edgecolors="k",s=500*np.asarray(label_size),cmap='Oranges')
+        
     if file_save != "": plt.savefig(file_save,dpi=300)  
     else:    plt.show()
+        
+    return(np.argsort(label_rmsd))
+
+
+########################################
+#  Plot COM RMSD in the clusters
+#
+#######################################
+def Plot_COM(df_ext):
+    """
+    """
+    labels_list = np.unique(df_ext["label"].values)
+    list_properties = ["COM_x","COM_y","COM_z","RGyr","WAT"]
+    pos = []
+    pos_SD = []
+    for j in range(0,len(list_properties)):
+        pos.append([])
+        pos_SD.append([])
+
+    for l in labels_list:
+        dd = df_ext[df_ext["label"] == l]
+        for j,c in enumerate(list_properties):
+            pos[j].append(dd[c].mean())
+            pos_SD[j].append(dd[c].std())
+
+    fig = plt.figure(figsize=(16,5))
+    gs = gridspec.GridSpec(1, len(list_properties),wspace=0.2) #,height_ratios=[1,1],width_ratios=[2,2,1,1])
+    color = ["blue","green","red","k","orange","cyan"]
+    label = list_properties
+
+    for i,(pos,SD) in enumerate(zip(pos,pos_SD)):
+        ax1 = plt.subplot(gs[i])
+        plt.scatter(x = labels_list,y = pos, color =color[i],label = label[i])
+        plt.errorbar(x = labels_list,y = pos,yerr= pos_SD[i], color = "gray" , fmt='o--', markersize=1)  
+        ax1.set_title(label[i], fontsize=18)
+        ax1.set_xlabel('cluster', fontsize=16)   
+        if i == 0:     ax1.set_ylabel('COM [arb. u.]', fontsize=18)  
+        else:  ax1.set_ylabel('', fontsize=18)  
+        ax1.grid(color='gray', linestyle='-', linewidth=0.2)
+    plt.show()
     return
+
+
+
+
+# generate a list of residues, combine all properties for each residue, sort them by the residue number
+def Print_IFP_averaged(df_tot,resi_list_sorted,ligandsi,resi_name_list_sorted,properties=["AR","HD","HA","HY","WB","IP","IN"],threshold = 0.01):
+    index_no_zero_IFP = np.asarray([])
+    threshold = 0.01
+
+
+    for i,pr in enumerate(properties):
+        list_x = get_resn_list(df_tot.columns.tolist(),pr)
+        ar_complete,ar_SD_complete=unify_resi(list_x,df_tot,resi_list_sorted,ligandsi)
+        ind = np.argwhere(ar_complete.mean(axis=0) > threshold).flatten()
+        index_no_zero_IFP = np.concatenate((index_no_zero_IFP,ind))
+
+    index_no_zero_IFP = np.sort(np.unique(index_no_zero_IFP.astype(int)))
+    part_resi =np.asarray(resi_name_list_sorted)[index_no_zero_IFP]
+    print(np.asarray(resi_name_list_sorted)[index_no_zero_IFP])
+    print(len(index_no_zero_IFP),len(resi_list_sorted))
+    ind_part_resi = []
+    for pr in part_resi:
+        t = np.argwhere(resi_name_list_sorted == pr)
+        ind_part_resi.append(t[0][0])
+
+    # Plot average IFP map 
+    color_ifp = ["k","magenta","skyblue","orange","darkgreen","red","blue","red"]
+
+
+    resi_list_eq = resi_list_sorted
+    ligands_group = np.asarray(ligandsi)
+    ligands_name = np.asarray(ligandsi)  #np.unique(df_tot.ligand.tolist())
+
+    #ligands_group = exp[exp.type == 'D'].ligand.tolist()
+    #ligands_name = exp[exp.type == 'D'].name.tolist()
+    print(ligands_group)
+    print(ligands_name)
+
+    fig = plt.figure(figsize = (16, 2*len(ligands_group)),facecolor='w')
+    fig.subplots_adjust(hspace=0.05, wspace=0.25)
+    for i,pr in enumerate(properties):
+        list_x = get_resn_list(df_tot.columns.tolist(),pr)
+        ar,ar_SD,x = get_from_prop(list_x, df_tot,threshold=0.1)
+        ar_complete,ar_SD_complete=unify_resi(list_x,df_tot,resi_list_eq,ligands_group,threshold=-6)
+        ax = plt.subplot(6,1,1)
+        ax.set_xticks(np.asarray(range(0,len(ind_part_resi))))
+        ax.set_yticks(2*np.arange(0,len(ligands_group)))
+        ax.set_xticklabels(resi_name_list_sorted[ind_part_resi],rotation=90,fontsize=12)
+        ax.set_yticklabels(ligands_name,fontsize=12)
+        for l,ar_l in enumerate(ar_complete[:,ind_part_resi]):
+            for r in range(0,len(ind_part_resi)):
+                ax.scatter(r-0.4+i*0.1,2*l-0.4+i*0.1,color=color_ifp[i],marker='s',alpha=0.8,s=120*ar_l[r])
+        ax.scatter(-2,0,color=color_ifp[i],alpha=0.9,s=120,label = pr,marker='s') 
+#    plt.title(pr,fontsize=16)
+        ax.grid(which="both")
+        plt.xlim((-0.6,len(ind_part_resi)+2))
+    plt.legend(fontsize=10,loc='upper right', bbox_to_anchor=(1.05, 1.))
+    plt.show()
+    return(ind_part_resi)
+
+
+###################################
+#
+##################################
+def last_frames_by_contact(df_tot,columns_IFP,contacts):
+    r_t_f = []
+    com_tot = []
+    diss = []
+    for r in df_tot.Repl.unique():  
+        df_repl = df_tot[df_tot.Repl == r]
+        for t in df_repl.Traj.unique():
+            df_traj = df_repl[df_repl.Traj == t]
+            sum_IFP = df_traj[columns_IFP].sum(1).values
+            last_frame = np.max(np.argwhere(sum_IFP > contacts))
+            r_t_f.append((r,t,last_frame))
+    df = pd.DataFrame(columns = df_tot.columns)     
+    for (r,t,f) in r_t_f:  
+        df_repl = df_tot[df_tot.Repl == r]
+        df_traj = df_repl[df_repl.Traj == t]
+        df = df.append(df_traj[df_traj.time == f], ignore_index = True)
+        com_tot.append(df_traj[df_traj.time == f][["COM_x","COM_y","COM_z"]].values)
+        diss.append(df_traj[df_traj.time == f]["length"].values)
+    ar = df[columns_IFP].values
+    return(ar,r_t_f,df,np.asarray(com_tot),np.asarray(diss))
+
+
+###################################
+#
+##################################
+
+from scipy.cluster import hierarchy
+def bootstrapp(t):
+    max_shuffle = 500
+    alpha = 0.9
+    sub_set = int(alpha*len(t))        
+    tau_bootstr = []
+    if sub_set > 4:
+        for i in range(1,max_shuffle):
+            numpy.random.shuffle(t)
+            t_b = t[:sub_set]
+            t_b_sorted_50 = (np.sort(t_b)[int(len(t_b)/2.0-0.5)]+np.sort(t_b)[int(len(t_b)/2)])/2.0
+            tau_bootstr.append(t_b_sorted_50)
+    return(tau_bootstr)
