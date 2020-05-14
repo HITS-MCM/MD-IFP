@@ -15,16 +15,18 @@ Schloss-Wolfsbrunnenweg 35
 69118 Heidelberg, Germany
     
 
-*This open source software code was developed in part in the Human Brain Project, funded from the European Union’s Horizon 2020 Framework Programme for Research and Innovation under Specific Grant Agreements  No. 785907 (Human Brain Project  SGA2).*
+*This open source software code was developed in part in the __Human Brain Project__, funded from the European Union’s Horizon 2020 Framework Programme for Research and Innovation under Specific Grant Agreements  No. 785907 (Human Brain Project  SGA2).*
 
 ## __Packages requirements:__
-    Python 3.x
-    numpy;    pandas;  matplotlib;  MDAnalysis;  RDkit;   scipy; ngview
-    Chimera - only for the scripts used for preprocessing pdb files (structure protonation and generation of the ligand mol2 file); not requared if protonation and mol2 file are already prepared by a user)
+__Python 3.x__
+
+__Python Libraries:__ numpy;    pandas;  matplotlib;  MDAnalysis;  RDkit;   scipy; ngview
+
+__Chimera__ - only for the scripts used for preprocessing pdb files (structure protonation and generation of the ligand mol2 file); not requared if protonation and mol2 file are already prepared by a user)
     
 __Codes were written on Python 3.x and tested on Python 3.7__
 
-__To configure envirement in anaconda use__
+__To configure envirement in anaconda use:__
 conda env create -f IFP_trajectory.yml
 
 
@@ -40,6 +42,9 @@ __Membrane_analysis.py__ - functions for analysis of membrane-protein systems
 
 __Clustering.py__   - functions for analysis of trajectories using IFP data   (is still under developments)
 
+__Process_pdb.py__   - preprocessing PDB files (splitting into ligand and protein files)
+
+__chimera_hydrogen_mol2.py__  - generation ligand mole2 file
 
 
 ## Data employed in test examples: 
@@ -49,18 +54,17 @@ https://zenodo.org/record/3755337#.XrF-iGgzaUk
 
 I. __IFP_generation_examples_PDB.ipynb:__
 
-an examples of Protein-Ligand IFP computations for
+examples of Protein-Ligand IFP computations (only function of IFP_generation.py are used) for:
    1. a single structure prepared for MD simulations (HSP90; PDB ID 6EI5, dcd format)
    2. a trajectory (for selected frames; dcd format)
    3. a PDB structure
 
 II. __IFP_generation_examples_TRAJ.ipynb:__ 
 
-example of generation and analysis of Ligand-Protein IFPs for RAMD simulations (dcd trajectories)
-
-   1. Computing interaction fingerprints (IFP) for
-   2. system equilibration trajectory
-   3. ligand dissociation trajectories
+examples of generation and analysis of  IFPs for plain MD simulations and RAMD trajectories for Muscarinic Receptor M2 in a membrane
+in this example Trajectories.py is used for pre-processing trajectories and  IFP_generation.py for computing IFPs
+   1. Computing IFPs for equilibrated trajectories in dcd format
+   3. Computing IFPs for ligand dissociation trajectories
 
 
 III. __IFP_generation_examples_Analysis.ipynb:__ 
