@@ -75,7 +75,7 @@ III. __IFP_generation_examples_Analysis.ipynb:__
 
 This example shows how RAMD dissociation trajectories can be analyzed usinf pre-generated IFP database 
 ![HSP90](/images/cluster-traj.png)
-*This plot visualizes ligand dissociation pathways in a graph representation*
+*This plot show ligand dissociation pathways in a graph representation*
    
 IV. __membrane_analysis_example.ipynb__
 
