@@ -73,8 +73,9 @@ in this example Trajectories.py is used for pre-processing trajectories and  IFP
 
 III. __IFP_generation_examples_Analysis.ipynb:__ 
 
-RAMD dissociation trajectories analysis using pre-generated IFP database 
+This example shows how RAMD dissociation trajectories can be analyzed usinf pre-generated IFP database 
 ![HSP90](/images/cluster-traj.png)
+<sub>*This plot visualizes ligand dissociation pathways in a graph representation*</sub>
    
 IV. __membrane_analysis_example.ipynb__
 
