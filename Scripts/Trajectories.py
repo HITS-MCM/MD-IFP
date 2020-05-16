@@ -269,13 +269,14 @@ class trajectories:
         self.ramd_tmpl ="/"+ramd_tmpl
         self.namd_tmpl = "/"+namd_tmpl
         self.timestep = timestep
-        
-        self.ligand = Ligand(PRJ_DIR,ligand_pdb,ligand_mol2)
-# check if ligand can be found in the trajectory 
-        u = mda.Universe(self.PRJ_DIR+self.pdb)
-        u.select_atoms(self.ligand.ligands_names[0])
-        print("Ligand atoms found in the trajectory ",u.select_atoms(self.ligand.ligands_names[0]))
-        
+
+        try:
+            self.ligand = Ligand(PRJ_DIR, ligand_pdb, ligand_mol2)
+            # check if ligand can be found in the trajectory
+            u = mda.Universe(self.PRJ_DIR + self.pdb)
+            print("Ligand atoms found in the trajectory ", u.select_atoms(self.ligand.ligands_names[0]))
+        except:
+            print("ligand name:      ", self.ligand.ligands_names[0])
 #        self.ligand = self.createLigand(PRJ_DIR,ligand_pdb,ligand_mol2) 
         self.namd = self.createNamd() 
         self.ramd = self.createRamd(PRJ_DIR,pdb,timestep) 

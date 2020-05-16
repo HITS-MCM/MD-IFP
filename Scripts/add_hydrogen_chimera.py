@@ -16,14 +16,6 @@ def main():
     for fn in file_names:
         replyobj.status("Processing " + fn)  # show what file we're working on
         rc("open " + fn)
-        if fn != "protein.pdb" and fn != "water.pdb":
-            rc("write format mol2 0 " + fn[:-4] + ".mol2")
-            rc("close all")
-            rc("open " + fn[:-4] + ".mol2")
-            rc("addh")
-            rc("write format mol2 0 " + fn[:-4] + ".mol2")
-            rc("close all")
-            rc("open " + fn)
         rc("addh")
         rc("write 0 " + fn)
         rc("close all")

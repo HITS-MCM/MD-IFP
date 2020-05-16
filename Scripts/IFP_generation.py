@@ -320,7 +320,7 @@ def IFP(u_mem,sel_ligands,property_list, WB_analysis = True, RE = True,Lipids = 
         hb.HydrogenBondAnalysis.DEFAULT_ACCEPTORS['OtherFF'] = hb.HydrogenBondAnalysis.DEFAULT_ACCEPTORS['OtherFF']+acceptor_line
         hb.WaterBridgeAnalysis.DEFAULT_ACCEPTORS['OtherFF'] = hb.WaterBridgeAnalysis.DEFAULT_ACCEPTORS['OtherFF']+acceptor_line
     
-    h = hb.HydrogenBondAnalysis(u_mem, selection1 ='resname '+sel_ligands,selection2=' not resname WAT HOH SOL '+sel_ligands, distance=3.1, angle=110, forcefield='OtherFF')
+    h = hb.HydrogenBondAnalysis(u_mem, selection1 ='resname '+sel_ligands,selection2=' not resname WAT HOH SOL '+sel_ligands, distance=3.3, angle=110, forcefield='OtherFF')
     print("Start HB analysis",datetime.datetime.now().time())
     h.run()
     h.generate_table()
@@ -333,7 +333,7 @@ def IFP(u_mem,sel_ligands,property_list, WB_analysis = True, RE = True,Lipids = 
         print("Start WB analysis",datetime.datetime.now().time())
         try:
             # will add O atom of water as an HB donor (it is concidered as acceptor by default assuming as a protein backbone atom)
-#            hb.WaterBridgeAnalysis.DEFAULT_DONORS['OtherFF'] = hb.WaterBridgeAnalysis.DEFAULT_DONORS['OtherFF']+tuple(set("O"))        
+            hb.WaterBridgeAnalysis.DEFAULT_DONORS['OtherFF'] = hb.WaterBridgeAnalysis.DEFAULT_DONORS['OtherFF']+tuple(set("O"))
 #            hb.WaterBridgeAnalysis.DEFAULT_ACCEPTORS['OtherFF'] = hb.WaterBridgeAnalysis.DEFAULT_DONORS['OtherFF']+tuple(set("O"))        
 #            w = hb.WaterBridgeAnalysis(u_mem, 'resname '+sel_ligands, ' not resname WAT HOH SOL ',water_selection=" resname WAT HOH SOL ", 
 #                distance=3.5, angle=110, forcefield='OtherFF',output_format="donor_acceptor",order=3)
@@ -530,7 +530,7 @@ def table_combine(df_HB,df_WB,df_prop,ligand_name,residues_name = [],start=0,sto
         df_WB_INH = df_WB[(df_WB.sele1_resnm.isin([ligand_name]) & df_WB.sele2_resnm.isin(["WAT","HOH","SOL"]))]
 #        print(df_WB_INH)
         # get a list of WAT-Prot (sele1 - sele2)
-        df_WB_Prot = df_WB[(~(df_WB.sele2_resnm.isin([ligand_name,"WAT"])) & (df_WB.sele1_resnm.isin(["WAT","HOH","SOL"])))]
+        df_WB_Prot = df_WB[(~(df_WB.sele2_resnm.isin([ligand_name,"WAT","HOH","SOL"])) & (df_WB.sele1_resnm.isin(["WAT","HOH","SOL"])))]
 #        print(df_WB_Prot)
  #       df_WB_WAT = df_WB[((df_WB.sele2_resnm == "WAT") & (df_WB.sele1_resnm == "WAT"))]
         for t in df_WB.time.unique().tolist():
@@ -667,6 +667,7 @@ def Plot_IFP(df,contact_collection=None,out_name=""):
     xticklabels = columns_IFP
     sns.heatmap(np.float32(df1), cmap="YlGnBu", xticklabels=xticklabels)
     ax.set_title('IFP')
+    ax.set_ylabel("frame")
     
     if( df[columns_CONT].shape[1] > 0):
         ax = plt.subplot(gs[1])
