@@ -9,7 +9,54 @@ from Bio.PDB import *
 from Bio import BiopythonWarning
 from Scripts.IFP_generation import IFP, table_combine
 from rdkit import Chem, RDConfig
-from rdkit.Chem.rdMolChemicalFeatures import MolChemicalFeatureFactory
+
+
+def extract_conformation(line, conformation, ligand):
+    """Helper function to extract information about conformation from pdb file.
+
+    Beware of bugs. pdb format is very inconsistent and columns might merge together.
+
+
+    Args:
+        line (str): Line from pdb file that will get analyzed.
+        conformation (str): Conformation that will be found.
+        ligand:
+
+    Returns:
+        1 if conformation information is matched.
+        0 if conformation information is not matched.
+    """
+    residues = standard_aa_names + [ligand]
+    split_line = line.split()
+    if split_line[0][:6].strip() in ["ATOM", "HETATM"]:
+        if split_line[3][-3:] in residues:
+            try:
+                if split_line[3][-4] in conformation:
+                    return 1
+                else:
+                    return 0
+            except IndexError:
+                return 0
+        elif split_line[2][-3:] in residues:
+            try:
+                if split_line[2][-4] in conformation:
+                    return 1
+                else:
+                    return 0
+            except IndexError:
+                return 0
+
+        elif split_line[1][-3:] in residues:
+            try:
+                if split_line[1][-4] in conformation:
+                    return 1
+                else:
+                    return 0
+            except IndexError:
+                return 0
+
+    else:
+        return 0
 
 
 class PdbIDAnalysis(object):
@@ -18,6 +65,8 @@ class PdbIDAnalysis(object):
     Crystal structures are downloaded from rcsb.org, split into the given protein chain, ligand and water molecules.
     Using Chimera hydrogens are added and mol2 of the ligand is generated. The three pdb files are merged. IFP Analysis
     is then performed.
+    If the file contains multiple conformations IFPs will not be found correctly. The conformations need to be filtered
+    out manually using the split_pdb method.
 
     Class attributes:
         reading_failed (list): PDB-IDs for which rdkit was unable to properly read the ligand.mol2 file.
@@ -35,12 +84,16 @@ class PdbIDAnalysis(object):
             data_path (str): Path indicating where generated data is supposed to be stored. Defaults to parent directory.
             verbose (bool): If true prints additional information during the processing. Defaults to false.
         """
-        self.data_path = data_path
+        if not os.path.isdir(data_path):
+            os.mkdir(data_path)
+        self.data_path = data_path + pdb_id + "/"
         self.verbose = verbose
         self.pdb_id = pdb_id
         self.ligand_id = ligand_id
+        if not os.path.isdir(self.data_path):
+            os.mkdir(self.data_path)
 
-# Method downloads the given pdb dataset from the RCSB. It checks for correct formatting and folder structure
+    # Downloads the given pdb dataset from the RCSB. It checks for correct formatting and folder structure
     def download_pdb(self):
         """ Downloads pdb file from rcsb.org.
 
@@ -57,9 +110,6 @@ class PdbIDAnalysis(object):
 
         file_name = self.data_path + self.pdb_id + '.pdb'
 
-        if not os.path.isdir(self.data_path):
-            os.mkdir(self.data_path)
-
         if os.path.isfile(file_name) is True:
             if self.verbose is True:
                 print('File {} has already been downloaded.'.format(self.pdb_id))
@@ -68,19 +118,46 @@ class PdbIDAnalysis(object):
             if self.verbose is True:
                 print('Downloading {}.pdb from RCSB to {}'.format(self.pdb_id, file_name))
             wget.download('https://files.rcsb.org/download/{0}.pdb'.format(self.pdb_id), out=file_name)
+        return
 
-    def split_pdb_automated(self, pdb_chain):
+    def split_pdb(self, pdb_chain, unwanted_conformation=None, wanted_conformation=None):
         """Extracts specified chain, ligand and water molecules from pdb file.
 
         Sub-structures are extracted using the pdb-handling capacities of the Biopython package. A new folder is created
         for the split structures.
+        The with ligand_conformation specified conformation will be filtered out.
 
         Args:
             pdb_chain (str): Chain identifier for the chain that is supposed to be extracted.
+            unwanted_conformation (str):  Conformation to be filtered out. Not mentioned conformation remains in pdb.
+            wanted_conformation (str): Conformation that is wanted. Used to reformat lines in case atom description and
+                                       residue merge.
 
         Returns:
             None, if pdbID_split directory already exists.
         """
+        if unwanted_conformation is not None and not os.path.isfile(
+                self.data_path + "unfiltered_" + self.pdb_id + ".pdb"):
+            os.rename(self.data_path+self.pdb_id+".pdb", self.data_path+"unfiltered_" + self.pdb_id + ".pdb")
+            with open(self.data_path + "unfiltered_" + self.pdb_id + ".pdb", "r+") as file:
+                lines = file.readlines()
+                with open(self.data_path + self.pdb_id + ".pdb", "w+") as filtered:
+                    i = 0
+                    for line in lines:
+                        if not extract_conformation(line, unwanted_conformation, self.ligand_id):
+                            if extract_conformation(line, wanted_conformation, self.ligand_id):
+                                fixed_line = ""
+                                for residue in standard_aa_names + [self.ligand_id]:
+                                    index = line.find(residue)
+                                    if index == -1:
+                                        continue
+                                    else:
+                                        fixed_line = fixed_line + line[:index-1] + " "
+                                        fixed_line = fixed_line + line[index:]
+                                filtered.write(fixed_line)
+                            else:
+                                filtered.write(line)
+
         structure = PDBParser().get_structure(self.pdb_id, self.data_path + self.pdb_id + '.pdb')
         ligand_id = self.ligand_id
         split_path = self.data_path + self.pdb_id + "_split/"
@@ -91,7 +168,6 @@ class PdbIDAnalysis(object):
             if self.verbose is True:
                 print("File {0} seems to have already been split.".format(self.pdb_id))
             return
-
 
         class LigandSelect(Select):
             """Selects only atoms belonging to the given ligand ID.
@@ -166,18 +242,6 @@ class PdbIDAnalysis(object):
         io.save(split_path + self.ligand_id + '.pdb', LigandSelect())
         io.save(split_path + 'water' + '.pdb', WaterSelect())
 
-    def prepare_data(self, chimera_path="C:/Program Files/Chimera 1.14/bin/chimera.exe"):
-        """chimera_hydrogen_mol2.py is executed in Chimera and pdb files are merged.
-
-        Through the shell Chimera is opened without gui and chimera_hydrogen_mol2.py is run with the split pdb files as
-        input. The three edited pdb files are then merged into one called merged.pdb
-
-        Args:
-            chimera_path (str): Path to the chimera executable.
-        """
-        subprocess.run("\"{0}\" --nogui --script \"{1}/chimera_hydrogen_mol2.py {2}/{3}_split/\"".format(
-            chimera_path, os.getcwd(), self.data_path, self.pdb_id), shell=True)
-
         with open(self.data_path + self.pdb_id + "_split/merged.pdb", "w+") as outfile:
             for file in ["protein", self.ligand_id, "water"]:
                 with open(self.data_path + self.pdb_id + "_split/" + file + ".pdb", "r") as infile:
@@ -185,7 +249,30 @@ class PdbIDAnalysis(object):
                     lines = [line for line in infile if line.split()[0] not in ["CONECT", "MASTER", "END", "TER"]]
                     outfile.writelines(lines)
 
-    def calculate_ifp(self, get_properties=False):
+    def add_hydrogen(self, script="add_hydrogen_chimera.py",
+                     chimera_path="C:/Program Files/Chimera 1.14/bin/chimera.exe"):
+        """chimera_hydrogen_mol2.py is executed in Chimera and pdb files are merged.
+
+        Through the shell Chimera is opened without gui and chimera_hydrogen_mol2.py is run with the split pdb files as
+        input. The three edited pdb files are then merged into one called merged.pdb
+
+        Args:
+            script (str): Script that chimera is supposed to run.
+            chimera_path (str): Path to the chimera executable.
+        """
+        if os.path.isdir(self.data_path + self.pdb_id + "_split/"):
+            return
+        subprocess.run("\"{0}\" --nogui --script \"{1}/{2} {3}\"".format(
+            chimera_path, os.getcwd(), script, self.data_path), shell=True)
+
+    def create_ligand_mol2(self, script="create_mol2_chimera.py",
+                           chimera_path="C:/Program Files/Chimera 1.14/bin/chimera.exe"):
+        if os.path.isfile(self.data_path + self.pdb_id + "_split/" + self.ligand_id + ".mol2"):
+            return
+        subprocess.run("\"{0}\" --nogui --script \"{1}/{2} {3} {4}\"".format(
+            chimera_path, os.getcwd(), script, self.data_path+self.pdb_id+"_split", self.ligand_id), shell=True)
+
+    def calculate_ifp(self, get_properties=False, wanted_conformation=None):
         """ IFPs are calculated.
 
         Properties of the ligand are determined using ligand mol2 and pdb files. merged.pdb is loaded into an MDAnalysis
@@ -194,6 +281,7 @@ class PdbIDAnalysis(object):
 
         Args:
             get_properties (bool): If true additionally returns the ligand properties.
+            wanted_conformation (str): Name of the wanted conformation if multiple conformations in one file.
 
         Returns:
             Pandas Dataframe containing the IFPs.
@@ -204,15 +292,23 @@ class PdbIDAnalysis(object):
         pdb_merged = self.data_path + self.pdb_id + "_split/merged.pdb"
 
         with open(ligand_pdb, 'r') as fasta_file:
-            list_labels = [line.split()[2] for line in fasta_file.readlines() if line.split()[0] in ["ATOM", "HETATM"]]
+            if wanted_conformation is None:
+                list_labels = [line.split()[2] for line in fasta_file.readlines() if line.split()[0] in ["ATOM", "HETATM"]]
+            elif wanted_conformation:
+                list_labels = []
+                for line in fasta_file.readlines():
+                    if line.split()[0] in ["ATOM", "HETATM"]:
+                        if len(line.split()) == 11:
+                            list_labels.append(line.split()[2][:-4])
+                        else:
+                            list_labels.append(line.split()[2])
+
         try:
             mol = Chem.rdmolfiles.MolFromMol2File(ligand_mol2, removeHs=False)
 
-        #TODO: Add warning to except statements
-
         # If an error occurs during reading of ligand.mol2, the pdb ID is appended to reading_failed and skipped.
         except OSError:
-            print("mol2 file of {} not working".format(self.pdb_id))
+            warnings.warn("mol2 file of the ligand {0} could not be read.".format(self.ligand_id))
             PdbIDAnalysis.reading_failed.append(self.pdb_id)
             return
 
@@ -225,6 +321,7 @@ class PdbIDAnalysis(object):
         # If an error occurs during feature generation of the ligand, the pdb ID is appended to features_failed and
         # skipped.
         except:
+            warnings.warn("Features for the ligand {0} could not computed".format(self.ligand_id))
             PdbIDAnalysis.features_failed.append(self.pdb_id)
             return
 
@@ -250,9 +347,13 @@ class PdbIDAnalysis(object):
 
         """
         self.download_pdb()
-        self.split_pdb_automated(chain)
-        self.prepare_data(chimera_path)
-        return self.calculate_ifp(get_properties)
+        self.add_hydrogen(chimera_path=chimera_path)
+        self.split_pdb(chain)
+        try:
+            self.create_ligand_mol2(chimera_path=chimera_path)
+        except:
+            PdbIDAnalysis.features_failed.append(self.pdb_id)
+        return self.calculate_ifp(get_properties=get_properties)
 
 
 def merge_hd_with_ha(dataframe):
@@ -280,7 +381,7 @@ class StatisticalAnalysis(object):
     Baseline is taken from Hajiebrahimi et al., 2017.
 
     """
-    def __init__(self, data, interactions=("AR", "HD", "HA", "HL", "IP", "IN")):
+    def __init__(self, data, interactions=("AR", "HD", "HA", "HL", "IN", "IP", "WB")):
         """Inits StatisticalAnalysis with entered data.
 
         Args:
@@ -375,9 +476,8 @@ class StatisticalAnalysis(object):
 
         return false_positives.drop(columns="HA"), false_negatives.drop(columns="HA")
 
-# TODO: Remove in final version or transfer to notebook.
     def get_baseline(self, input_file):
-        """ Placeholder function that is used since baseline is badly formatted and can't easily be used.
+        """ Placeholder method that is used since baseline is badly formatted and can't easily be used.
         """
 
         result = {}
@@ -398,41 +498,36 @@ class StatisticalAnalysis(object):
 
 
 if __name__ == '__main__':
-    hajiebrahimi_pdb = ["1ay8", "1bju", "1bma", "1eve", "1h2t", "1hvy", "1hwi", "1ia1", "1ig3", "1jd0", "1jla", "1l2s",
+    hajiebrahimi_pdb = ["1bju", "1bma", "1eve", "1hvy", "1hwi", "1ia1", "1ig3", "1jd0", "1jla", "1l2s",
                         "1l7f", "1n1m", "1n7g", "1nax", "1oq5", "1osn", "1oyt", "1p2y", "1p5e", "1p62", "1t9b", "1tsl",
                         "1tt1", "1xdn", "2gpu", "2is7", "2iuz", "2p16", "2reg", "2w0s", "2yxj", "2zoz", "3byz", "3g2k",
-                        "3i6O", "3O1H", "3pxf", "3r0t", "3shy", "3srr", "3t5y", "3tah", "4alw", "4kya", "4pjt", "4qnb",
+                        "3i6O", "3O1H", "3pxf", "3r0t", "3shy", "3srr", "3t5y", "4alw", "4kya", "4pjt", "4qnb",
                         "4rao", "4rdl"]
-    hajiebrahimi_ligand = ["PLP", "GP6", "0QH", "E20", "7MG", "D16", "115", "TQ3", "VIB", "AZM", "TNK", "STC", "BCZ",
+    hajiebrahimi_ligand = ["GP6", "0QH", "E20", "D16", "115", "TQ3", "VIB", "AZM", "TNK", "STC", "BCZ",
                            "A3M", "NDP", "IH5", "CEL", "BVP", "FSN", "NCT", "TBS", "GEO", "1CS", "A15", "KAI", "ATP",
                            "OHT", "2CL", "D1H", "GG2", "CHT", "BVP", "N3C", "ET", "H11", "SKY", "GR6", "TMO", "2AN",
-                           "FU9", "5FO", "Q20", "MCS", "BGO", "HY7", "1UG", "2YQ", "1B0", "3L7", "FUC"]
-    hajiebrahimi_chain = ["A", "A", "A", "A", "Z", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "H",
+                           "FU9", "5FO", "Q20", "MCS", "HY7", "1UG", "2YQ", "1B0", "3L7", "FUC"]
+    hajiebrahimi_chain = ["A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "H",
                           "A", "A", "B", "A", "A", "A", "A", "A", "A", "A", "A", "A", "B", "A", "B", "A", "A", "B", "B",
-                          "A", "A", "A", "X", "B", "A", "A", "E", "D", "A", "B", "A", ]
-    """salentin_pdb = ["1AGL", "1AJC", "1AKU", "1AY8", "1BJU", "1BMA", "1EVE", "1H2T", "1N7G", "1OSN", "1P5E", "1VSN",
-                    "1XDN", "2EFJ", "2IUZ", "2REG", "2W0S", "2ZOZ", "3O1H", "3PXF", "3R0T", "3SHY", "3TAH", "3T5Y",
-                    "3THY", "4ALW", "4KYA", "4PJT", "4QNB", "4RAO", "4RDL"]
-    salentin_ligand = ["P84", "THA", "FMN", "PLP", "GP6", "0QH", "E20", "7MG", "NDP", "BVP", "TBS", "NFT", "ATP", "37T",
-                       "D1H", "CHT", "BVP", "ET", "TMO", "2AN", "FU9", "5FO", "BGO", "MCS", "ADP", "HY7", "1UG", "2YQ",
-                       "1B0", "3L7", "FUC"]
-    salentin_chain = ["A", "A", "A", "A", "A", "A", "A", "Z", "A", "A", "A", "A", "A", "A", "A", "A", "B", "B", "B",
-                      "A", "A", "A", "A", "B", "A", "A", "E", "D", "A", "B", "A"]"""
+                          "A", "A", "A", "X", "B", "A", "E", "D", "A", "B", "A", ]
+
     hajiebrahimi = [list(combi) for combi in zip(hajiebrahimi_pdb, hajiebrahimi_ligand, hajiebrahimi_chain)]
-    # salentin = [list(combi) for combi in zip(salentin_pdb, salentin_ligand, salentin_chain)]
- 
+
     def run(element):
         analysis = PdbIDAnalysis(element[0], element[1], data_path="../data/")
-        return analysis.run(element[2])
+        return analysis.run(element[2], get_properties=False)
 
     haji_results = [run(element) for element in hajiebrahimi if run(element) is not None]
+
     haji_results_columns = [list(entry.columns) for entry in haji_results]
     haji_proteins = [protein for protein in hajiebrahimi_pdb if (protein not in PdbIDAnalysis.reading_failed and
                                                                  protein not in PdbIDAnalysis.features_failed)]
+
     result_dataframe = pd.DataFrame.from_dict(dict(zip(haji_proteins, haji_results_columns)), orient="index")
+  
     result_dataframe.to_pickle("results.pkl")
-    # salentin_results = [run(element) for element in salentin]
+
     analyze = StatisticalAnalysis("results.pkl")
     results_cleaned = analyze.get_results()
-    baseline_cleaned = analyze.get_baseline(r".\compare_corrected_testing.txt")
+    baseline_cleaned = analyze.get_baseline(r"..\baseline.txt")
     pos, neg = analyze.compare(baseline=baseline_cleaned, results=results_cleaned)

@@ -641,6 +641,7 @@ def Plot_IFP(df,contact_collection=None,out_name=""):
     if len(columns_IFP) < 25:  sns.heatmap(np.float32(df1), cmap="YlGnBu", xticklabels=xticklabels)
     else:  sns.heatmap(np.float32(df1), cmap="YlGnBu")
     ax.set_title('IFP')
+    ax.set_ylabel("frame")
     
     if( df[columns_CONT].shape[1] > 0):
         ax = plt.subplot(gs[1])
