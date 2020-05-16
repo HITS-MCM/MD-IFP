@@ -377,14 +377,19 @@ def IFP(u_mem,sel_ligands,property_list, WB_analysis = True, RE = True,Lipids = 
                 for u in u_list:   found.append(["LIP",u.name])
             elif (IFP_type.name == "AR"):
                 u_ar = []
-                for u in u_list:  u_ar.append(u.resid)
+                u_ar_n = []
+                for u in u_list:  
+                    u_ar.append(u.resid)
+                    u_ar_n.append(u.resname)
                 if len(u_ar)> 0:
                     ar_resid, ar_n = np.unique(u_ar,return_counts=True)
-     #               print(ar_resid, ar_n)
                     for u in u_list:  
+                        # check if this aromatic residue has more than 4 contacts with an aromatic fragment of a ligand
                         if(u.resid in ar_resid[ar_n > 4]): 
+                            # check also residue name to deal the case of residues with the same id
+                            if( np.unique(np.asarray(u_ar_n)[np.where(u_ar==u.resid)[0]]).shape[0])== 1: 
                                 found.append([IFP_type.name+"_"+u.resname+str(u.resid),u.name])
-#                                print("!!!!!!!!!!!!!  pi-pi stacking found",ar_n,u_list)
+ #                               print("!!!!!!!!!!!!!  pi-pi stacking found",ar_n,u.resname)
                         # here we will check if cation (LYS or ARG) really contact an aromatic ring of the ligand
                         elif(u.resname in ["LYS","ARG"]):
                             if u.resname == "LYS" : cation = "LYS"
@@ -393,7 +398,7 @@ def IFP(u_mem,sel_ligands,property_list, WB_analysis = True, RE = True,Lipids = 
                             u1_list = (u_mem.select_atoms(line1,updating=True))
                             if(len(u1_list) > 4): 
                                 found.append([IFP_type.name+"_"+u.resname+str(u.resid),u.name])
-#                                print("!!!!!!!!!!!!!  Cat-Ar  interactions found",u1_list)
+  #                              print("!!!!!!!!!!!!!  Cat-Ar  interactions found",u1_list)
             else:  
                 for u in u_list:
                         found.append([IFP_type.name+"_"+u.resname+str(u.resid),u.name]) 
