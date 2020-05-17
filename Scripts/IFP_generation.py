@@ -394,11 +394,14 @@ def IFP(u_mem,sel_ligands,property_list, WB_analysis = True, RE = True,Lipids = 
                         elif(u.resname in ["LYS","ARG"]):
                             if u.resname == "LYS" : cation = "LYS"
                             else: cation = "ARG"
-                            line1 = "(resname "+sel_ligands+" and ( not type H O)) and around 4.5 (resid "+str(u.resid[u.resname == cation][0]) + " and type N)" 
-                            u1_list = (u_mem.select_atoms(line1,updating=True))
-                            if(len(u1_list) > 4): 
-                                found.append([IFP_type.name+"_"+u.resname+str(u.resid),u.name])
-  #                              print("!!!!!!!!!!!!!  Cat-Ar  interactions found",u1_list)
+                            if("Aromatic" in property_list.keys()):
+                                line_ar = ""
+                                for l in np.asarray(property_list["Aromatic"]): line_ar = line_ar + l +" "
+                                line1 = "(resname "+sel_ligands+" and ( not type H O) and name "+line_ar+") and around 4.5 (resid "+str(u.resid[u.resname == cation][0]) + " and type N)" 
+                                u1_list = (u_mem.select_atoms(line1,updating=True))
+                                if(len(u1_list) > 4): 
+                                    found.append([IFP_type.name+"_"+u.resname+str(u.resid),u.name])
+                 #               print("!!!!!!!!!!!!!  Cat-Ar  interactions found",len(u1_list),u1_list)
             else:  
                 for u in u_list:
                         found.append([IFP_type.name+"_"+u.resname+str(u.resid),u.name]) 
@@ -641,7 +644,6 @@ def Plot_IFP(df,contact_collection=None,out_name=""):
     if len(columns_IFP) < 25:  sns.heatmap(np.float32(df1), cmap="YlGnBu", xticklabels=xticklabels)
     else:  sns.heatmap(np.float32(df1), cmap="YlGnBu")
     ax.set_title('IFP')
-    ax.set_ylabel("frame")
     
     if( df[columns_CONT].shape[1] > 0):
         ax = plt.subplot(gs[1])
