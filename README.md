@@ -81,4 +81,4 @@ IV. __membrane_analysis_example.ipynb__
 
 Exploring behavior of a membrane-protein system in MD simulations
 ![HSP90](/images/Membrane.png)
-*Illustratration of the analysis of a protein-membrane system for a muscarinic reseptor M2 embedded in a mixed membrane with 50% of cholesterol*
+*Illustratration of the analysis of the muscarinic reseptor M2 GPCR embedded in a mixed membrane with 50% of cholesterol*
