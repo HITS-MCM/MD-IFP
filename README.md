@@ -79,6 +79,6 @@ This example shows how RAMD dissociation trajectories can be analyzed usinf pre-
    
 IV. __membrane_analysis_example.ipynb__
 
-Exploring behavior of a membrane-protein system in MD simulations
+Exploring behavior of a membrane-protein system in MD simulations. Membrane surface is supposed to be in the X/Y plane 
 ![HSP90](/images/Membrane.png)
 *Illustratration of the analysis of the muscarinic reseptor M2 GPCR embedded in a mixed membrane with 50% of cholesterol*
