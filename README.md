@@ -57,7 +57,7 @@ https://zenodo.org/record/3755337#.XrF-iGgzaUk
        
 ## Test example as jupyter notebooks :
 
-I. __IFP_generation_examples_PDB.ipynb:__
+###I. __IFP_generation_examples_PDB.ipynb:__
 
 Protein-Ligand interaction fingerprint (IFP) computations (only function of IFP_generation.py are used) for:
    1. a single structure prepared for MD simulations (HSP90; PDB ID 6EI5, dcd format)
