@@ -86,6 +86,16 @@ mda.core.flags['use_periodic_selections'] = True
 mda.core.flags['use_KDTree_routines'] = False
 
 
+#####################################
+# thresholds:
+#####################################
+r_cat = 5 # cation-aromatic
+r_ari = 5.5  # pi-pi
+r_hyd = 4.0 # hydrophobic
+r_sar = 4.5 # S-aromatic
+r_sal = 4.5 # salt bridge
+r_hal = 3.5 # halogen interactions
+r_wat = 3.5 # water shell
 
 #######################################################################
 #
@@ -138,7 +148,7 @@ def IFP_list(property_list, sel_ligands, RE=True, Lipids = []):
             for l in tuple(set(property_list["Hydrophobe"])): line = line + l + " "
             sel_a = " (protein and (type C  S) and (not  (name CG and resname ASN ASP))   and (not  (name CD and resname GLU GLN ARG))  and (not  (name CZ and resname TYR ARG))  and (not  (name CE and resname LYS)) and (not  (name CB and resname SER THR))   and (not backbone))"                 
             sel_b = '((resname '+sel_ligands+") and (name "+line+") )"
-            IFP_prop_list.append(IFP_prop("HY",line,sel_a,sel_b,4.0))
+            IFP_prop_list.append(IFP_prop("HY",line,sel_a,sel_b,r_hyd))
     except:
         print("HY failed")
         pass
@@ -148,7 +158,7 @@ def IFP_list(property_list, sel_ligands, RE=True, Lipids = []):
             for l in tuple(set(property_list["PosIonizable"])): line = line + l +" "
             sel_a = "((resname ASP GLU) and (name OE* OD*)) "
             sel_b = '((resname '+sel_ligands+") and (name "+line+") )"
-            IFP_prop_list.append(IFP_prop("IP",line,sel_a,sel_b,4.5))
+            IFP_prop_list.append(IFP_prop("IP",line,sel_a,sel_b,r_sal))
     except:
         print("IP failed")
         pass
@@ -159,7 +169,7 @@ def IFP_list(property_list, sel_ligands, RE=True, Lipids = []):
             for l in tuple(set(property_list["NegIonizable"])): line = line + l +" "
             sel_a = "((resname ARG LYS ) and (name NH* NZ)) or ((resname HI2 ) and (name HD HE))"
             sel_b = '((resname '+sel_ligands+") and (name "+line+") )"
-            IFP_prop_list.append(IFP_prop("IN",line,sel_a,sel_b,4.5))
+            IFP_prop_list.append(IFP_prop("IN",line,sel_a,sel_b,r_sal))
     except:
         print("IN failed")
         pass
@@ -173,9 +183,9 @@ def IFP_list(property_list, sel_ligands, RE=True, Lipids = []):
         sel_b = '((resname '+sel_ligands+" ) and (name "+line+"))"
         sel_a = "((resname PHE TRP TYR HIS HIE HID HE2) and (name CZ* CD* CE* CG* CH* NE* ND*))"      
         if("PosIonizable" in property_list.keys()): 
-            IFP_prop_list.append(IFP_prop("AR",line,sel_a,sel_b,4.5))
+            IFP_prop_list.append(IFP_prop("AR",line,sel_a,sel_b,r_cat))
         if("Aromatic" in property_list.keys()):
-            IFP_prop_list.append(IFP_prop("AR",line,sel_a,sel_b,5.5))
+            IFP_prop_list.append(IFP_prop("AR",line,sel_a,sel_b,r_ari))
     except:
         print("AR1 failed")
         pass
@@ -183,7 +193,7 @@ def IFP_list(property_list, sel_ligands, RE=True, Lipids = []):
     try: #--- S -aromatic 
         sel_b = '((resname '+sel_ligands+") and (type S ))"
         sel_a = "((resname PHE TRP TYR HI2 HIS HIE HID) and (name CZ* CD* CE* CG* CH* NE* ND*)) "
-        IFP_prop_list.append(IFP_prop("AR",line,sel_a,sel_b,4.5))
+        IFP_prop_list.append(IFP_prop("AR",line,sel_a,sel_b,r_sar))
     except:
         print("AR2 failed")
         pass
@@ -193,16 +203,26 @@ def IFP_list(property_list, sel_ligands, RE=True, Lipids = []):
         if "Aromatic" in property_list.keys():
             for l in np.asarray(property_list["Aromatic"]): line = line + l +" "
             sel_b = '((resname '+sel_ligands+" ) and (name "+line+") )"
-            sel_a = "((resname ARG LYS ) and (name NH* NZ*)) or (backbone and name H)" #  or ((type S) and (resname MET CYS))
-            IFP_prop_list.append(IFP_prop("AR",line,sel_a,sel_b,4.5))
+            sel_a = "((resname ARG LYS ) and (name NH* NZ*)) or (backbone and name H)  " #  or ((type S) and (resname MET CYS))
+            IFP_prop_list.append(IFP_prop("AR",line,sel_a,sel_b,r_cat))
     except:
         print("AR3 failed")
+        pass
+    try: #--- aromatic ligand - cation , amide, or S interactions
+        line = ""
+        if "Aromatic" in property_list.keys():
+            for l in np.asarray(property_list["Aromatic"]): line = line + l +" "
+            sel_b = '((resname '+sel_ligands+" ) and (name "+line+") )"
+            sel_a = " type S " #  or ((type S) and (resname MET CYS))
+            IFP_prop_list.append(IFP_prop("AR",line,sel_a,sel_b,r_sar))
+    except:
+        print("AR4 failed")
         pass
     
     try: #--- halogen bonds with atromatic or backbone carbonyl oxygen
         sel_b = '((resname '+sel_ligands+" ) and ( type I CL BR Br Cl) )"
         sel_a = "((resname PHE TRP TYR HIS HIE HID ) and (name CZ* CD* CE* CG* CH* NE* ND*)) or (backbone and name O) or ((resname ASP GLU) and (name OE* OD*))  or ((resname CYS MET) and (type S))"
-        IFP_prop_list.append(IFP_prop("HL","HL",sel_a,sel_b,3.5))
+        IFP_prop_list.append(IFP_prop("HL","HL",sel_a,sel_b,r_hal))
     except:
         print("HL failed")
         pass
@@ -210,7 +230,7 @@ def IFP_list(property_list, sel_ligands, RE=True, Lipids = []):
 #        sel_a = "((sphzone 12.0 resname "+sel_ligands+") and (resname WAT and type O))"
         sel_a = " (resname WAT HOH SOL and type O) "
         sel_b = '(resname '+sel_ligands+" ) and ( not type H )"
-        IFP_prop_list.append(IFP_prop("WA","HE",sel_a,sel_b,3.5))
+        IFP_prop_list.append(IFP_prop("WA","HE",sel_a,sel_b,r_wat))
     except:
         print("WA failed")
         pass
@@ -391,28 +411,30 @@ def IFP(u_mem,sel_ligands,property_list, WB_analysis = True, RE = True,Lipids = 
                                 found.append([IFP_type.name+"_"+u.resname+str(u.resid),u.name])
  #                               print("!!!!!!!!!!!!!  pi-pi stacking found",ar_n,u.resname,str(u.resid))
                         # here we will check if cation (LYS or ARG) really contact an aromatic ring of the ligand
-                        elif(u.resname in ["LYS","ARG"]):
-                            if u.resname == "LYS" : cation = "LYS"
-                            else: cation = "ARG"
-         #                   cation = u_resname 
+                        elif(u.resname in ["LYS","ARG","CYS","MET"]):
+ #                           if u.resname == "LYS" : cation = "LYS"
+ #                           else: cation = "ARG"
+                            cation = u.resname 
                             if("Aromatic" in property_list.keys()):
                                 line_ar = ""
                                 for l in np.asarray(property_list["Aromatic"]): line_ar = line_ar + l +" "
-                                line1 = "(resname "+sel_ligands+" and ( not type H O) and name "+line_ar+") and around 4.5 (resid "+str(u.resid[u.resname == cation][0]) + " and type N)" 
+                                line1 = "(resname "+sel_ligands+" and ( not type H O) and name "+line_ar+") and around "+str(r_cat)+" (resid "+str(u.resid[u.resname == cation][0]) + " and type N)" 
                                 u1_list = (u_mem.select_atoms(line1,updating=True))
                                 if(len(u1_list) > 4): 
                                     found.append([IFP_type.name+"_"+u.resname+str(u.resid),u.name])
-                 #               print("!!!!!!!!!!!!!  Cat-Ar  interactions found",len(u1_list),u1_list)
+    #                            print("!!!!!!!!!!!!!  Cat-Ar  interactions found",len(u1_list),u1_list)
                         # now we check if aromatc residue (HIS) is perpendicular to the aromatic fragment of the ligand
                         ### TOBE checked if this works!!!!!================================================
+                 #       """
                         elif(u.resname in ["PHE", "TRP", "TYR","HIS","HIE","HID","HI2"]) and (u.resid in ar_resid[ar_n < 4]):
                             if("Aromatic" in property_list.keys()):
                                 line_ar = ""
                                 for l in np.asarray(property_list["Aromatic"]): line_ar = line_ar + l +" "
-                                line1 = "(resname "+sel_ligands+" and ( not type H O) and name "+line_ar+") and around 5. (resid "+str(u.resid) + " and (name NE* ND* CE* CD* CZ* CH*))" 
+                                line1 = "(resname "+sel_ligands+" and ( not type H O) and name "+line_ar+") and around 5.0 (resid "+str(u.resid) + " and (name NE* ND* CE* CD* CZ* CH*))" 
                                 u1_list = (u_mem.select_atoms(line1,updating=True))
                                 if(len(u1_list) > 4): 
                                     found.append([IFP_type.name+"_"+u.resname+str(u.resid),u.name])
+               #         """
                         ### TOBE checked if this works!!!!!================================================
                                 
             else:  
