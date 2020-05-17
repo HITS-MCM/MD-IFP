@@ -120,7 +120,7 @@ class PdbIDAnalysis(object):
             wget.download('https://files.rcsb.org/download/{0}.pdb'.format(self.pdb_id), out=file_name)
         return
 
-    def split_pdb(self, pdb_chain, unwanted_conformation=None, wanted_conformation=None):
+    def split_pdb(self, pdb_chain, unwanted_conformation=None, wanted_conformation=None, residue_id = None):
         """Extracts specified chain, ligand and water molecules from pdb file.
 
         Sub-structures are extracted using the pdb-handling capacities of the Biopython package. A new folder is created
@@ -132,6 +132,8 @@ class PdbIDAnalysis(object):
             unwanted_conformation (str):  Conformation to be filtered out. Not mentioned conformation remains in pdb.
             wanted_conformation (str): Conformation that is wanted. Used to reformat lines in case atom description and
                                        residue merge.
+            residue_id (int): Optional wanted residue number of the ligand. Usefull if two ligands interact with the
+                              same chain.
 
         Returns:
             None, if pdbID_split directory already exists.
@@ -142,7 +144,6 @@ class PdbIDAnalysis(object):
             with open(self.data_path + "unfiltered_" + self.pdb_id + ".pdb", "r+") as file:
                 lines = file.readlines()
                 with open(self.data_path + self.pdb_id + ".pdb", "w+") as filtered:
-                    i = 0
                     for line in lines:
                         if not extract_conformation(line, unwanted_conformation, self.ligand_id):
                             if extract_conformation(line, wanted_conformation, self.ligand_id):
@@ -173,12 +174,19 @@ class PdbIDAnalysis(object):
             """Selects only atoms belonging to the given ligand ID.
 
             accept_residue is overloaded to only return 1 if the residue name is equal to the ligand ID.
+            If residue_id is specified 1 will only be returned if the residue_id is matched.
             accept_chain is overloaded to only return 1 if the chain is equal to the supplied chain identifier.
 
             """
             def accept_residue(self, residue):
                 if residue.get_resname().strip() == ligand_id:
-                    return 1
+                    if residue_id is not None:
+                        if residue.get_id()[1] == residue_id:
+                            return 1
+                        else:
+                            return 0
+                    else:
+                        return 1
                 else:
                     return 0
 
@@ -342,13 +350,14 @@ class PdbIDAnalysis(object):
 
         return df_prop_complete
 
-    def run(self, chain, chimera_path="C:/Program Files/Chimera 1.14/bin/chimera.exe", get_properties=False):
+    def run(self, chain, chimera_path="C:/Program Files/Chimera 1.14/bin/chimera.exe", get_properties=False,
+            residue_id=None):
         """ Wraps all methods of PdbIDAnalysis into a single method for convenient use. For Args see each method itself.
 
         """
         self.download_pdb()
         self.add_hydrogen(chimera_path=chimera_path)
-        self.split_pdb(chain)
+        self.split_pdb(chain, residue_id=residue_id)
         try:
             self.create_ligand_mol2(chimera_path=chimera_path)
         except:
@@ -524,7 +533,7 @@ if __name__ == '__main__':
                                                                  protein not in PdbIDAnalysis.features_failed)]
 
     result_dataframe = pd.DataFrame.from_dict(dict(zip(haji_proteins, haji_results_columns)), orient="index")
-  
+    
     result_dataframe.to_pickle("results.pkl")
 
     analyze = StatisticalAnalysis("results.pkl")
