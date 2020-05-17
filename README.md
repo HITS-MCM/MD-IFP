@@ -1,4 +1,4 @@
-# MD-trajectory_analysis
+# MD-IFP: MD trajectory analysis using protein-ligand Interaction Fingerprints
 ## A workflow for generation and analysis Protein-Ligand Interaction Fingerprints from MD tajectories
 
 
