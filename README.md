@@ -37,7 +37,7 @@ conda env create -f IFP_trajectory.yml
 ## Scripts:
 
 
-__Trajectories.py__  - functions for building a trajectory object for reading and analysis standard MD and RAMD trajectories and computation of relative residence times
+### __Trajectories.py__  - functions for building a trajectory object for reading and analysis standard MD and RAMD trajectories and computation of relative residence times
 
 __IFP_generation.py__  -  functions for generation of IFPs
 
@@ -57,7 +57,7 @@ https://zenodo.org/record/3755337#.XrF-iGgzaUk
        
 ## Test example as jupyter notebooks :
 
-###I. __IFP_generation_examples_PDB.ipynb:__
+### I. __IFP_generation_examples_PDB.ipynb:__
 
 Protein-Ligand interaction fingerprint (IFP) computations (only function of IFP_generation.py are used) for:
    1. a single structure prepared for MD simulations (HSP90; PDB ID 6EI5, dcd format)
@@ -65,7 +65,7 @@ Protein-Ligand interaction fingerprint (IFP) computations (only function of IFP_
    3. a PDB structure
 
 
-II. __IFP_generation_examples_TRAJ.ipynb:__ 
+### II. __IFP_generation_examples_TRAJ.ipynb:__ 
 
 generation and analysis of  IFPs for plain MD simulations and RAMD trajectories for Muscarinic Receptor M2 in a membrane
 in this example Trajectories.py is used for pre-processing trajectories and  IFP_generation.py for computing IFPs
@@ -73,14 +73,14 @@ in this example Trajectories.py is used for pre-processing trajectories and  IFP
    3. Computing IFPs for ligand dissociation trajectories (dcd format)
 
 
-III. __IFP_generation_examples_Analysis.ipynb:__ 
+### III. __IFP_generation_examples_Analysis.ipynb:__ 
 
 This example shows how RAMD dissociation trajectories can be analyzed usinf pre-generated IFP database 
 ![HSP90](/images/cluster-traj.png)
 *This plot illustrates ligand dissociation pathways in a graph representation*
    
    
-IV. __membrane_analysis_example.ipynb__
+### IV. __membrane_analysis_example.ipynb__
 
 Exploring behavior of a membrane-protein system in MD simulations. Membrane surface is supposed to be in the X/Y plane 
 ![HSP90](/images/Membrane.png)
