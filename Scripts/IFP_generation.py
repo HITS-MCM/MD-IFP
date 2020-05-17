@@ -169,7 +169,7 @@ def IFP_list(property_list, sel_ligands, RE=True, Lipids = []):
         if "PosIonizable" in property_list.keys():
             for l in tuple(set(property_list["PosIonizable"])): line = line + l +" "
         if "Aromatic" in property_list.keys():  # pi-pi
-            for l in tuple(set(property_list["Aromatic"])): line = line + l +" "
+            for l in np.asarray(property_list["Aromatic"]): line = line + l +" "
         sel_b = '((resname '+sel_ligands+" ) and (name "+line+"))"
         sel_a = "((resname PHE TRP TYR HIS HIE HID HE2) and (name CZ* CD* CE* CG* CH* NE* ND*))"      
         if("PosIonizable" in property_list.keys()): 
@@ -191,7 +191,7 @@ def IFP_list(property_list, sel_ligands, RE=True, Lipids = []):
     try: #--- aromatic ligand - cation , amide, or S interactions
         line = ""
         if "Aromatic" in property_list.keys():
-            for l in tuple(set(property_list["Aromatic"])): line = line + l +" "
+            for l in np.asarray(property_list["Aromatic"]): line = line + l +" "
             sel_b = '((resname '+sel_ligands+" ) and (name "+line+") )"
             sel_a = "((resname ARG LYS ) and (name NH* NZ*)) or (backbone and name H)" #  or ((type S) and (resname MET CYS))
             IFP_prop_list.append(IFP_prop("AR",line,sel_a,sel_b,4.5))
@@ -389,11 +389,12 @@ def IFP(u_mem,sel_ligands,property_list, WB_analysis = True, RE = True,Lipids = 
                             # check also residue name to deal the case of residues with the same id
                             if( np.unique(np.asarray(u_ar_n)[np.where(u_ar==u.resid)[0]]).shape[0])== 1: 
                                 found.append([IFP_type.name+"_"+u.resname+str(u.resid),u.name])
- #                               print("!!!!!!!!!!!!!  pi-pi stacking found",ar_n,u.resname)
+ #                               print("!!!!!!!!!!!!!  pi-pi stacking found",ar_n,u.resname,str(u.resid))
                         # here we will check if cation (LYS or ARG) really contact an aromatic ring of the ligand
                         elif(u.resname in ["LYS","ARG"]):
                             if u.resname == "LYS" : cation = "LYS"
                             else: cation = "ARG"
+         #                   cation = u_resname 
                             if("Aromatic" in property_list.keys()):
                                 line_ar = ""
                                 for l in np.asarray(property_list["Aromatic"]): line_ar = line_ar + l +" "
@@ -402,6 +403,18 @@ def IFP(u_mem,sel_ligands,property_list, WB_analysis = True, RE = True,Lipids = 
                                 if(len(u1_list) > 4): 
                                     found.append([IFP_type.name+"_"+u.resname+str(u.resid),u.name])
                  #               print("!!!!!!!!!!!!!  Cat-Ar  interactions found",len(u1_list),u1_list)
+                        # now we check if aromatc residue (HIS) is perpendicular to the aromatic fragment of the ligand
+                        ### TOBE checked if this works!!!!!================================================
+                        elif(u.resname in ["PHE", "TRP", "TYR","HIS","HIE","HID","HI2"]) and (u.resid in ar_resid[ar_n < 4]):
+                            if("Aromatic" in property_list.keys()):
+                                line_ar = ""
+                                for l in np.asarray(property_list["Aromatic"]): line_ar = line_ar + l +" "
+                                line1 = "(resname "+sel_ligands+" and ( not type H O) and name "+line_ar+") and around 5. (resid "+str(u.resid) + " and (name NE* ND* CE* CD* CZ* CH*))" 
+                                u1_list = (u_mem.select_atoms(line1,updating=True))
+                                if(len(u1_list) > 4): 
+                                    found.append([IFP_type.name+"_"+u.resname+str(u.resid),u.name])
+                        ### TOBE checked if this works!!!!!================================================
+                                
             else:  
                 for u in u_list:
                         found.append([IFP_type.name+"_"+u.resname+str(u.resid),u.name]) 
