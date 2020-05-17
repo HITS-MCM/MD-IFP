@@ -1,5 +1,5 @@
 # MD-IFP: MD trajectory analysis using protein-ligand Interaction Fingerprints
-## A workflow for generation and analysis Protein-Ligand Interaction Fingerprints from MD tajectories
+## A workflow for generation and analysis Protein-Ligand Interaction Fingerprints from Molecular Dynamics tajectories
 
 
 __Authors:__
