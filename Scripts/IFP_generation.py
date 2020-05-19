@@ -425,7 +425,6 @@ def IFP(u_mem,sel_ligands,property_list, WB_analysis = True, RE = True,Lipids = 
     #                            print("!!!!!!!!!!!!!  Cat-Ar  interactions found",len(u1_list),u1_list)
                         # now we check if aromatc residue (HIS) is perpendicular to the aromatic fragment of the ligand
                         ### TOBE checked if this works!!!!!================================================
-                 #       """
                         elif(u.resname in ["PHE", "TRP", "TYR","HIS","HIE","HID","HI2"]) and (u.resid in ar_resid[ar_n < 4]):
                             if("Aromatic" in property_list.keys()):
                                 line_ar = ""
@@ -434,19 +433,26 @@ def IFP(u_mem,sel_ligands,property_list, WB_analysis = True, RE = True,Lipids = 
                                 u1_list = (u_mem.select_atoms(line1,updating=True))
                                 if(len(u1_list) > 4): 
                                     found.append([IFP_type.name+"_"+u.resname+str(u.resid),u.name])
-               #         """
                         ### TOBE checked if this works!!!!!================================================
             elif (IFP_type.name == "HL"):
                 for u in u_list:   
                     # here we will check if the angle  C-HAL.... O is about 180grad
-                    if u.type == "O":
-                        line1 =  "(resname "+sel_ligands+" and (type C)) and around 4.0 (resid "+str(u.resid)+" and type O )"
+                    if (u.type == "O") or (u.type == "S"):
+                        line1 ="(resname "+sel_ligands+" ) and around "+str(r_hal+1.0)+" (resid "+str(u.resid)+" and type O S )"
                         u1_list = (u_mem.select_atoms(line1,updating=True))
- #                       print(u.resid,u.name,":::",len(u1_list),u1_list)
+#                        print(u.resid,u.name,":::",len(u1_list),u1_list)
                         if len(u1_list) < 2:
-                            found.append([IFP_type.name+"_"+u.resname+str(u.resid),u.name])           
-                    else:
-                        found.append([IFP_type.name+"_"+u.resname+str(u.resid),u.name])   
+                            found.append([IFP_type.name+"_"+u.resname+str(u.resid),u.name])  
+                # now we check if halogen atom is  perpendicular to the aromatic residue
+                 ### TOBE checked if this works!!!!!====HAL=====================================
+                u_ar = []
+                for u in u_list:  
+                    if u.resname in ["HIS","HIE","HID","TYR","TRP","PHE"]:  u_ar.append(u.resid)
+                if len(u_ar)> 0:
+                    ar_resid, ar_n = np.unique(u_ar,return_counts=True)
+                    if(u.resid in ar_resid[ar_n > 4]): 
+                            found.append([IFP_type.name+"_"+u.resname+str(u.resid),u.name])  
+                 ### TOBE checked if this works!!!!!====HAL========================================
             else:  
                 for u in u_list:
                         found.append([IFP_type.name+"_"+u.resname+str(u.resid),u.name]) 
