@@ -1,13 +1,12 @@
 # MD-IFP: MD trajectory analysis using protein-ligand Interaction Fingerprints
 ## A Python workflow for generation and analysis Protein-Ligand Interaction Fingerprints from Molecular Dynamics tajectories
-
+## v.1.0
 
 __Authors:__
 
 * Daria Kokh
 * Fabian Ormersbach - preprocessing PDB files using Chimera (Process_pdb.py, chimera_hydrogen_mol2.py; test examples revised) 
 
-v.1.0
 
 Daria.Kokh@h-its.org
 
