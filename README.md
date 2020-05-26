@@ -1,5 +1,5 @@
 # MD-IFP: MD trajectory analysis using protein-ligand Interaction Fingerprints
-## A workflow for generation and analysis Protein-Ligand Interaction Fingerprints from Molecular Dynamics tajectories
+## A Python workflow for generation and analysis Protein-Ligand Interaction Fingerprints from Molecular Dynamics tajectories
 
 
 __Authors:__
@@ -25,7 +25,7 @@ __Python 3.x__
 
 __Python Libraries:__ numpy;    pandas;  matplotlib;  MDAnalysis;  seaborn; RDkit; sklearn;  scipy; ngview 
 
-__Chimera__ - only for the scripts used for preprocessing pdb files (structure protonation and generation of the ligand mol2 file); not requared if protonation and mol2 file are already prepared by a user)
+__Chimera__ - only for the scripts used for preprocessing pdb files (structure protonation and generation of the ligand mol2 file); not required if protonation and mol2 file are already prepared by a user)
     
 __Codes were written on Python 3.x and tested on Python 3.7__
 
@@ -55,7 +55,12 @@ __Membrane_analysis.py__ - computation of the membrane surface area per lipid an
 ## Data employed in test examples: 
 https://zenodo.org/record/3755337#.XrF-iGgzaUk
        
-## Test example as jupyter notebooks :
+## Application examples (folder Examples):
+
+   1. Generation of the IFP databease a single MD trajectory of a protein-ligand complex
+   2. Analysis and visualization of a set of IFP databsis for different ligands 
+
+## Test example as Python Jupyter Notebooks :
 
 ### I. __IFP_generation_examples_PDB.ipynb:__
 
