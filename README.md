@@ -51,9 +51,6 @@ __chimera_hydrogen_mol2.py__  - generation ligand mole2 file
 
 __Membrane_analysis.py__ - computation of the membrane surface area per lipid and membrane/protein/water atom density distribution  
 
-
-## Data employed in test examples: 
-https://zenodo.org/record/3755337#.XrF-iGgzaUk
        
 ## Application examples (folder Examples):
 
@@ -61,6 +58,9 @@ https://zenodo.org/record/3755337#.XrF-iGgzaUk
    2. Analysis and visualization of a set of IFP databsis for different ligands 
 
 ## Test example as Python Jupyter Notebooks :
+
+### Data employed in test examples 
+   can be dowloaded from  https://zenodo.org/record/3755337#.XrF-iGgzaUk
 
 ### I. __IFP_generation_examples_PDB.ipynb:__
 
