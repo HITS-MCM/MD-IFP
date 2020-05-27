@@ -20,7 +20,7 @@ Schloss-Wolfsbrunnenweg 35
 *This open source software code was developed in part in the __Human Brain Project__, funded from the European Union’s Horizon 2020 Framework Programme for Research and Innovation under Specific Grant Agreements  No. 785907 (Human Brain Project  SGA2).*
 
 
-# __Important notes regarding file preparation procedure for IFP computations:__
+# __Important notes regarding the file preparation procedure for IFP computations:__
 
 ## __Ligand structure preparation__
   1. Ligand should be protonated. In the case of multiple ligands, one can use automated procedure implemented in the script Process_pdb.py that employes Chimera software (https://www.cgl.ucsf.edu/chimera/). 
