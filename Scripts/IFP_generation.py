@@ -452,13 +452,14 @@ def IFP(u_mem,sel_ligands,property_list, WB_analysis = True, RE = True,Lipids = 
                         ### TOBE checked if this works!!!!!================================================
             elif (IFP_type.name == "HL"):
                 for u in u_list:   
-                    # here we will check if the angle  C-HAL.... O is about 180grad
+                    # here we will check if the angle  C-HAL.... O is about 180grad fro this we look what atoms within r_hal+1 from O - should be only Hal
                     if (u.type == "O") or (u.type == "S"):
                         line1 ="(resname "+sel_ligands+" ) and around "+str(r_hal+1.0)+" (resid "+str(u.resid)+" and type O S )"
                         u1_list = (u_mem.select_atoms(line1,updating=True))
 #                        print(u.resid,u.name,":::",len(u1_list),u1_list)
-                        if len(u1_list) < 1:
-                            found.append([IFP_type.name+"_"+u.resname+str(u.resid),u.name])  
+                        if len(u1_list) < 2:
+                            found.append([IFP_type.name+"_"+u.resname+str(u.resid),u.name]) 
+                        else: print("HL-O contact found but will not be counted because of the too small angle: ",len(u1_list),u.resname+str(u.resid),u.name)
                         # TO BE DONE instead of previous criterion
                         """
                         else:
@@ -481,6 +482,8 @@ def IFP(u_mem,sel_ligands,property_list, WB_analysis = True, RE = True,Lipids = 
                     ar_resid, ar_n = np.unique(u_ar,return_counts=True)
                     if(u.resid in ar_resid[ar_n > 4]): 
                             found.append([IFP_type.name+"_"+u.resname+str(u.resid),u.name])  
+                    else:
+                        print("HL-aromatic contact found but will not be counted because it has less than 4 contacts with aromatic atoms:",ar_resid,ar_n)
                  ### TOBE checked if this works!!!!!====HAL========================================
             else:  
                 for u in u_list:

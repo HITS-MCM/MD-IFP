@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 # coding: utf-8
 #
-# # Package for analysis of RAMD dissociation tarjectories using Interaction Fingerprints 
+#  Package for analysis of RAMD dissociation tarjectories using Interaction Fingerprints 
+#
 #############################
 ### v 1.0
 #
@@ -53,27 +54,57 @@ from sklearn.cluster import KMeans
 ########################################################################
 # Sorting of residue by number
 ########################################################################
+def rank_IFP_resi(df,ifp_type=['AR','HY','HA','HD','HL','IP','IN',"IO"]):
+    """    
+    script extracts and ranks by the residue number IFP list  from the IFP table 
+    
+    Parameters:
+    df - pkl table
+    ifp_type - list of IFP types to be considered
+    
+    Results:
+    columns_IFP - list of IFP
+    columns_R
+    """
+    columns_IFP = []  # standard IFP
+    number = []
+    for c in df.columns.tolist():
+        if c[0:2] in ifp_type: 
+            columns_IFP.append(c)
+            if c[3:].isdigit():    number.append(int(c[3:]))
+            elif c[4:].isdigit():    number.append(int(c[4:]))
+            elif c[5:].isdigit():    number.append(int(c[5:]))
+            else: number.append(int(c[6:]))
+    columns_IFP = np.asarray(columns_IFP)[np.argsort(np.asarray(number))]
 
-def get_resn_list(li,lab):
-    ret = []
-    n = []
-    for i in li:
-        if i[:2] == lab:
-            ret.append(i)
-            n.append(int(i[6:]))
-    ind_sorted = np.argsort(np.asarray(n))
-    return np.asarray(ret)[ind_sorted]
+    columns_RE = []  # standard IFP
+    number = []
+    for c in df.columns.tolist():
+        if c[0:2] == "RE": 
+            columns_RE.append(c)
+            if c[3:].isdigit():    number.append(int(c[3:]))
+            elif c[4:].isdigit():    number.append(int(c[4:]))
+            elif c[5:].isdigit():    number.append(int(c[5:]))
+            else: number.append(int(c[6:]))
+
+    columns_RE = np.asarray(columns_RE)[np.argsort(np.asarray(number))]
+    return(columns_IFP,columns_RE)
+
+
 
 
 ########################################################################
-# Program for reading IFP databases
+# reading IFP databases
 # Additionally column with ligand name is added
 # and COM column is splitted to COM_x, COM_y, COM_z
 ########################################################################
 def standard_IFP(unpickled_dfi,ligandsi):
     """
+    Script for reading IFP databases; Additionally column with ligand name is added and COM column is splitted to COM_x, COM_y, COM_z
+    
     Parameters:
     dictionary of files with IFP databases {name1:file_path1[,name2:filepath2],...}
+    
     Returns:
     combined IFP database
     """
@@ -110,8 +141,20 @@ def standard_IFP(unpickled_dfi,ligandsi):
     return(unpickled_df)
 
 ########################################################################
+# separate IFP by type 
+#
 ########################################################################
 def separate_IFP(complete_list_IFP):
+    """
+    
+    Parameters:
+    complete_list_IFP - list of IFPs
+    
+    Returns:
+    resi_list_sorted -
+    resi_name_list_sorted- 
+    ifp_list - 
+    """
     resi_list = []
     ifp_list = []
     resi_name_list = []
@@ -140,6 +183,17 @@ def separate_IFP(complete_list_IFP):
 ########################################################################
 def get_from_prop(list_x, df,list_l= [],threshold = 0.1):
     """
+    
+    Parameters:
+    list_x
+    df,list_l= []
+    threshold = 0.1
+    
+    Returns:
+    ar
+    ar_SD
+    x
+    
     """
     if len(list_l) == 0:
         list_l = np.unique(df.ligand.tolist())
@@ -167,9 +221,15 @@ def get_from_prop(list_x, df,list_l= [],threshold = 0.1):
 ########################################################################
 def unify_resi(list_resi, df,resi_list_sorted,list_l= [], threshold=3):
     """
+    Parameters:
+    
     list_resi - a complete list of IFP contacts to be considered
     resi_list_sorted - sorted residue numbers to be included in the IFP matrix
     list_l - list of ligands to be considered
+    
+    Returns:
+    ar_complete
+    ar_SD_complete
     """
     if len(list_l) == 0:
         list_l = np.unique(df.ligand.tolist())
@@ -188,26 +248,11 @@ def unify_resi(list_resi, df,resi_list_sorted,list_l= [], threshold=3):
         else:
             df_ligand_diss = df_ligand[t < threshold*threshold]
         ar_repl = []
-        """
-        for Repl in np.unique(df_ligand.Repl.tolist()):
-            df_ligand_Repl = df_ligand[df_ligand.Repl == Repl]
-            repl_mean = df_ligand_Repl[list_resi].mean().values
-            ar_repl.append(repl_mean)
-        ar.append(np.mean(np.asarray(ar_repl),axis=0))
-        ar_SD.append(np.std(np.asarray(ar_repl),axis=0))
-        """
         ar.append(np.asarray(df_ligand_diss[list_resi].mean().values))
         ar_SD.append(np.asarray(df_ligand_diss[list_resi].std().values))
     ar= np.asarray(ar)
     ar_SD= np.asarray(ar_SD)
     x = list_resi
-    """
-    ind = np.where(np.mean(ar,axis=0)<threshold)
-    if len(ind) > 9:
-        ar=np.delete(ar,ind,1)
-        ar_SD=np.delete(ar_SD,ind,1)
-        x = np.delete(list_resi,ind)
-    """
         
     ar_complete = np.zeros((len(list_l),len(resi_list_sorted)),dtype = float)
     ar_SD_complete = np.zeros((len(list_l),len(resi_list_sorted)),dtype = float)
@@ -225,6 +270,11 @@ def unify_resi(list_resi, df,resi_list_sorted,list_l= [], threshold=3):
 ########################################################################
 def ar_complete_ligand(ligand,df_tot,resi_list_sorted,properties=["RE","AR","HD","HA","HY","WB"]):
     """
+    
+    Parameters:
+    
+    Returns:
+    
     """
     df_ligand = df_tot[df_tot.ligand == ligand]
     ar_complete = np.zeros((len(properties),len(resi_list_sorted)),dtype = float)
@@ -250,6 +300,16 @@ def ar_complete_ligand(ligand,df_tot,resi_list_sorted,properties=["RE","AR","HD"
 ########################################################################
 ########################################################################
 def read_databases(d,name_template,name_len = 8):
+    """    
+    Parameters:
+    d - directory with multiple datasets 
+    name_template - name of IFP pkl files (may contain *)
+    name_len - number of the first letters in the name of  pkl files to be used as a ligand name
+    Results:
+    df_tot - concatinated dataset
+    ligandsi - a set of ligand names
+    
+    """
     unpickled_dfi = []
     ligandsi = []
     list_IFP = {}    
@@ -264,7 +324,8 @@ def read_databases(d,name_template,name_len = 8):
         #--- to re-number residues
         for l in list_col:
             if(l[2] == "_"):  
-                new_list_col.append(l[:6]+str(int(l[6:])))
+                new_list_col.append(l)
+      #          new_list_col.append(l[:6]+str(int(l[6:])))
             else: new_list_col.append(l)
         df_lig.columns = new_list_col
         unpickled_dfi.append( df_lig)
@@ -280,7 +341,10 @@ def read_databases(d,name_template,name_len = 8):
 ########################################################################
 def clean_ramd(df_tot,threshold = 0.9,check_z = False):
     """
+    Parameters:
     check_z - check if z coordinate is changed and drop trajectories where it did not
+    
+    Parameters:
     """
     df_tot_new = pd.DataFrame(columns=df_tot.columns.tolist())
     if "ligand" in np.unique(df_tot.columns.values):
@@ -319,6 +383,13 @@ def clean_ramd(df_tot,threshold = 0.9,check_z = False):
 ##########################################################################
 ######################################################################
 def GRID_PRINT(file_name,pdrv,gr_orgn,gr_dim,grid_stp):
+    """
+    
+    Parameters:
+    
+    Returns:
+    
+    """
     header = "#  density  \n"
     header += "object 1 class gridpositions counts %3i" %gr_dim[0]+" %3i" %gr_dim[1]+" %3i" %gr_dim[2]+"\n"
     header += "origin %5.3f" %gr_orgn[0]+" %5.3f" %gr_orgn[1]+" %5.3f" %gr_orgn[2]+"\n"
@@ -347,6 +418,16 @@ def GRID_PRINT(file_name,pdrv,gr_orgn,gr_dim,grid_stp):
 ##################################
 ################################
 def Map_3D_grid(df_tot_to_save,filename):
+    """
+    Mapping ligand motion trajectory from the IFP file on the 3D grid and saving the grid in dx format
+    
+    Parameters:
+    df_tot_to_save
+    filename
+    
+    Returns:
+    
+    """
     COM_x = []
     COM_y = []
     COM_z = []
@@ -377,15 +458,23 @@ def Map_3D_grid(df_tot_to_save,filename):
 ################################
 
 
-from matplotlib.patches import ArrowStyle
-from matplotlib.patches import Ellipse
-from scipy.spatial import distance
 def plot_graph_New(df_ext,file_save = "",ligand = "",draw_round = False,water = False):
     """
+    Graph-based  representation of ligand dissociation trajectories
+    
     Parameters:
     df_ext - IFP database
+    file_save - file name to save an image
+    ligand - generate dissociation pathways for a selected ligand only (note, that clusters properties still include data for all ligands)
+    draw_round - type of representation (plain/round)
+    water - visualize number of wather molecules in the ligand solvation shell for each clutser
+    
     Returns:
+    cluster label sorted by increase of the average ligand RMSD in each cluster
     """
+    from matplotlib.patches import ArrowStyle
+    from matplotlib.patches import Ellipse
+    from scipy.spatial import distance
     df_ext_ligand = df_ext
     if len(ligand)> 0:
         try:
@@ -428,7 +517,7 @@ def plot_graph_New(df_ext,file_save = "",ligand = "",draw_round = False,water = 
     dist_com = (10*np.asarray(dist_com)/np.max(dist_com)).astype(int)
     
     print(indx_first_com, min(label_rmsd),dist_com)
-    fig = plt.figure(figsize = (6,2),facecolor='w') 
+    fig = plt.figure(figsize = (6,2),facecolor='w',dpi=150) 
     gs = gridspec.GridSpec(1,2, width_ratios=[ 1,1],wspace=0.08) 
     ax = plt.subplot(gs[0]) 
     plt.title("Transition density")
@@ -578,6 +667,12 @@ def plot_graph_New(df_ext,file_save = "",ligand = "",draw_round = False,water = 
 #######################################
 def Plot_COM(df_ext):
     """
+    
+    Parameters:
+    df_ext - IFP database with COM columns
+    
+    Returns:
+    
     """
     labels_list = np.unique(df_ext["label"].values)
     list_properties = ["COM_x","COM_y","COM_z","RGyr","WAT"]
@@ -613,8 +708,15 @@ def Plot_COM(df_ext):
 
 
 
-# generate a list of residues, combine all properties for each residue, sort them by the residue number
 def Print_IFP_averaged(df_tot,resi_list_sorted,ligandsi,resi_name_list_sorted,properties=["AR","HD","HA","HY","WB","IP","IN"],threshold = 0.01):
+    """
+    generate a list of residues, combine all properties for each residue, sort them by the residue number
+    
+    Parameters:
+    
+    Returns:
+    
+    """
     index_no_zero_IFP = np.asarray([])
     threshold = 0.01
 
@@ -674,6 +776,13 @@ def Print_IFP_averaged(df_tot,resi_list_sorted,ligandsi,resi_name_list_sorted,pr
 #
 ##################################
 def last_frames_by_contact(df_tot,columns_IFP,contacts):
+    """
+    
+    Parameters:
+    
+    Returns:
+    
+    """
     r_t_f = []
     com_tot = []
     diss = []
@@ -701,6 +810,13 @@ def last_frames_by_contact(df_tot,columns_IFP,contacts):
 
 from scipy.cluster import hierarchy
 def bootstrapp(t):
+    """
+    
+    Parameters:
+    
+    Returns:
+    
+    """
     max_shuffle = 500
     alpha = 0.9
     sub_set = int(alpha*len(t))        

@@ -158,7 +158,7 @@ from Scripts.IFP_generation import *
 
  
 #sub_system = "protein or resname MG MN CA Mg Mn Ca"
-#sub_system = "protein or (resname G G3 G5 U5 C C3 MN)"
+sub_system = "protein or (resname G G3 G5 U5 C C3 MG MN CA Mg Mn)"
 
 class Trj_Properties:
     def __init__(self):
@@ -173,8 +173,6 @@ class Trj_Properties:
         self.Rgr_lig = None
         self.com_lig = None
         self.rmsd_auxi = None
-        self.sub_system = "protein" 
-        self.WB_order = 5
         
 
 
@@ -830,6 +828,7 @@ class trajectories:
         else: start = start_analysis        
         if(start > stop): start = stop -1
         step = max(1,step_analysis)
+#        sub_system = "protein"
         if len(Lipids) > 0:
             lipid_line = ""
             for l in Lipids: lipid_line = lipid_line+" "+l
@@ -1081,6 +1080,7 @@ class  Ligand:
                             properties_list['NegIonizable'] = new_properties_list_H
                         else:  properties_list.update({'NegIonizable': list_labelsP})
                         print(" PO3 group is found (P atoms will be considered as NegIonizable) :",list_labelsP)
+                        
                     if len(list_labelsPO3) > 0:                        
                         if  'Acceptor' in properties_list: 
                             new_properties_list_H = properties_list['Acceptor']
@@ -1088,8 +1088,9 @@ class  Ligand:
                             properties_list['Acceptor'] = new_properties_list_H
                         else:  properties_list.update({'Acceptor': list_labelsPO3})
                         print(" PO3 group is found (O atoms will be considered as Acceptors) :",list_labelsPO3)
-
-                    print("Ligand properties:")
+                        
+                        
+                    print("...............Ligand properties:................")
                     self.properties_list = properties_list
                     for k in properties_list:
                         print (k,properties_list[k])
@@ -1111,7 +1112,7 @@ class  Ligand:
                             print("ERROR: RDKit cannot read file- some errors found in the ligand structure")
                             sys.exit()
                 self.ligands_names = np.unique(resnames)
-                print("Important! The following residue names that will be used to identify ligand in the PDB file: ",self.ligands_names)            
+                print("............Important! ........\nThe following residue names will be used to identify ligand in the PDB file: ",self.ligands_names)            
                         
             else: print(" ligand PDB and Mol2 are not defined")
                 
