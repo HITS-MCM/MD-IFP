@@ -34,6 +34,6 @@ Schloss-Wolfsbrunnenweg 35
   
  ## __Complex structure/trajectory __
    1. System (protein/ligand/water) must be protonated. This is nessesary for detection of hydrogen bonds.
-   2. To minimize memory requared, only part of the system is analyzed (sub_system). By default this is protein+water+ligand. Interactions (H-bonds) with DNA/RND and ions can be found only if their residues are explicitly added to the sub_system. Currently, the simplest way to do this is to define all nessesary elements as an array or residue names and pass it as the "LIPID" parameter either IFP function or  trajectory (see examples)
+   2. To minimize memory requared, only part of the system is analyzed (sub_system). By default this is protein+water+ligand. Interactions (H-bonds) with DNA/RND and ions can be found only if their residues are explicitly added to the sub_system. Currently, the simplest way to do this is to define all nessesary elements as an array or residue names and pass it as a parameter "Lipids" either directly to IFP function or to a trajectory analysis function (see the example IFP.py)
    
 
