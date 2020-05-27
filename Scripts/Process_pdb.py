@@ -510,15 +510,15 @@ if __name__ == '__main__':
     hajiebrahimi_pdb = ["1bju", "1bma", "1eve", "1hvy", "1hwi", "1ia1", "1ig3", "1jd0", "1jla", "1l2s",
                         "1l7f", "1n1m", "1n7g", "1nax", "1oq5", "1osn", "1oyt", "1p2y", "1p5e", "1p62", "1t9b", "1tsl",
                         "1tt1", "1xdn", "2gpu", "2is7", "2iuz", "2p16", "2reg", "2w0s", "2yxj", "2zoz", "3byz", "3g2k",
-                        "3i6O", "3O1H", "3pxf", "3r0t", "3shy", "3srr", "3t5y", "4alw", "4kya", "4pjt", "4qnb",
+                        "3i6O", "3O1H", "3pxf", "3r0t", "3shy", "3srr", "3t5y", "3tah", "4alw", "4kya", "4pjt", "4qnb",
                         "4rao", "4rdl"]
     hajiebrahimi_ligand = ["GP6", "0QH", "E20", "D16", "115", "TQ3", "VIB", "AZM", "TNK", "STC", "BCZ",
                            "A3M", "NDP", "IH5", "CEL", "BVP", "FSN", "NCT", "TBS", "GEO", "1CS", "A15", "KAI", "ATP",
                            "OHT", "2CL", "D1H", "GG2", "CHT", "BVP", "N3C", "ET", "H11", "SKY", "GR6", "TMO", "2AN",
-                           "FU9", "5FO", "Q20", "MCS", "HY7", "1UG", "2YQ", "1B0", "3L7", "FUC"]
+                           "FU9", "5FO", "Q20", "MCS", "BGO", "HY7", "1UG", "2YQ", "1B0", "3L7", "FUC"]
     hajiebrahimi_chain = ["A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "H",
                           "A", "A", "B", "A", "A", "A", "A", "A", "A", "A", "A", "A", "B", "A", "B", "A", "A", "B", "B",
-                          "A", "A", "A", "X", "B", "A", "E", "D", "A", "B", "A", ]
+                          "A", "A", "A", "X", "B", "A", "A", "E", "D", "A", "B", "A", ]
 
     hajiebrahimi = [list(combi) for combi in zip(hajiebrahimi_pdb, hajiebrahimi_ligand, hajiebrahimi_chain)]
     def run(element):

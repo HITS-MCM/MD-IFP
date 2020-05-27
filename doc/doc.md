@@ -20,7 +20,7 @@ Schloss-Wolfsbrunnenweg 35
 *This open source software code was developed in part in the __Human Brain Project__, funded from the European Union’s Horizon 2020 Framework Programme for Research and Innovation under Specific Grant Agreements  No. 785907 (Human Brain Project  SGA2).*
 
 
-# __Important notes regarding file preparation procedure for IFP computations:__
+# __Important notes regarding the file preparation procedure for IFP computations:__
 
 ## __Ligand structure preparation__
   1. Ligand should be protonated. In the case of multiple ligands, one can use automated procedure implemented in the script Process_pdb.py that employes Chimera software (https://www.cgl.ucsf.edu/chimera/). 
@@ -30,4 +30,4 @@ Schloss-Wolfsbrunnenweg 35
       - Hydrophobic properties of fluorine atoms
       -  Neg. ionazable property of the phosphate atom
       -  Acceptor property of the oxigen atoms bound to phosphate atoms
-  5. __Important__, that the name of the ligand in mol2 file (or the residue name in the pdb file if mol2 is absent) is used to detect ligand in a trajectory or in a complex. If the residue name is different - IFP will not be computed!
+  5. __Important__, the name of the ligand in mol2 file (or the residue name in the pdb file if mol2 is absent) is used to detect ligand in a trajectory or in a complex. If the residue name is different - IFP will not be computed!
