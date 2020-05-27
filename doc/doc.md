@@ -22,7 +22,7 @@ Schloss-Wolfsbrunnenweg 35
 
 # __Important notes regarding the file preparation procedure for IFP computations:__
 
-## __Ligand structure __
+## Ligand structure
   1. Ligand must be protonated. In the case of multiple ligands, one can use automated procedure implemented in the script Process_pdb.py that employes Chimera software (https://www.cgl.ucsf.edu/chimera/). 
   2. Ideally ligand structure should be provided by MOL2 file. However, not all MOL2 formats are accepted by RDKit (Python library that is used to determine ligand atom  properties). The best way to generate mol2 file is to use MOE or Maestro software. Generated mol2 file in same cases can also be corrected by http://www.swissparam.ch/. The main problem with Chimera is that correctly describes bonds in aromatic or cyclic groubs containing nitrogen atoms
   3. If mol2 file is absent or is not accepted by RDKit, pdb file will be used to define properies of ligand atoms. Unfortunately, in this case aromatic fragments will not be identified.
@@ -32,7 +32,7 @@ Schloss-Wolfsbrunnenweg 35
       -  Acceptor property of the oxigen atoms bound to phosphate atoms
   5. __Important__, the name of the ligand in mol2 file (or the residue name in the pdb file if mol2 is absent) is used to detect ligand in a trajectory or in a complex. If the residue name is different - IFP will not be computed!
   
- ## __Complex structure/trajectory __
+ ## Complex structure/trajectory 
    1. System (protein/ligand/water) must be protonated. This is nessesary for detection of hydrogen bonds.
    2. To minimize memory requared, only part of the system is analyzed (sub_system). By default this is protein+water+ligand. Interactions (H-bonds) with DNA/RND and ions can be found only if their residues are explicitly added to the sub_system. Currently, the simplest way to do this is to define all nessesary elements as an array or residue names and pass it as a parameter "Lipids" either directly to IFP function or to a trajectory analysis function (see the example IFP.py)
    3. For computation of IFP in a trajectory, protein (reference) structure in a pdb format must be provided in addition to a trajectory file. It must have the same structure. Note, that RMSD computed will be relative to the reference structure (not the first frame).
