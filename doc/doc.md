@@ -19,22 +19,11 @@ Schloss-Wolfsbrunnenweg 35
 
 *This open source software code was developed in part in the __Human Brain Project__, funded from the European Union’s Horizon 2020 Framework Programme for Research and Innovation under Specific Grant Agreements  No. 785907 (Human Brain Project  SGA2).*
 
-## __Packages requirements:__
-__Python 3.x__
 
-__Python Libraries:__ numpy;    pandas;  matplotlib;  MDAnalysis;  seaborn; RDkit; sklearn;  scipy; ngview 
-
-__Chimera__ - only for the scripts used for preprocessing pdb files (structure protonation and generation of the ligand mol2 file); not required if protonation and mol2 file are already prepared by a user)
-    
-__Codes were written on Python 3.x and tested on Python 3.7__
-
-__To configure envirement in anaconda use:__
-conda env create -f IFP_trajectory.yml
-
-
-#__Important Notes regarding IFP computations:__
+# __Important notes about file preparation for computation of IFPs:__
 
   1. __Ligand structure preparation__
+      - Ligand should be protonated. In the case of multiple ligands, one can use automated procedure implemented in the script Process_pdb.py that employes Chimera software (https://www.cgl.ucsf.edu/chimera/). 
       - Ideally ligand structure should be provided by MOL2 file. However, not all MOL2 formats are accepted by RDKit (Python library that is used to determine ligand atom  properties). The best way to generate mol2 file is to use MOE or Maestro software. Generated mol2 file in same cases can also be corrected by http://www.swissparam.ch/. The main problem with Chimera is that correctly describes bonds in aromatic or cyclic groubs containing nitrogen atoms
       - If mol2 file is absent or is not accepted by RDKit, pdb file will be used to define properies of ligand atoms. Unfortunately, in this case aromatic fragments will not be identified.
       - There are several atom properties that are introduced in addition to those identified by RDKit:
