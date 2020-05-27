@@ -156,7 +156,9 @@ from MDAnalysis.coordinates.memory import MemoryReader
 
 from Scripts.IFP_generation import *
 
-
+ 
+#sub_system = "protein or resname MG MN CA Mg Mn Ca"
+#sub_system = "protein or (resname G G3 G5 U5 C C3 MN)"
 
 class Trj_Properties:
     def __init__(self):
@@ -171,6 +173,8 @@ class Trj_Properties:
         self.Rgr_lig = None
         self.com_lig = None
         self.rmsd_auxi = None
+        self.sub_system = "protein" 
+        self.WB_order = 5
         
 
 
@@ -239,7 +243,8 @@ class trajectories:
                     contact_collection - a complete list of contact residues  
 
     """
-        
+    
+       
     #========================================================    
     def __init__(self,PRJ_DIR = "./",namd_tmpl= "NAMD*", ramd_tmpl= "RAMD*", pdb = "ref.pdb", 
                 ligand_pdb = None,ligand_mol2 = None,\
@@ -431,7 +436,7 @@ class trajectories:
   #          print("+++++++++++++++++",self.names,subset)
             n_auxi = len(r_subset[0].rmsd_auxi)
             for i,(tr_c,n_replica) in enumerate(zip(r_subset,n_subset)):
-                    print(i,n_replica)
+                    print("#  Replica:",i,n_replica)
                     tt = tr_c.df_properties
                     tt["Repl"] = np.repeat(n_replica,tr_c.df_properties.shape[0]) 
                     tt["Traj"] = np.repeat(str(i),tt.shape[0]) 
@@ -547,7 +552,7 @@ class trajectories:
                 n_subset = np.take(self.names,subset)
  #           print("replicas to be analyzed:",r_subset)
             IFP_list = self.IFP_unify(subset)
-            print("++++Will be saved+++++",self.names)
+            print("++++Will be saved +++++",self.names)
 
             sys.stdout.flush()
             for tr_replica,tr_name in zip(r_subset,n_subset):
@@ -688,7 +693,7 @@ class trajectories:
                     ymin, ymax = ax1.get_ylim()
                     
             replicas_distr = [x for x in self.replicas_distr if x]  # here we eliminate all empty lists
-            print(np.max(np.asarray(replicas_distr).flatten()))
+#            print(np.max(np.asarray(replicas_distr).flatten()))
 
             if(tau_lims == (0,0)): lims =(0,1.2*np.max(np.asarray(replicas_distr).flatten()))
 
@@ -783,7 +788,8 @@ class trajectories:
         RE
         Lipids
         auxi_selection
-        traj - location and name of the trajectory to be analyzed   
+        traj - location and name of the trajectory to be analyzed  
+        reference - 
         
         Results:
         rmsd_prot,rmsd_lig - RMSD of the protein and ligand
@@ -827,9 +833,9 @@ class trajectories:
         if len(Lipids) > 0:
             lipid_line = ""
             for l in Lipids: lipid_line = lipid_line+" "+l
-            selection = "(resname "+sel_ligands+") or  protein or (resname WAT HOH SOL ) or ( resname " + lipid_line+" ) "
+            selection = "(resname "+sel_ligands+") or  "+sub_system+" or (resname WAT HOH SOL ) or ( resname " + lipid_line+" ) "
         else:
-            selection = " protein or (resname WAT HOH SOL "+sel_ligands+")"
+            selection = sub_system+" or (resname WAT HOH SOL "+sel_ligands+")"
         
         selection_rmsd = ["protein and (not type H)","resname "+sel_ligands+" and (not type H)"]
         auxi_rmsd = []
@@ -846,7 +852,7 @@ class trajectories:
         
         
         system_reduced = u.select_atoms(selection)
-        print(">>>???",selection)
+        print(">>>sub-system selected ",selection)
         try:
             u_mem = mda.Merge(system_reduced).load_new(AnalysisFromFunction(lambda ag: ag.positions.copy(), system_reduced).run(start=start,stop=stop,step=step).results,format=MemoryReader)
             past_the_rest = False
@@ -1053,15 +1059,35 @@ class  Ligand:
                         print("ERROR:  RDKit cannot read MOL2 structure",mol)
                 else:    
                     properties_list,ligand_2D = self.ligand_properties(mol,list_labels) 
-                # add fluorine as hydrophobic atoms (absent in RDkit
+                # add fluorine as hydrophobic atoms (absent in RDkit)
                 if len(properties_list) > 0:
-                    list_labelsF  = self.ligand_PDB_F(PRJ_DIR+"/"+ligand_pdb)
+                    if DO_PDB:
+                        list_labelsF  = self.ligand_PDB_F(PRJ_DIR+"/"+ligand_pdb)
+                    else:
+                        list_labelsF,list_labelsPO3,list_labelsP  = self.ligand_Mol2_F_PO3(PRJ_DIR+"/"+ligand_mol2)
+                    
                     if len(list_labelsF) > 0:
-                        new_properties_list_H = properties_list['Hydrophobe']
- #                   print("Fluorine atoms found: ",list_labelsF)
-                        for at in list_labelsF:
-                            new_properties_list_H.append(at)
+                        if  'Hydrophobe' in properties_list:  
+                            new_properties_list_H = properties_list['Hydrophobe']
+                            for at in list_labelsF:  new_properties_list_H.append(at)
+                        else:  properties_list.update({'Hydrophobe': list_labelsF})
                         properties_list['Hydrophobe'] = new_properties_list_H
+                        print(" Fluorine atoms are found (will be considered as Hydrophobe):",list_labelsF)
+                        
+                    if len(list_labelsP) > 0:
+                        if  'NegIonizable' in properties_list: 
+                            new_properties_list_H = properties_list['NegIonizable']
+                            for at in list_labelsP: new_properties_list_H.append(at)
+                            properties_list['NegIonizable'] = new_properties_list_H
+                        else:  properties_list.update({'NegIonizable': list_labelsP})
+                        print(" PO3 group is found (P atoms will be considered as NegIonizable) :",list_labelsP)
+                    if len(list_labelsPO3) > 0:                        
+                        if  'Acceptor' in properties_list: 
+                            new_properties_list_H = properties_list['Acceptor']
+                            for at in list_labelsPO3: new_properties_list_H.append(at)
+                            properties_list['Acceptor'] = new_properties_list_H
+                        else:  properties_list.update({'Acceptor': list_labelsPO3})
+                        print(" PO3 group is found (O atoms will be considered as Acceptors) :",list_labelsPO3)
 
                     print("Ligand properties:")
                     self.properties_list = properties_list
@@ -1085,7 +1111,7 @@ class  Ligand:
                             print("ERROR: RDKit cannot read file- some errors found in the ligand structure")
                             sys.exit()
                 self.ligands_names = np.unique(resnames)
-                            
+                print("Important! The following residue names that will be used to identify ligand in the PDB file: ",self.ligands_names)            
                         
             else: print(" ligand PDB and Mol2 are not defined")
                 
@@ -1119,6 +1145,7 @@ class  Ligand:
                         list_labels.append(key[1]) 
                         resnames.append(key[7])
             mol = Chem.rdmolfiles.MolFromMol2File(ligand_mol2,removeHs=False) 
+            print("Atoms found in the MOL2 file: ",list_labels)
             return(mol,list_labels,resnames)
 
         ########################################
@@ -1159,9 +1186,7 @@ class  Ligand:
             Parameters:
             ligand_pdb - ligand structure file  in the PDB format
             Results:
-            mol - RDKit molecular object
-            list_labels - list of atom names
-            resnames - list of residue names (for all atoms)
+            list_labels - list of  names for F atoms found
             """
             ff=open(ligand_pdb,"r")
             lines = ff.readlines()
@@ -1175,6 +1200,55 @@ class  Ligand:
                             list_labels.append(line.split()[2]) 
  #           print(list_labels)            
             return(list_labels)
+        ########################################
+        #
+        #     get ligand chemical properties for Fluorine from PDB file only
+        #
+        ########################################
+    def  ligand_Mol2_F_PO3(self,ligand_mol2):
+            """
+            Parameters:
+            ligand_mol2 - ligand structure file  in the MOL2 format
+            Results:
+            list_labels_P - list of  names for oxygen atoms bound to P
+            list_labels - list of  names for F atoms found
+            """
+            ff=open(ligand_mol2,"r")
+            lines = ff.readlines()
+            ff.close()
+            list_labels_O = []
+            list_labels_P = []
+            list_labels_F = []
+            list_atoms = []
+            list_P = []
+            resnames = []
+            start = 0
+            for line in lines:
+                key = line.split()
+                if line.find("<TRIPOS>ATOM") >= 0: start = 1
+                elif line.find("<TRIPOS>BOND") >= 0: start = 2
+                elif line.find("<TRIPOS>SUBSTRUCTURE") >= 0: break
+                else:
+                    if start == 1: 
+                        list_atoms.append(key[1]) 
+                        if(key[1][0]) == "P":
+                            list_P.append(key[0])
+                            list_labels_P.append(key[1])
+                        if(key[1][0]) == "F":
+                            list_labels_F.append(key[1])
+                    if start == 2: 
+                        for P in list_P:
+                            if int(key[1]) == int(P):
+                                if list_atoms[int(key[2])-1][0] == 'O':
+                                    if list_atoms[int(key[2])-1] not in list_labels_O:
+                                        list_labels_O.append(list_atoms[int(key[2])-1])
+                            if int(key[2]) == int(P):
+                                if list_atoms[int(key[1])-1][0] == 'O':
+                                    if list_atoms[int(key[1])-1] not in list_labels_O:
+                                        list_labels_O.append(list_atoms[int(key[1])-1])
+            
+            return(list_labels_F,list_labels_O,list_labels_P)
+
 
         ########################################
         #

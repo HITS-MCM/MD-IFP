@@ -338,7 +338,7 @@ def make_IFT_table(IFP_prop_list,snaps,columns_extended = []):
 #     FUNCTION FOR generation of interaction fingerprints (IFP) in a trajectory
 #
 #######################################################################
-def IFP(u_mem,sel_ligands,property_list, WB_analysis = True, RE = True,Lipids = []):
+def IFP(u_mem,sel_ligands,property_list, WB_analysis = True, RE = True,Lipids = [],WB_order = 5):
     import datetime
     """
     Parameters:
@@ -383,7 +383,7 @@ def IFP(u_mem,sel_ligands,property_list, WB_analysis = True, RE = True,Lipids = 
 #            hb.WaterBridgeAnalysis.DEFAULT_ACCEPTORS['OtherFF'] = hb.WaterBridgeAnalysis.DEFAULT_DONORS['OtherFF']+tuple(set("O"))        
 #            w = hb.WaterBridgeAnalysis(u_mem, 'resname '+sel_ligands, ' not resname WAT HOH SOL ',water_selection=" resname WAT HOH SOL ", 
 #                distance=3.5, angle=110, forcefield='OtherFF',output_format="donor_acceptor",order=3)
-            w = hb.WaterBridgeAnalysis(u_mem, selection1  = 'resname '+sel_ligands, selection2  = ' not resname WAT HOH SOL '+sel_ligands,water_selection=" resname WAT HOH SOL ",  distance=3.5, angle=100, forcefield='OtherFF',order=5)
+            w = hb.WaterBridgeAnalysis(u_mem, selection1  = 'resname '+sel_ligands, selection2  = ' not resname WAT HOH SOL '+sel_ligands,water_selection=" resname WAT HOH SOL ",  distance=3.5, angle=120, forcefield='OtherFF',order=WB_order)
             w.run()
             w.generate_table()
             df_WB = pd.DataFrame.from_records(w.table)
@@ -691,7 +691,7 @@ def read_IFP(list_IFP):
 #     PLOT IFP  and ligand water shell for a trajectory
 #
 ########################################
-def Plot_IFP(df,contact_collection=None,out_name=""):
+def Plot_IFP(df,contact_collection=None,out_name="",ifp_list = ["HY","AR","HD","HA","HL","IP","IN","WB","LIP"]):
     """
     Parameters:
     df- IFP database
@@ -704,7 +704,6 @@ def Plot_IFP(df,contact_collection=None,out_name=""):
     bottom = cm.get_cmap('Blues', 128)
     color = np.vstack((top(np.linspace(0, 1, 128)),
                        bottom(np.linspace(0, 1, 128))))
-    ifp_list = ["HY","AR","HD","HA","HL","IP","IN","WB","LIP"]
     columns_IFP = []  # standard IFP
     columns_CONT = []  # just contacts
     for c in df.columns.tolist():
@@ -713,13 +712,14 @@ def Plot_IFP(df,contact_collection=None,out_name=""):
         elif c[0:2]  == "RE":
             columns_CONT.append(c)
                 
+    df1 = df[columns_IFP].values
+    if df1.shape[0] < 2: return
     fig = plt.figure(figsize=(16, 6))
     gs = gridspec.GridSpec(1, 3, width_ratios=[4, 2, 1]) 
     ax = plt.subplot(gs[0])
    
     ax =  plt.subplot(gs[0])
     ax.set_title('IFP')
-    df1 = df[columns_IFP].values
     xticklabels = columns_IFP
     if len(columns_IFP) < 25:  sns.heatmap(np.float32(df1), cmap="YlGnBu", xticklabels=xticklabels)
     else:  sns.heatmap(np.float32(df1), cmap="YlGnBu")
