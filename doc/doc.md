@@ -30,4 +30,4 @@ Schloss-Wolfsbrunnenweg 35
       - Hydrophobic properties of fluorine atoms
       -  Neg. ionazable property of the phosphate atom
       -  Acceptor property of the oxigen atoms bound to phosphate atoms
-  5. __Important__, that the name of the ligand in mol2 file (or the residue name in the pdb file if mol2 is absent) is used to detect ligand in a trajectory or in a complex. If the residue name is different - IFP will not be computed!
+  5. __Important__, the name of the ligand in mol2 file (or the residue name in the pdb file if mol2 is absent) is used to detect ligand in a trajectory or in a complex. If the residue name is different - IFP will not be computed!
