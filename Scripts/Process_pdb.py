@@ -521,19 +521,23 @@ if __name__ == '__main__':
                           "A", "A", "A", "X", "B", "A", "E", "D", "A", "B", "A", ]
 
     hajiebrahimi = [list(combi) for combi in zip(hajiebrahimi_pdb, hajiebrahimi_ligand, hajiebrahimi_chain)]
-
     def run(element):
+        print("Starting analysis of ", element[0])
         analysis = PdbIDAnalysis(element[0], element[1], data_path="../data/")
         return analysis.run(element[2], get_properties=False)
 
-    haji_results = [run(element) for element in hajiebrahimi if run(element) is not None]
+    haji_results = []
+    for element in hajiebrahimi:
+        result = run(element)
+        if result is not None:
+            haji_results.append(result)
 
     haji_results_columns = [list(entry.columns) for entry in haji_results]
     haji_proteins = [protein for protein in hajiebrahimi_pdb if (protein not in PdbIDAnalysis.reading_failed and
                                                                  protein not in PdbIDAnalysis.features_failed)]
 
     result_dataframe = pd.DataFrame.from_dict(dict(zip(haji_proteins, haji_results_columns)), orient="index")
-    
+
     result_dataframe.to_pickle("results.pkl")
 
     analyze = StatisticalAnalysis("results.pkl")
