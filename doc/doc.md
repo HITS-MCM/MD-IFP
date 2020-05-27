@@ -24,7 +24,7 @@ Schloss-Wolfsbrunnenweg 35
 
 ## Ligand structure
   1. __Ligand must be protonated__. In the case of multiple ligands, one can use automated procedure implemented in the script Process_pdb.py that employes Chimera software (https://www.cgl.ucsf.edu/chimera/). 
-  2. Ideally ligand structure should be provided by __MOL2 file__. However, not all MOL2 formats are accepted by RDKit (Python library that is used to determine ligand atom  properties). The best way to generate mol2 file is to use MOE or Maestro software. Generated mol2 file in same cases can also be corrected by http://www.swissparam.ch/. The main problem with Chimera is that correctly describes bonds in aromatic or cyclic groubs containing nitrogen atoms
+  2. Ideally ligand structure should be provided by __MOL2 file__. However, not all MOL2 formats are accepted by RDKit (Python library that is used to determine ligand atom  properties). The best way to generate mol2 file is to use MOE or Maestro software. Generated mol2 file in same cases can also be corrected by http://www.swissparam.ch/. The main problem with Chimera is that it often incorrectly describes bonds in aromatic or cyclic groubs containing nitrogen atoms
   3. If mol2 file is absent or is not accepted by RDKit, pdb file will be used to define properies of ligand atoms. Unfortunately, in this case aromatic fragments will not be identified.
   4. There are several atom properties that are introduced in addition to those identified by RDKit:
       - Hydrophobic properties of fluorine atoms
