@@ -444,7 +444,7 @@ class trajectories:
                     for k in range(0,n_auxi):
                          tt["Auxi_"+str(k)] = tr_c.rmsd_auxi[k]
                     df1 = pd.concat([df1, tt])
-            if(i > 0):
+            if  len(r_subset) > 0:
                 df1.to_pickle(file)
             else:
                 print("No IFP for equilibration simulations were generated")

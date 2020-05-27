@@ -96,12 +96,16 @@ r_sar = 4.5 # S-aromatic
 r_sal = 4.5 # salt bridge
 r_hal = 3.5 # halogen interactions
 r_wat = 3.5 # water shell
+r_dis = 5.0 # water shell
+r_lip = 5.0 # specific residues
+r_ion = 3.4  # salt bridges with ions
 
 at_aromatic = "((resname PHE TRP TYR HIS HIE HID HE2) and (name CZ* CD* CE* CG* CH* NE* ND*))" 
 at_positive =  "((resname ARG LYS ) and (name NH* NZ)) or ((resname HI2 ) and (name HD HE))"
 at_negative = "((backbone and name O) or ((resname ASP GLU) and (name OE* OD*)))"
-at_sulfur = "(protein and (type S)"
+at_sulfur = "(protein and (type S))"
 at_hydrophob = " (protein and (type C  S) and (not  (name CG and resname ASN ASP))   and (not  (name CD and resname GLU GLN ARG))  and (not  (name CZ and resname TYR ARG))  and (not  (name CE and resname LYS)) and (not  (name CB and resname SER THR))   and (not backbone))"
+at_ions = "(resname  MN ZN Mn Zn Ca CA NA Na)"
 
 angle_CHal_O = 150
 
@@ -180,6 +184,9 @@ def IFP_list(property_list, sel_ligands, RE=True, Lipids = []):
             sel_a = at_positive # "((resname ARG LYS ) and (name NH* NZ)) or ((resname HI2 ) and (name HD HE))"
             sel_b = '((resname '+sel_ligands+") and (name "+line+") )"
             IFP_prop_list.append(IFP_prop("IN",line,sel_a,sel_b,r_sal))
+            sel_a = at_ions # "((resname ARG LYS ) and (name NH* NZ)) or ((resname HI2 ) and (name HD HE))"
+            sel_b = '((resname '+sel_ligands+") and (name "+line+") )"
+            IFP_prop_list.append(IFP_prop("IO",line,sel_a,sel_b,r_ion))
     except:
         print("IN failed")
         pass
@@ -247,9 +254,9 @@ def IFP_list(property_list, sel_ligands, RE=True, Lipids = []):
     
     if RE:
         try: # any protein-ligand contacts 
-            sel_a = "(protein) and (not type H)"
+            sel_a = "(not resname WAT HOH SOL) and (not type H)"
             sel_b = '(resname '+sel_ligands+" ) and ( not type H )"
-            IFP_prop_list.append(IFP_prop("RE","HE",sel_a,sel_b,3.5))
+            IFP_prop_list.append(IFP_prop("RE","HE",sel_a,sel_b,r_dis))
         except:
             print("RE failed")
             pass
@@ -260,7 +267,7 @@ def IFP_list(property_list, sel_ligands, RE=True, Lipids = []):
             for l in Lipids: line = line + l +" "
             sel_a = '((resname '+line+' ) and (not type H)) '
             sel_b = '(resname '+sel_ligands+") and (not type H)"
-            IFP_prop_list.append(IFP_prop("LL",line,sel_a,sel_b,4.0))
+            IFP_prop_list.append(IFP_prop("LL",line,sel_a,sel_b,r_lip))
         except:
             pass
     return (IFP_prop_list)
@@ -359,7 +366,7 @@ def IFP(u_mem,sel_ligands,property_list, WB_analysis = True, RE = True,Lipids = 
         hb.HydrogenBondAnalysis.DEFAULT_ACCEPTORS['OtherFF'] = hb.HydrogenBondAnalysis.DEFAULT_ACCEPTORS['OtherFF']+acceptor_line
         hb.WaterBridgeAnalysis.DEFAULT_ACCEPTORS['OtherFF'] = hb.WaterBridgeAnalysis.DEFAULT_ACCEPTORS['OtherFF']+acceptor_line
     
-    h = hb.HydrogenBondAnalysis(u_mem, selection1 ='resname '+sel_ligands,selection2=' not resname WAT HOH SOL '+sel_ligands, distance=3.3, angle=110, forcefield='OtherFF')
+    h = hb.HydrogenBondAnalysis(u_mem, selection1 ='resname '+sel_ligands,selection2=' not resname WAT HOH SOL '+sel_ligands, distance=3.3, angle=100, forcefield='OtherFF')
     print("Start HB analysis",datetime.datetime.now().time())
     h.run()
     h.generate_table()
@@ -376,7 +383,7 @@ def IFP(u_mem,sel_ligands,property_list, WB_analysis = True, RE = True,Lipids = 
 #            hb.WaterBridgeAnalysis.DEFAULT_ACCEPTORS['OtherFF'] = hb.WaterBridgeAnalysis.DEFAULT_DONORS['OtherFF']+tuple(set("O"))        
 #            w = hb.WaterBridgeAnalysis(u_mem, 'resname '+sel_ligands, ' not resname WAT HOH SOL ',water_selection=" resname WAT HOH SOL ", 
 #                distance=3.5, angle=110, forcefield='OtherFF',output_format="donor_acceptor",order=3)
-            w = hb.WaterBridgeAnalysis(u_mem, selection1  = 'resname '+sel_ligands, selection2  = ' not resname WAT HOH SOL '+sel_ligands,water_selection=" resname WAT HOH SOL ",  distance=3.5, angle=110, forcefield='OtherFF',order=5)
+            w = hb.WaterBridgeAnalysis(u_mem, selection1  = 'resname '+sel_ligands, selection2  = ' not resname WAT HOH SOL '+sel_ligands,water_selection=" resname WAT HOH SOL ",  distance=3.5, angle=100, forcefield='OtherFF',order=5)
             w.run()
             w.generate_table()
             df_WB = pd.DataFrame.from_records(w.table)
