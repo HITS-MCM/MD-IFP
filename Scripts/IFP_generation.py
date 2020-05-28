@@ -86,7 +86,7 @@ mda.core.flags['use_periodic_selections'] = True
 mda.core.flags['use_KDTree_routines'] = False
 
 
-#####################################
+#################################at_negative####
 # thresholds:
 #####################################
 r_cat = 5 # cation-aromatic
@@ -102,7 +102,7 @@ r_ion = 3.4  # salt bridges with ions
 
 at_aromatic = "((resname PHE TRP TYR HIS HIE HID HE2) and (name CZ* CD* CE* CG* CH* NE* ND*))" 
 at_positive =  "((resname ARG LYS ) and (name NH* NZ)) or ((resname HI2 ) and (name HD HE))"
-at_negative = "((backbone and name O) or ((resname ASP GLU) and (name OE* OD*)))"
+at_negative = " ((resname ASP GLU) and (name OE* OD*))"
 at_sulfur = "(protein and (type S))"
 at_hydrophob = " (protein and (type C  S) and (not  (name CG and resname ASN ASP))   and (not  (name CD and resname GLU GLN ARG))  and (not  (name CZ and resname TYR ARG))  and (not  (name CE and resname LYS)) and (not  (name CB and resname SER THR))   and (not backbone))"
 at_ions = "(resname  MN ZN Mn Zn Ca CA NA Na)"
@@ -237,9 +237,9 @@ def IFP_list(property_list, sel_ligands, RE=True, Lipids = []):
         print("AR4 failed")
         pass
     
-    try: #--- halogen bonds with atromatic or backbone carbonyl oxygen
+    try: #--- halogen bonds with atromatic, negatively charged or backbone carbonyl oxygen
         sel_b = '((resname '+sel_ligands+" ) and ( type I CL BR Br Cl) )"
-        sel_a = at_aromatic +" or "+at_negative+" or "+at_sulfur #((resname CYS MET) and (type S))"
+        sel_a = at_aromatic +" or "+at_negative+" or "+ " or (backbone and name O) "+" or "+at_sulfur #((resname CYS MET) and (type S))"
         IFP_prop_list.append(IFP_prop("HL","HL",sel_a,sel_b,r_hal))
     except:
         print("HL failed")
