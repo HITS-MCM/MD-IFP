@@ -166,24 +166,25 @@ def IFP_list(property_list, sel_ligands, RE=True, Lipids = []):
     except:
         print("HY failed")
         pass
-    try:  #--- salt bridge with posetively-charged residues 
+    try:  #--- salt bridge with negatively-charged residues 
         line = ""
         if "PosIonizable" in property_list.keys():
             for l in tuple(set(property_list["PosIonizable"])): line = line + l +" "
-            sel_a = at_positive #"((resname ASP GLU) and (name OE* OD*)) "
+            sel_a = at_negative #"((resname ASP GLU) and (name OE* OD*)) "
             sel_b = '((resname '+sel_ligands+") and (name "+line+") )"
             IFP_prop_list.append(IFP_prop("IP",line,sel_a,sel_b,r_sal))
     except:
         print("IP failed")
         pass
     
-    try: #--- salt bridges with negatively charged residues  
+    try: #--- salt bridges with posetively charged residues  
         line = ""
         if "NegIonizable" in property_list.keys():
             for l in tuple(set(property_list["NegIonizable"])): line = line + l +" "
             sel_a = at_positive # "((resname ARG LYS ) and (name NH* NZ)) or ((resname HI2 ) and (name HD HE))"
             sel_b = '((resname '+sel_ligands+") and (name "+line+") )"
             IFP_prop_list.append(IFP_prop("IN",line,sel_a,sel_b,r_sal))
+          #--- salt bridges with positively charged ions 
             sel_a = at_ions # "((resname ARG LYS ) and (name NH* NZ)) or ((resname HI2 ) and (name HD HE))"
             sel_b = '((resname '+sel_ligands+") and (name "+line+") )"
             IFP_prop_list.append(IFP_prop("IO",line,sel_a,sel_b,r_ion))
