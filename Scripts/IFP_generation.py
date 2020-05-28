@@ -239,7 +239,7 @@ def IFP_list(property_list, sel_ligands, RE=True, Lipids = []):
     
     try: #--- halogen bonds with atromatic, negatively charged or backbone carbonyl oxygen
         sel_b = '((resname '+sel_ligands+" ) and ( type I CL BR Br Cl) )"
-        sel_a = at_aromatic +" or "+at_negative+" or "+ " or (backbone and name O) "+" or "+at_sulfur #((resname CYS MET) and (type S))"
+        sel_a = at_aromatic +" or "+at_negative+" or "+ " (backbone and name O) "+" or "+at_sulfur #((resname CYS MET) and (type S))"
         IFP_prop_list.append(IFP_prop("HL","HL",sel_a,sel_b,r_hal))
     except:
         print("HL failed")
