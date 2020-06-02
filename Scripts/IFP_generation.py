@@ -105,7 +105,7 @@ at_positive =  "((resname ARG LYS ) and (name NH* NZ)) or ((resname HI2 ) and (n
 at_negative = " ((resname ASP GLU) and (name OE* OD*))"
 at_sulfur = "(protein and (type S))"
 at_hydrophob = " (protein and (type C  S) and (not  (name CG and resname ASN ASP))   and (not  (name CD and resname GLU GLN ARG))  and (not  (name CZ and resname TYR ARG))  and (not  (name CE and resname LYS)) and (not  (name CB and resname SER THR))   and (not backbone))"
-at_ions = "(resname  MN ZN Mn Zn Ca CA NA Na)"
+at_pos_ions = "(resname  MN ZN Mn Zn Ca CA NA Na)"
 
 angle_CHal_O = 150
 
@@ -185,7 +185,7 @@ def IFP_list(property_list, sel_ligands, RE=True, Lipids = []):
             sel_b = '((resname '+sel_ligands+") and (name "+line+") )"
             IFP_prop_list.append(IFP_prop("IN",line,sel_a,sel_b,r_sal))
           #--- salt bridges with positively charged ions 
-            sel_a = at_ions # "((resname ARG LYS ) and (name NH* NZ)) or ((resname HI2 ) and (name HD HE))"
+            sel_a = at_pos_ions 
             sel_b = '((resname '+sel_ligands+") and (name "+line+") )"
             IFP_prop_list.append(IFP_prop("IO",line,sel_a,sel_b,r_ion))
     except:
@@ -380,14 +380,14 @@ def IFP(u_mem,sel_ligands,property_list, WB_analysis = True, RE = True,Lipids = 
         print("Start WB analysis",datetime.datetime.now().time())
         try:
             # will add O atom of water as an HB donor (it is concidered as acceptor by default assuming as a protein backbone atom)
-            hb.WaterBridgeAnalysis.DEFAULT_DONORS['OtherFF'] = hb.WaterBridgeAnalysis.DEFAULT_DONORS['OtherFF']+tuple(set("O"))        
-#            hb.WaterBridgeAnalysis.DEFAULT_ACCEPTORS['OtherFF'] = hb.WaterBridgeAnalysis.DEFAULT_DONORS['OtherFF']+tuple(set("O"))        
-#            w = hb.WaterBridgeAnalysis(u_mem, 'resname '+sel_ligands, ' not resname WAT HOH SOL ',water_selection=" resname WAT HOH SOL ", 
-#                distance=3.5, angle=110, forcefield='OtherFF',output_format="donor_acceptor",order=3)
-            w = hb.WaterBridgeAnalysis(u_mem, selection1  = 'resname '+sel_ligands, selection2  = ' not resname WAT HOH SOL '+sel_ligands,water_selection=" resname WAT HOH SOL ",  distance=3.5, angle=120, forcefield='OtherFF',order=WB_order)
-            w.run()
-            w.generate_table()
-            df_WB = pd.DataFrame.from_records(w.table)
+#            hb.WaterBridgeAnalysis.DEFAULT_DONORS['OtherFF'] = hb.WaterBridgeAnalysis.DEFAULT_DONORS['OtherFF']+tuple(set("O"))        
+#            w = hb.WaterBridgeAnalysis(u_mem, selection1  = 'resname '+sel_ligands, selection2  = ' not resname WAT HOH SOL '+sel_ligands,water_selection=" resname WAT HOH SOL ",  distance=3.0, angle=120, forcefield='OtherFF',order=WB_order)
+#            w.run()
+#            w.generate_table()
+#            df_WB = pd.DataFrame.from_records(w.table)
+            ################ test
+            df_WB = Water_bridges(u_mem, sel_ligands)
+            ############### test ele1_index	sele2_index	sele1_resnm	sele1_resid	sele1_atom	sele2_resnm	sele2_resid	sele2_atom
         except:
             print("Water bridge analysis failed ")
         
@@ -455,12 +455,12 @@ def IFP(u_mem,sel_ligands,property_list, WB_analysis = True, RE = True,Lipids = 
                 for u in u_list:   
                     # here we will check if the angle  C-HAL.... O is about 180grad fro this we look what atoms within r_hal+1 from O - should be only Hal
                     if (u.type == "O") or (u.type == "S"):
-                        line1 ="(resname "+sel_ligands+" ) and around "+str(r_hal+1.0)+" (resid "+str(u.resid)+" and type O S )"
+                        line1 ="(resname "+sel_ligands+" ) and around "+str(r_hal+1.0)+" (protein and resid "+str(u.resid)+" and type O S )"
                         u1_list = (u_mem.select_atoms(line1,updating=True))
 #                        print(u.resid,u.name,":::",len(u1_list),u1_list)
                         if len(u1_list) < 2:
                             found.append([IFP_type.name+"_"+u.resname+str(u.resid),u.name]) 
-                        else: print("HL-O contact found but will not be counted because of the too small angle: ",len(u1_list),u.resname+str(u.resid),u.name)
+ #                       else: print("HL-O contact found but will not be counted because of the too small angle: ",len(u1_list),u.resname+str(u.resid),u.name)
                         # TO BE DONE instead of previous criterion
                         """
                         else:
@@ -483,8 +483,7 @@ def IFP(u_mem,sel_ligands,property_list, WB_analysis = True, RE = True,Lipids = 
                     ar_resid, ar_n = np.unique(u_ar,return_counts=True)
                     if(u.resid in ar_resid[ar_n > 4]): 
                             found.append([IFP_type.name+"_"+u.resname+str(u.resid),u.name])  
-                    else:
-                        print("HL-aromatic contact found but will not be counted because it has less than 4 contacts with aromatic atoms:",ar_resid,ar_n)
+#                    else: print("HL-aromatic contact found but will not be counted because it has less than 4 contacts with aromatic atoms:",ar_resid,ar_n)
                  ### TOBE checked if this works!!!!!====HAL========================================
             else:  
                 for u in u_list:
@@ -753,47 +752,58 @@ def Plot_IFP(df,contact_collection=None,out_name="",ifp_list = ["HY","AR","HD","
     else: plt.savefig(out_name,dpi=300)
     return
 
-########################################
+
+#############################################
+#   
 #
-#     get ligand chemical properties
-#
-########################################
-def  ligand_properties(ligand_pdb,ligand_mol2):
-    """
-    Parameters:
-    ligand_pdb - ligand structure file  in the PDB format
-    ligand_mol2 - ligand structure file  in the Mol2 format (not all mol2 format work, but generated by MOE does)
-    
-    Returns:
-    """
-    ff=open(ligand_pdb,"r")
-    lines = ff.readlines()
-    ff.close()
-    list_labels = []
-    for line in lines:
-        if (line.split()[0] == 'ATOM' or line.split()[0] == 'HETATM'): list_labels.append(line.split()[2]) 
-
-    mol = Chem.rdmolfiles.MolFromMol2File(ligand_mol2,removeHs=False)   
-    fdefName = os.path.join(RDConfig.RDDataDir,'BaseFeatures.fdef')
-    factory = ChemicalFeatures.BuildFeatureFactory(fdefName)
-    feats = factory.GetFeaturesForMol(mol)
-
-    properties_list = {}
-    for f in feats:
-        prop = f.GetFamily()  #  get property name
-        at_indx  = list(f.GetAtomIds())  # get atom index
-        if prop not in properties_list.keys():
-            properties_list[prop]=[]
-        if(len(at_indx) > 0 ):
-            for l in at_indx:
-                try:
-                    properties_list[prop].append(list_labels[l])
-                except:
-                    print("Error:",prop," atom index: ",at_indx, " are not found") 
-        else: properties_list[prop].append(list_labels[at_indx[0]])
-    return(properties_list)
-
-
-
-
+############################################
+def Water_bridges(u_mem, sel_ligands):
+            """
+            A very simple procedure for detection of possible protein-ligand water bridges 
+            Parameters:
+            u_mem - trajectory
+            residues_name a list of properties that (column names) that can be used to generate tables with the same column list
+            sel_ligands - ligand residue name 
+            Returns:
+            df_WB - pkl table with all components of water bridges
+            """
+            df_WB = pd.DataFrame()
+            hb.HydrogenBondAnalysis.DEFAULT_DONORS['OtherFF'] = hb.WaterBridgeAnalysis.DEFAULT_DONORS['OtherFF']+tuple(set("O"))        
+            h = hb.HydrogenBondAnalysis(u_mem, selection1 ='resname '+sel_ligands,selection2='  resname WAT HOH SOL ', distance=3.3, angle=120, forcefield='OtherFF')
+            h.run()
+            h.generate_table()
+            wb1 = pd.DataFrame.from_records(h.table)
+            lista = wb1[wb1.donor_resnm == sel_ligands].acceptor_resid.values
+            listd = wb1[wb1.acceptor_resnm == sel_ligands].donor_resid.values
+            if (len(lista)+ len(listd) > 0):
+                list_wb = "resid "
+                for l in lista: list_wb = list_wb + str(l)+" " 
+                for l in listd: list_wb = list_wb + str(l)+" " 
+                h = hb.HydrogenBondAnalysis(u_mem, selection1 =list_wb,selection2=' not resname WAT HOH SOL '+sel_ligands, distance=3.0, angle=120, forcefield='OtherFF')
+                h.run()
+                h.generate_table()
+                wb2 = pd.DataFrame.from_records(h.table)
+                if wb2.shape[0] > 0:
+                    # exclude the cases where the same hydrogen is a donor for both protein and ligand
+#                    if wb1[wb1["donor_resnm"].isin(["WAT", "HOH", "SOL"])].shape[0] > 0:
+                    wb2 = wb2[~(wb2.donor_index.isin(wb1[wb1["donor_resnm"].isin(["WAT", "HOH", "SOL"])].donor_index))]
+                    # exclude the cases where the same oxigen is an acceptor for both protein and ligand
+                    wb2 = wb2[~(wb2.acceptor_index.isin(wb1[wb1["acceptor_resnm"].isin(["WAT", "HOH", "SOL"])].acceptor_index))]
+                    list_ia = wb2[wb2["donor_resnm"].isin(["WAT", "HOH", "SOL"])].acceptor_resid.values
+                    list_ra = wb2[wb2["donor_resnm"].isin(["WAT", "HOH", "SOL"])].acceptor_resnm.values
+                    list_id = wb2[wb2["acceptor_resnm"].isin(["WAT", "HOH", "SOL"])].donor_resid.values
+                    list_rd = wb2[wb2["acceptor_resnm"].isin(["WAT", "HOH", "SOL"])].donor_resnm.values
+                    WB_list = []
+                    for r,i in zip(list_ra,list_ia): WB_list.append(r+str(i))
+                    for r,i in zip(list_rd,list_id): WB_list.append(r+str(i))
+                    wb12 =wb1.append(wb2).rename(columns={"donor_index": "sele1_index", "acceptor_index": "sele2_index","donor_resnm": "sele1_resnm", "donor_resid": "sele1_resid","donor_atom": "sele1_atom", "acceptor_resnm": "sele2_resnm","acceptor_resid": "sele2_resid","acceptor_atom": "sele2_atom"})
+                    df_WB = wb12[wb12.sele1_resnm.isin([sel_ligands])] # ---- sel1: lig - sel2: water
+                    wb12_t = wb12[wb12.sele1_resnm.isin(["WAT", "HOH", "SOL"])] # ---- sel1: wat - sel2: any
+                    df_WB = df_WB.append(wb12_t[~(wb12_t.sele2_resnm.isin([sel_ligands]))])  # ---- sel1: wat - sel2: prot
+                    col_transfer = {"sele1_index": "sele2_index", "sele2_index": "sele1_index" ,"sele1_resnm": "sele2_resnm", "sele1_resid": "sele2_resid", "sele1_atom": "sele2_atom","sele2_resnm": "sele1_resnm", "sele2_resid": "sele1_resid","sele2_atom": "sele1_atom"}
+                    df_WB = df_WB.append(wb12[wb12.sele2_resnm.isin([sel_ligands])].rename(columns=col_transfer))    # ---- sel1:water - sel2: lgand  - replace sel1 and sel2
+                    df_WB = df_WB.append(wb12[~wb12.sele1_resnm.isin(["WAT", "HOH", "SOL",sel_ligands])].rename(columns=col_transfer)) # ---- sel1:prot - sel2: wat - replace sel1 and sel2
+ #                   print(df_WB)
+                    print("NEW WATER BRIDGE LIST: >>>>>>>>>>>>>>>>",np.unique(WB_list))
+            return df_WB
 

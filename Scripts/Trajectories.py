@@ -1062,6 +1062,8 @@ class  Ligand:
                 if len(properties_list) > 0:
                     if DO_PDB:
                         list_labelsF  = self.ligand_PDB_F(PRJ_DIR+"/"+ligand_pdb)
+                        list_labelsPO3 = []
+                        list_labelsP = []
                     else:
                         list_labelsF,list_labelsPO3,list_labelsP  = self.ligand_Mol2_F_PO3(PRJ_DIR+"/"+ligand_mol2)
                     
