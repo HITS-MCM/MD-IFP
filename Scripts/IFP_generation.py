@@ -77,7 +77,7 @@ from MDAnalysis.analysis import contacts,align,rms
 from MDAnalysis.analysis.base import AnalysisFromFunction
 from MDAnalysis.coordinates.memory import MemoryReader
 import MDAnalysis.analysis.hbonds as hb
-
+from MDAnalysis.lib.distances import capped_distance, calc_angles
 
 import warnings
 warnings.filterwarnings("ignore")
@@ -107,7 +107,7 @@ at_sulfur = "(protein and (type S))"
 at_hydrophob = " (protein and (type C  S) and (not  (name CG and resname ASN ASP))   and (not  (name CD and resname GLU GLN ARG))  and (not  (name CZ and resname TYR ARG))  and (not  (name CE and resname LYS)) and (not  (name CB and resname SER THR))   and (not backbone))"
 at_pos_ions = "(resname  MN ZN Mn Zn Ca CA NA Na)"
 
-angle_CHal_O = 150
+angle_CHal_O = 150  # currently is not used
 
 resi_aromatic = ["HIS","HIE","HID","HI2","TYR","TRP","PHE"]
 
@@ -757,6 +757,9 @@ def Plot_IFP(df,contact_collection=None,out_name="",ifp_list = ["HY","AR","HD","
 #   
 #
 ############################################
+
+col_exchange = {"sele1_index": "sele2_index", "sele2_index": "sele1_index" ,"sele1_resnm": "sele2_resnm", "sele1_resid": "sele2_resid", "sele1_atom": "sele2_atom","sele2_resnm": "sele1_resnm", "sele2_resid": "sele1_resid","sele2_atom": "sele1_atom"}
+col_transfer = {"donor_index": "sele1_index", "acceptor_index": "sele2_index","donor_resnm": "sele1_resnm", "donor_resid": "sele1_resid","donor_atom": "sele1_atom", "acceptor_resnm": "sele2_resnm","acceptor_resid": "sele2_resid","acceptor_atom": "sele2_atom"}
 def Water_bridges(u_mem, sel_ligands):
             """
             A very simple procedure for detection of possible protein-ligand water bridges 
@@ -767,9 +770,12 @@ def Water_bridges(u_mem, sel_ligands):
             Returns:
             df_WB - pkl table with all components of water bridges
             """
+        
+            angle_th =120
+            dist_th =3.3
             df_WB = pd.DataFrame()
             hb.HydrogenBondAnalysis.DEFAULT_DONORS['OtherFF'] = hb.WaterBridgeAnalysis.DEFAULT_DONORS['OtherFF']+tuple(set("O"))        
-            h = hb.HydrogenBondAnalysis(u_mem, selection1 ='resname '+sel_ligands,selection2='  resname WAT HOH SOL ', distance=3.3, angle=120, forcefield='OtherFF')
+            h = hb.HydrogenBondAnalysis(u_mem, selection1 ='resname '+sel_ligands,selection2='  resname WAT HOH SOL ', distance=dist_th, angle=angle_th, forcefield='OtherFF')
             h.run()
             h.generate_table()
             wb1 = pd.DataFrame.from_records(h.table)
@@ -785,25 +791,64 @@ def Water_bridges(u_mem, sel_ligands):
                 wb2 = pd.DataFrame.from_records(h.table)
                 if wb2.shape[0] > 0:
                     # exclude the cases where the same hydrogen is a donor for both protein and ligand
-#                    if wb1[wb1["donor_resnm"].isin(["WAT", "HOH", "SOL"])].shape[0] > 0:
                     wb2 = wb2[~(wb2.donor_index.isin(wb1[wb1["donor_resnm"].isin(["WAT", "HOH", "SOL"])].donor_index))]
                     # exclude the cases where the same oxigen is an acceptor for both protein and ligand
                     wb2 = wb2[~(wb2.acceptor_index.isin(wb1[wb1["acceptor_resnm"].isin(["WAT", "HOH", "SOL"])].acceptor_index))]
+                    wb12 =wb1.append(wb2)
+#                    print(wb12)
+                    # check additionally angles
                     list_ia = wb2[wb2["donor_resnm"].isin(["WAT", "HOH", "SOL"])].acceptor_resid.values
                     list_ra = wb2[wb2["donor_resnm"].isin(["WAT", "HOH", "SOL"])].acceptor_resnm.values
+                    list_aa = wb2[wb2["donor_resnm"].isin(["WAT", "HOH", "SOL"])].acceptor_atom.values
                     list_id = wb2[wb2["acceptor_resnm"].isin(["WAT", "HOH", "SOL"])].donor_resid.values
                     list_rd = wb2[wb2["acceptor_resnm"].isin(["WAT", "HOH", "SOL"])].donor_resnm.values
-                    WB_list = []
+                    list_ad = wb2[wb2["acceptor_resnm"].isin(["WAT", "HOH", "SOL"])].donor_atom.values
+                    WB_list = []                    
                     for r,i in zip(list_ra,list_ia): WB_list.append(r+str(i))
                     for r,i in zip(list_rd,list_id): WB_list.append(r+str(i))
-                    wb12 =wb1.append(wb2).rename(columns={"donor_index": "sele1_index", "acceptor_index": "sele2_index","donor_resnm": "sele1_resnm", "donor_resid": "sele1_resid","donor_atom": "sele1_atom", "acceptor_resnm": "sele2_resnm","acceptor_resid": "sele2_resid","acceptor_atom": "sele2_atom"})
-                    df_WB = wb12[wb12.sele1_resnm.isin([sel_ligands])] # ---- sel1: lig - sel2: water
-                    wb12_t = wb12[wb12.sele1_resnm.isin(["WAT", "HOH", "SOL"])] # ---- sel1: wat - sel2: any
-                    df_WB = df_WB.append(wb12_t[~(wb12_t.sele2_resnm.isin([sel_ligands]))])  # ---- sel1: wat - sel2: prot
-                    col_transfer = {"sele1_index": "sele2_index", "sele2_index": "sele1_index" ,"sele1_resnm": "sele2_resnm", "sele1_resid": "sele2_resid", "sele1_atom": "sele2_atom","sele2_resnm": "sele1_resnm", "sele2_resid": "sele1_resid","sele2_atom": "sele1_atom"}
-                    df_WB = df_WB.append(wb12[wb12.sele2_resnm.isin([sel_ligands])].rename(columns=col_transfer))    # ---- sel1:water - sel2: lgand  - replace sel1 and sel2
-                    df_WB = df_WB.append(wb12[~wb12.sele1_resnm.isin(["WAT", "HOH", "SOL",sel_ligands])].rename(columns=col_transfer)) # ---- sel1:prot - sel2: wat - replace sel1 and sel2
+                    print("Preliminary WATER BRIDGE LIST: >>>>>>>>>>>>>>>>",np.unique(WB_list))
+                    
+                    wat_donor = wb12[wb12["donor_resnm"].isin(["WAT", "HOH", "SOL"])]
+                    wat_acceptor = wb12[wb12["acceptor_resnm"].isin(["WAT", "HOH", "SOL"])]
+                    lig_donor = wb12[wb12["donor_resnm"].isin([sel_ligands])]
+                    prot_donor = wb12[~(wb12["donor_resnm"].isin(["WAT", "HOH", "SOL", sel_ligands]))]
+                    if (not prot_donor.empty)  or (not lig_donor.empty):
+                        wb2remove = []
+                        for wat_hid,wat_hat in zip(wat_donor.donor_resid.values,wat_donor.donor_atom.values):
+                            wat_oid = wat_acceptor[wat_acceptor["acceptor_resid"] == wat_hid].acceptor_resid.values 
+                            for wid in wat_oid:
+                                 for (nowat_hid,nowat_hat) in zip(wat_acceptor[wat_acceptor["acceptor_resid"] == wid].donor_resid.values,wat_acceptor[wat_acceptor["acceptor_resid"] == wid].donor_atom.values):
+#                                    print(" coordinates","resid "+str(wat_hid)+" and name "+wat_hat)
+#                                    print(" coordinates","resid "+str(wid)+" and type O")
+#                                    print(" coordinates","resid "+str(nowat_hid)+" and name "+nowat_hat)
+                                    angles = np.rad2deg(
+                                        calc_angles(
+                                            u_mem.select_atoms("resid "+str(wat_hid)+" and name "+wat_hat,updating=True).positions,
+                                            u_mem.select_atoms("resid "+str(wid)+" and type O",updating=True).positions,
+                                            u_mem.select_atoms("resid "+str(nowat_hid)+" and name "+nowat_hat,updating=True).positions,
+                                         #   box=u_mem.box
+                                        )
+                                        )
+#                                    print("Check angle: ",angles[0])
+                                    if angles < angle_th:   wb2remove.append((wat_hid,nowat_hid,nowat_hat,angles[0]))
+                                                       
+                    for wr in wb2remove :
+  #                      print("REMOVE incorrect H-bonds from the WB list:",wr)
+                        wb12 = wb12[~((wb12.acceptor_resid == wr[0]) & (wb12.donor_resid == wr[1]) & (wb12.donor_atom == wr[2]))]
+                        
+                    wb12 =wb12.rename(columns=col_transfer)
+                    # bring table to the following structure: sel1 - lig or water ; sel2- protein or water
+                    # ---- sel1: lig - sel2: water
+                    df_WB = wb12[wb12.sele1_resnm.isin([sel_ligands])] 
+                    # ---- sel1: wat - sel2: any
+                    wb12_t = wb12[wb12.sele1_resnm.isin(["WAT", "HOH", "SOL"])] 
+                    # ---- sel1: wat - sel2: prot
+                    df_WB = df_WB.append(wb12_t[~(wb12_t.sele2_resnm.isin([sel_ligands]))])  
+                    # ---- sel1:water - sel2: lgand  - replace sel1 and sel2
+                    df_WB = df_WB.append(wb12[wb12.sele2_resnm.isin([sel_ligands])].rename(columns=col_exchange))
+                    # ---- sel1:prot - sel2: wat - replace sel1 and sel2
+                    df_WB = df_WB.append(wb12[~wb12.sele1_resnm.isin(["WAT", "HOH", "SOL",sel_ligands])].rename(columns=col_exchange)) 
+                    
  #                   print(df_WB)
-                    print("NEW WATER BRIDGE LIST: >>>>>>>>>>>>>>>>",np.unique(WB_list))
             return df_WB
 

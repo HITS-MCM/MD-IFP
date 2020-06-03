@@ -33,6 +33,7 @@ import matplotlib.ticker
 import  pylab as plt
 import seaborn
 import seaborn as sns
+import matplotlib.gridspec as GS
 
 #import ipywidgets as widgets
 
@@ -361,7 +362,7 @@ def clean_ramd(df_tot,threshold = 0.9,check_z = False):
                             list_out += 1
                     else:
                         df_tot_new = pd.concat([df_tot_new,df_tot_ligand_Repl_Traj])
-                if(list_out > 5): print(ligand,":   ",Repl)
+                if(list_out > 5): print(ligand,"be discarded:   ",Repl)
     else:
              for Repl in np.unique(df_tot.Repl):
                 df_tot_Repl = df_tot[df_tot.Repl == Repl]
@@ -371,9 +372,10 @@ def clean_ramd(df_tot,threshold = 0.9,check_z = False):
                     if check_z:
                         if((df_tot_Repl_Traj.COM_z.tolist()[0])*threshold > df_tot_Repl_Traj.COM_z.tolist()[-1]):
                             list_out += 1
+                            print("Dropped",ligand, Repl, Traj)
                         else:
                             df_tot_new = pd.concat([df_tot_new,df_tot_Repl_Traj])
-                if(list_out > 5): print(ligand,":   ",Repl)
+                if(list_out > 5): print(ligand,"be discarded:   ",Repl)
        
     print(df_tot.shape, df_tot_new.shape)
     return(df_tot_new)
@@ -518,7 +520,7 @@ def plot_graph_New(df_ext,file_save = "",ligand = "",draw_round = False,water = 
     
     print(indx_first_com, min(label_rmsd),dist_com)
     fig = plt.figure(figsize = (6,2),facecolor='w',dpi=150) 
-    gs = gridspec.GridSpec(1,2, width_ratios=[ 1,1],wspace=0.08) 
+    gs = GS.GridSpec(1,2, width_ratios=[ 1,1],wspace=0.08) 
     ax = plt.subplot(gs[0]) 
     plt.title("Transition density")
     plt.imshow(eidges,cmap='Blues')
@@ -581,7 +583,7 @@ def plot_graph_New(df_ext,file_save = "",ligand = "",draw_round = False,water = 
         label_y = np.sin(alpha)
         label_x = np.cos(alpha)
         fig = plt.figure(figsize=(8, 8))
-        gs = gridspec.GridSpec(1, 1) #, width_ratios=[1, 1]) 
+        gs = GS.GridSpec(1, 1) #, width_ratios=[1, 1]) 
         ax = plt.subplot(gs[0])
         plt.scatter(x=np.cos(alpha_regular),y=np.sin(alpha_regular), c='k',s=10)
         for l,p in zip(x_tick_lable,x_tick_pos):
@@ -590,7 +592,7 @@ def plot_graph_New(df_ext,file_save = "",ligand = "",draw_round = False,water = 
         plt.ylim(-1.3,1.3)
     else:
         fig = plt.figure(figsize=(10, 6))
-        gs = gridspec.GridSpec(1, 1) #, width_ratios=[1, 1]) 
+        gs = GS.GridSpec(1, 1) #, width_ratios=[1, 1]) 
         ax = plt.subplot(gs[0])
         ax.set_ylabel('Cluster', fontsize=18)
         ax.set_xlabel('<RMSD> /Angstrom', fontsize=18) 
@@ -689,7 +691,7 @@ def Plot_COM(df_ext):
             pos_SD[j].append(dd[c].std())
 
     fig = plt.figure(figsize=(16,5))
-    gs = gridspec.GridSpec(1, len(list_properties),wspace=0.2) #,height_ratios=[1,1],width_ratios=[2,2,1,1])
+    gs = GS.GridSpec(1, len(list_properties),wspace=0.2) #,height_ratios=[1,1],width_ratios=[2,2,1,1])
     color = ["blue","green","red","k","orange","cyan"]
     label = list_properties
 
@@ -808,7 +810,7 @@ def last_frames_by_contact(df_tot,columns_IFP,contacts):
 #
 ##################################
 
-from scipy.cluster import hierarchy
+
 def bootstrapp(t):
     """
     

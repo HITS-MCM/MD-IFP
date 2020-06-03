@@ -158,7 +158,6 @@ from Scripts.IFP_generation import *
 
  
 #sub_system = "protein or resname MG MN CA Mg Mn Ca"
-sub_system = "protein or (resname G G3 G5 U5 C C3 MG MN CA Mg Mn)"
 
 class Trj_Properties:
     def __init__(self):
@@ -264,6 +263,7 @@ class trajectories:
 #                    print ("Creation of the directory %s failed" % PRJ_DIR)
 #                else:  
 #                    print ("Data generated will be located at %s " % PRJ_DIR)
+        
         if not os.path.isdir(PRJ_DIR):  PRJ_DIR = os.getcwd()
         if(PRJ_DIR[-1] != "/"): PRJ_DIR = PRJ_DIR+"/"
         self.PRJ_DIR = PRJ_DIR
@@ -279,6 +279,8 @@ class trajectories:
         self.ramd_tmpl ="/"+ramd_tmpl
         self.namd_tmpl = "/"+namd_tmpl
         self.timestep = timestep
+        self.sub_system = "protein or (resname G G3 G5 U5 C C3 MG MN CA Mg Mn)"
+
         try:
             self.ligand = Ligand(PRJ_DIR,ligand_pdb,ligand_mol2)
             # check if ligand can be found in the trajectory 
