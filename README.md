@@ -1,6 +1,7 @@
 # MD-IFP: MD trajectory analysis using protein-ligand Interaction Fingerprints
-## A Python workflow for generation and analysis Protein-Ligand Interaction Fingerprints from Molecular Dynamics tajectories
+## A Python Workflow for the Generation and Analysis of Protein-Ligand Interaction Fingerprints from Molecular Dynamics trajectories
 ## v.1.0
+## 03.05.2020
 
 __Authors:__
 
@@ -36,7 +37,7 @@ conda env create -f IFP_trajectory.yml
 ## Scripts:
 
 
-### __Trajectories.py__  - functions for building a trajectory object for reading and analysis standard MD and RAMD trajectories and computation of relative residence times
+### __Trajectories.py__  - functions for building a trajectory object for reading and analysis of standard MD and RAMD trajectories and computation of relative residence times
 
 __IFP_generation.py__  -  functions for generation of IFPs
 
@@ -46,24 +47,24 @@ __Clustering.py__   - functions for analysis of trajectories using IFP data   (i
 
 __Process_pdb.py__   - preprocessing PDB files (splitting into ligand and protein files)
 
-__chimera_hydrogen_mol2.py__  - generation ligand mole2 file
+__chimera_hydrogen_mol2.py__  - generation of ligand mole2 file
 
 __Membrane_analysis.py__ - computation of the membrane surface area per lipid and membrane/protein/water atom density distribution  
 
        
 ## Application examples (folder Examples):
 
-   1. Generation of the IFP databease a single MD trajectory of a protein-ligand complex
-   2. Analysis and visualization of a set of IFP databsis for different ligands 
+   1. Generation of the IFP databease for a single MD trajectory of a protein-ligand complex
+   2. Analysis and visualization of a set of IFP databases for different ligand 
 
-## Test example as Python Jupyter Notebooks :
+## Test Examples as Python Jupyter Notebooks :
 
 ### Data employed in test examples 
-   can be dowloaded from  https://zenodo.org/record/3755337#.XrF-iGgzaUk
+   can be downloaded from  https://zenodo.org/record/3755337#.XrF-iGgzaUk
 
 ### I. __IFP_generation_examples_PDB.ipynb:__
 
-Protein-Ligand interaction fingerprint (IFP) computations (only function of IFP_generation.py are used) for:
+Protein-Ligand Interaction Fingerprint (IFP) computations (only functions of IFP_generation.py are used) for:
    1. a single structure prepared for MD simulations (HSP90; PDB ID 6EI5, dcd format)
    2. a trajectory (for selected frames; dcd format)
    3. a PDB structure
@@ -71,21 +72,20 @@ Protein-Ligand interaction fingerprint (IFP) computations (only function of IFP_
 
 ### II. __IFP_generation_examples_TRAJ.ipynb:__ 
 
-generation and analysis of  IFPs for plain MD simulations and RAMD trajectories for Muscarinic Receptor M2 in a membrane
-in this example Trajectories.py is used for pre-processing trajectories and  IFP_generation.py for computing IFPs
+Generation and analysis of IFPs for conventional MD simulations and for RAMD trajectories for Muscarinic Receptor M2 in a membrane.  In this example,  Trajectories.py is used for pre-processing trajectories and IFP_generation.py is used for computing IFPs
    1. Computing IFPs for system equilibration trajectory (dcd format)
    3. Computing IFPs for ligand dissociation trajectories (dcd format)
 
 
 ### III. __IFP_generation_examples_Analysis.ipynb:__ 
 
-This example shows how RAMD dissociation trajectories can be analyzed usinf pre-generated IFP database 
+This example shows how RAMD dissociation trajectories can be analyzed using pre-generated IFP databases 
 ![HSP90](/images/cluster-traj.png)
-*This plot illustrates ligand dissociation pathways in a graph representation*
+*This plot illustrates ligand dissociation pathways in a graph representation derived from clustering ligand trajectories in IFP space and plotting them with respect to RMSD from the initial bound position.*
    
    
 ### IV. __membrane_analysis_example.ipynb__
 
-Exploring behavior of a membrane-protein system in MD simulations. Membrane surface is supposed to be in the X/Y plane 
+Exploring the behavior of a membrane-protein system in MD simulations. The membrane surface is assumed to be in the X/Y plane 
 ![HSP90](/images/Membrane.png)
-*Illustratration of the analysis of the muscarinic reseptor M2 GPCR embedded in a mixed membrane with 50% of cholesterol*
+*Illustratration of the analysis of the muscarinic receptor M2 GPCR embedded in a mixed membrane with 50% cholesterol content*
