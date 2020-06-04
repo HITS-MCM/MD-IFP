@@ -36,9 +36,16 @@ Schloss-Wolfsbrunnenweg 35
    1. __System (protein/ligand/water) must be protonated__. This is nessesary for detection of hydrogen bonds.
    2. __Finding ligand contacts with ions/RNA/etc__.To minimize the memory required, only part of the system is analyzed (sub_system). By default, this is protein+water+ligand. Interactions (H-bonds) with DNA/RNA and ions can be found only if their residues are explicitly defined in by the sub_system  variable  of the trajectories class. One can further speed-up computqtions by keeping only protein as a sub_system. For example:
    
+     # consider only protein and ligand
      tr = trajectories()
      tr.sub_system = " proteins "
      tr.analysis_all_namd()
+     
+     # consider only protein, water, ligand, RRN, and MN
+     tr = trajectories()
+     tr.sub_system = "protein or (resname G G3 G5 U5 C C3 MG MN CA Mg Mn) or (resname WAT HOH SOL)"
+     tr.analysis_all_namd()
+
    
    3. For computation of IFP in a trajectory, protein (reference) structure in a pdb format must be provided in addition to a trajectory file. It must have the same structure. Note, that RMSD computed will be relative to the reference structure (not the first frame).
    
