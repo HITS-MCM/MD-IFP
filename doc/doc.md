@@ -34,9 +34,10 @@ Schloss-Wolfsbrunnenweg 35
   
  ## Complex structure/trajectory 
    1. __System (protein/ligand/water) must be protonated__. This is nessesary for detection of hydrogen bonds.
-   2. __Finding ligand contacts with ions/RNA/etc__.To minimize the memory required, only part of the system is analyzed (sub_system). By default, this is protein+water+ligand. Interactions (H-bonds) with DNA/RNA and ions can be found only if their residues are explicitly defined in by the sub_system  variable  of the trajectories class. One can further speed-up computqtions by keeping only protein as a sub_system. For example:
-   
-     # consider only protein and ligand
+   2. __Finding ligand contacts with ions/RNA/etc__.To minimize the memory and computational time required, only a part of the system is analyzed (defined by a variable sub_system). By default, this is protein+water+ligand. Interactions (H-bonds) with DNA/RNA and ions can be found only if their residues are explicitly defined in by the sub_system variable of the trajectories class. Alternatively, one can speed-up computqtions by keeping only protein as a sub_system. For example:
+     
+     # by default protein, ligand and water are considered
+     # consider only protein and ligand 
      tr = trajectories()
      tr.sub_system = " proteins "
      tr.analysis_all_namd()
