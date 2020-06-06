@@ -157,7 +157,7 @@ from MDAnalysis.coordinates.memory import MemoryReader
 from Scripts.IFP_generation import *
 
  
-#sub_system = "protein or resname MG MN CA Mg Mn Ca"
+
 
 class Trj_Properties:
     def __init__(self):
@@ -279,7 +279,7 @@ class trajectories:
         self.ramd_tmpl ="/"+ramd_tmpl
         self.namd_tmpl = "/"+namd_tmpl
         self.timestep = timestep
-        self.sub_system = "protein or (resname G G3 G5 U5 C C3 MG MN CA Mg Mn)"
+        self.sub_system = "protein or (resname MG MN CA Mg Mn) or (resname WAT HOH SOL)"  # G G3 G5 U5 C C3  can be added for RNA
 
         try:
             self.ligand = Ligand(PRJ_DIR,ligand_pdb,ligand_mol2)
@@ -834,9 +834,9 @@ class trajectories:
         if len(Lipids) > 0:
             lipid_line = ""
             for l in Lipids: lipid_line = lipid_line+" "+l
-            selection = "(resname "+sel_ligands+") or  "+sub_system+" or (resname WAT HOH SOL ) or ( resname " + lipid_line+" ) "
+            selection = "(resname "+sel_ligands+") or  "+self.sub_system+" or ( resname " + lipid_line+" ) "
         else:
-            selection = sub_system+" or (resname WAT HOH SOL "+sel_ligands+")"
+            selection = self.sub_system+" or (resname  "+sel_ligands+")"
         
         selection_rmsd = ["protein and (not type H)","resname "+sel_ligands+" and (not type H)"]
         auxi_rmsd = []

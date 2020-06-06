@@ -503,7 +503,8 @@ def plot_graph_New(df_ext,file_save = "",ligand = "",draw_round = False,water = 
         label_com.append(np.array((t.COM_x.mean(),t.COM_y.mean(),t.COM_z.mean())))
         print("STD: ",l,t.COM_x.std(),t.COM_y.std(),t.COM_z.std(),t.RMSDl.std())
         label_size.append(100*t_lig.shape[0]/df_ext.shape[0])
-        label_water.append(int(t.WAT.mean()))
+        if water:
+            label_water.append(int(t.WAT.mean()))
         for j in range(0,i):
             coms[i,j] = distance.euclidean(label_com[i],label_com[j])
     
@@ -642,14 +643,14 @@ def plot_graph_New(df_ext,file_save = "",ligand = "",draw_round = False,water = 
             xytext=(label_x[a],label_y[a])   
             ax.annotate("", xy=xy, xycoords='data',
                         xytext=xytext, textcoords='data',
-                        size=np.abs(flow)*4000,
+                        size=np.abs(flow)*5000,
                         arrowprops=dict(arrowstyle="Simple,head_length=0.2, head_width=0.4, tail_width=0.2", 
                                 fc="0.6", ec="none", alpha=0.8 ,
                                 connectionstyle="arc3,rad=-0.5"),
                         )
 
-    for i,txt in enumerate(labels_list):
-            ax.annotate(txt, (label_x[txt],label_y[txt]+0.05*pow(i,0.5)),fontsize=18)
+#    for i,txt in enumerate(labels_list):
+#            ax.annotate(txt, (label_x[txt],label_y[txt]+0.05*pow(i,0.5)),fontsize=18)
     if water:         
         ax.scatter(label_x,label_y,facecolors='none',c=color_com,edgecolors="lightskyblue",s=500*np.asarray(label_size),cmap='Oranges',\
                linewidths=np.asarray(label_water))
