@@ -816,7 +816,7 @@ def Plot_IF_trajectory(df_tot,ifp_type = np.asarray(['AR','HA','HD','HY','IP','I
     n_hb = len(columns_HB[(df[columns_HB].mean()> 0.75).values])
     plt.bar(range(0,len(columns_sel)),df[df.time < head_tail][columns_sel].mean(),alpha=0.6,label="first "+str(head_tail)+" frames")
     plt.bar(range(0,len(columns_sel)),df[df.time > df.shape[0]-head_tail][columns_sel].mean(),alpha=0.6,label="last "+str(head_tail)+" frames")
-    plt.bar(np.asarray(range(0,len(columns_sel))),df[columns_sel].mean(),color="",label="all frames,edgecolor ='k',hatch="/")
+    plt.bar(np.asarray(range(0,len(columns_sel))),df[columns_sel].mean(),color="",label="all frames",edgecolor ='k',hatch="/")
     plt.xticks(range(0,len(columns_sel)), columns_sel, rotation='vertical',fontsize=10)
     plt.legend(fontsize=10, loc = 'upper left')
     plt.show()
