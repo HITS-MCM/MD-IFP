@@ -793,7 +793,8 @@ def plot_graph_COM(df_ext,file_save = "",ligand = "",draw_round = False,water = 
             color_com[labels_list[l]] = 10*dist_rmsd[l] #dist_com[l]
 
     # since the last node is usually very far from all others we will damp it's color
-    color_com[color_com == np.max(color_com)] = int(np.sort(color_com)[-2]+0.25*(np.sort(color_com)[-1]-np.sort(color_com)[-2] ))  
+    color_com[color_com == np.max(color_com)] = max(int(np.sort(color_com)[-2]+0.25*(np.sort(color_com)[-1]-np.sort(color_com)[-2] )),np.sort(color_com)[-1]-20) 
+    print("COLORS: ",color_com)
 
     # set logarythmic scale
     label_x = np.log10(label_x)

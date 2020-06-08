@@ -842,6 +842,7 @@ def Water_bridges(u_mem, sel_ligands):
         
     angle_th =120
     dist_th =3.3
+    
     df_WB = pd.DataFrame()
     
     # 1. we will find a list of ligand- water h-bonds in the all trajectory
@@ -850,25 +851,25 @@ def Water_bridges(u_mem, sel_ligands):
     h.run()
     h.generate_table()
     wb1_tot = pd.DataFrame.from_records(h.table)
-    
-    # 2. make a list of water molecules 
+# 2. make a list of water molecules 
     lista = []
     if not wb1_tot[wb1_tot.donor_resnm == sel_ligands].empty:
         lista = wb1_tot[wb1_tot.donor_resnm == sel_ligands].acceptor_resid.values
     listd = []
     if not wb1_tot[wb1_tot.acceptor_resnm == sel_ligands].empty:
         listd = wb1_tot[wb1_tot.acceptor_resnm == sel_ligands].donor_resid.values
-#    print(">>>>>>>>>>",lista,listd)
     
     if (len(lista)+ len(listd) > 0):    
         list_wb = "resid "
         for l in np.unique(lista): list_wb = list_wb + str(l)+" " 
         for l in np.unique(listd): list_wb = list_wb + str(l)+" " 
-        #3. make a table of water- protein contacts (only selected water molecules are considered)
+#3. make a table of water- protein contacts (only selected water molecules are considered)
         h = hb.HydrogenBondAnalysis(u_mem, selection1 =list_wb,selection2=' not resname WAT HOH SOL '+sel_ligands, distance=dist_th , angle=angle_th, forcefield='OtherFF')
         h.run()
         h.generate_table()
         wb2_tot = pd.DataFrame.from_records(h.table)
+        
+        
         if wb2_tot.shape[0] > 0: 
             # loop over frames
             for time in range(len(u_mem.trajectory)):
@@ -881,27 +882,24 @@ def Water_bridges(u_mem, sel_ligands):
                     # exclude the cases where the same oxigen is an acceptor for both protein and ligand
                     wb2 = wb2[~(wb2.acceptor_index.isin(wb1[wb1["acceptor_resnm"].isin(["WAT", "HOH", "SOL"])].acceptor_index))]
                     wb12 =wb1.append(wb2)
-#                    print(time," -----------------\n",wb12)
-                    # check additionally angles
-                    list_ia = wb2[wb2["donor_resnm"].isin(["WAT", "HOH", "SOL"])].acceptor_resid.values
-                    list_ra = wb2[wb2["donor_resnm"].isin(["WAT", "HOH", "SOL"])].acceptor_resnm.values
-                    list_aa = wb2[wb2["donor_resnm"].isin(["WAT", "HOH", "SOL"])].acceptor_atom.values
-                    list_id = wb2[wb2["acceptor_resnm"].isin(["WAT", "HOH", "SOL"])].donor_resid.values
-                    list_rd = wb2[wb2["acceptor_resnm"].isin(["WAT", "HOH", "SOL"])].donor_resnm.values
-                    list_ad = wb2[wb2["acceptor_resnm"].isin(["WAT", "HOH", "SOL"])].donor_atom.values
-                    WB_list = []                    
-                    for r,i in zip(list_ra,list_ia): WB_list.append(r+str(i))
-                    for r,i in zip(list_rd,list_id): WB_list.append(r+str(i))
- #                   print("Preliminary WATER BRIDGE LIST: >>>>>>>>>>>>>>>>",time,np.unique(WB_list))
-                    
+ #                   print(time," -----------------\n",wb12)
+# 4. make a list water molecules  that have H-bonds with a ligand
+                    list_ld = wb12[wb12.acceptor_resnm ==  sel_ligands].donor_resid.values
+                    list_la = wb12[wb12.donor_resnm == sel_ligands].acceptor_resid.values
+                    list_w_l = np.concatenate((list_la, list_ld))
+ #                   print(list_w_l)
+                    if len(list_w_l) == 0: continue        
+# 5. check additionally angles                    
                     wat_donor = wb12[wb12["donor_resnm"].isin(["WAT", "HOH", "SOL"])]
                     wat_acceptor = wb12[wb12["acceptor_resnm"].isin(["WAT", "HOH", "SOL"])]
+                    
                     lig_donor = wb12[wb12["donor_resnm"].isin([sel_ligands])]
                     prot_donor = wb12[~(wb12["donor_resnm"].isin(["WAT", "HOH", "SOL", sel_ligands]))]
                     if (not prot_donor.empty)  or (not lig_donor.empty):
                         check_list =[]
                         # loop over water donor atoms
                         for wat_hid,wat_hat in zip(wat_donor.donor_resid.values,wat_donor.donor_atom.values):
+                            if wat_hid not in list_w_l: continue
                             wat_oid = wat_acceptor[wat_acceptor["acceptor_resid"] == wat_hid].acceptor_resid.values 
                             # loop over water acceptor atoms
                             for wid in wat_oid:
@@ -928,7 +926,7 @@ def Water_bridges(u_mem, sel_ligands):
 #                        for wr in wb2remove :
 #                            print("REMOVE incorrect H-bonds from the WB list:",wr)
 #                            wb12 = wb12[~((wb12.acceptor_resid == wr[0])& (wb12.donor_resid == wr[1]) & (wb12.donor_atom == wr[2]))]
-                            
+#6. change structure - rename donor/acceptor to sel_1 / sel_2 and move ligand to sel_1                            
                     wb12 =wb12.rename(columns=col_transfer)
                     # bring table to the following structure: sel1 - lig or water ; sel2- protein or water
                     # ---- sel1: lig - sel2: water
