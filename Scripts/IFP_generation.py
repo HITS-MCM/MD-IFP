@@ -221,7 +221,7 @@ def IFP_list(property_list, sel_ligands, RE=True, Lipids = []):
         if "Aromatic" in property_list.keys():
             for l in np.asarray(property_list["Aromatic"]): line = line + l +" "
             sel_b = '((resname '+sel_ligands+" ) and (name "+line+") )"
-            sel_a = at_positive #"((resname ARG LYS ) and (name NH* NZ*)) or (backbone and name H)  
+            sel_a = at_positive +" or "+at_sulfur #"((resname ARG LYS ) and (name NH* NZ*)) or (backbone and name H)  
             IFP_prop_list.append(IFP_prop("AR",line,sel_a,sel_b,r_cat))
     except:
         print("AR3 failed")
@@ -435,7 +435,7 @@ def IFP(u_mem,sel_ligands,property_list, WB_analysis = True, RE = True,Lipids = 
                             if("Aromatic" in property_list.keys()):
                                 line_ar = ""
                                 for l in np.asarray(property_list["Aromatic"]): line_ar = line_ar + l +" "
-                                line1 = "(resname "+sel_ligands+" and ( not type H O) and name "+line_ar+") and around "+str(r_cat)+" (resid "+str(u.resid[u.resname == cation][0]) + " and type N)" 
+                                line1 = "(resname "+sel_ligands+" and ( not type H O) and name "+line_ar+") and around "+str(r_cat)+" (resid "+str(u.resid[u.resname == cation][0]) + " and type N S)" 
                                 u1_list = (u_mem.select_atoms(line1,updating=True))
                                 if(len(u1_list) > 4): 
                                     found.append([IFP_type.name+"_"+u.resname+str(u.resid),u.name])
@@ -816,7 +816,7 @@ def Plot_IF_trajectory(df_tot,ifp_type = np.asarray(['AR','HA','HD','HY','IP','I
     n_hb = len(columns_HB[(df[columns_HB].mean()> 0.75).values])
     plt.bar(range(0,len(columns_sel)),df[df.time < head_tail][columns_sel].mean(),alpha=0.6,label="first "+str(head_tail)+" frames")
     plt.bar(range(0,len(columns_sel)),df[df.time > df.shape[0]-head_tail][columns_sel].mean(),alpha=0.6,label="last "+str(head_tail)+" frames")
-    plt.bar(np.asarray(range(0,len(columns_sel))),df[columns_sel].mean(),color="",label="all frames\n h-bonds observed in >75% frames: "+str(n_hb),edgecolor ='k',hatch="/")
+    plt.bar(np.asarray(range(0,len(columns_sel))),df[columns_sel].mean(),color="",label="all frames,edgecolor ='k',hatch="/")
     plt.xticks(range(0,len(columns_sel)), columns_sel, rotation='vertical',fontsize=10)
     plt.legend(fontsize=10, loc = 'upper left')
     plt.show()
