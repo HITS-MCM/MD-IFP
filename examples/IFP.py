@@ -29,11 +29,21 @@ from Scripts.IFP_generation import *
 from Scripts.Trajectories import *
 
 
+####
+# Location of your data:
+#  your_path/ligand_name/top/input.pdb - reference PDB structure
+#  your_path/ligand_name/build/moe.mol2  - ligand mol2 file
+#  your_path/ligand_name/build/ligand_name.mol2  - ligand pdb file
+#  your_path/ligand_name/md/out/*.nc    - trajectories to be analyzed
+###
+
+
+
 ligand_name = name
-DIR_all = "/hits/fast/mcm/kokhda/Corona/RdRp-MD/"+name+"/"
+DIR_all = "your_path"+name+"/"
 trj = "md/out/"
 ref_pdb = "top/input.pdb"
-ligand_pdb = "build/"+name+"_resp.pdb"
+ligand_pdb = "build/"+name+".pdb"
 ligand_mol2 = "build/moe.mol2"
 
 #os.system("grep "+ligand_name+" "+ref_pdb+ " > build/"+name+"_resp.pdb")
@@ -41,16 +51,14 @@ ligand_mol2 = "build/moe.mol2"
 step =1
 start=0
 end = -1
-#u = mda.Universe(ref_pdb,trj+"prod.nc")
-select = ["G","G3","G5","U5","C","C3","MN"]
 print("TRJ "+name+">>>>"+DIR_all+trj)
 sys.stdout.flush()
 tr = trajectories(DIR_all,namd_tmpl= trj, ramd_tmpl= DIR_all,ligand_pdb=ligand_pdb,pdb = ref_pdb,\
                           ligand_mol2=ligand_mol2,namd_traj_tmpl = "*nc",ramd_traj_tmpl = "xx")
-
+tr.sub_system = " protein or (resname SOL HOH WAT G G3 G5 U5 C C3 MN) "
 print("TRJ "+name+">> IFP")
 sys.stdout.flush()
-tr.analysis_all_namd(WB_analysis = False, Lipids = select,auxi_selection = [],step_analysis=step, start_analysis=start)
+tr.analysis_all_namd(WB_analysis = False, Lipids = [],auxi_selection = [],step_analysis=step, start_analysis=start)
 
 sys.stdout.flush()
 IFP_table = tr.namd.IFP_save(DIR_all+ligand_name+"-IFP_3000.pkl")
