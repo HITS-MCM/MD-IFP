@@ -881,7 +881,7 @@ def Water_bridges(u_mem, sel_ligands):
                     # exclude the cases where the same oxigen is an acceptor for both protein and ligand
                     wb2 = wb2[~(wb2.acceptor_index.isin(wb1[wb1["acceptor_resnm"].isin(["WAT", "HOH", "SOL"])].acceptor_index))]
                     wb12 =wb1.append(wb2)
-                    print(time," -----------------\n",wb12)
+#                    print(time," -----------------\n",wb12)
 # 5. check additionally angles                    
 # 5(a) make a list water molecules  that have H-bonds with a ligand
                     list_ld = wb12[wb12.acceptor_resnm ==  sel_ligands].donor_resid.values
@@ -919,15 +919,15 @@ def Water_bridges(u_mem, sel_ligands):
                                             u_mem.select_atoms("resid "+str(nowat_hid)+" and name "+nowat_hat,updating=True).positions,
                                         )
                                         )
-                                    print("Check angle: ",np.round(angles[0],1)," resid "+str(wat_hid)+" "+wat_hat," resid "+str(wid)+" O","resid "+str(nowat_hid)+" "+nowat_hat)
+#                                    print("Check angle: ",np.round(angles[0],1)," resid "+str(wat_hid)+" "+wat_hat," resid "+str(wid)+" O","resid "+str(nowat_hid)+" "+nowat_hat)
                             except:
                                     angles = 0     
                                     print("Warning: problem with WB angles (maybe some residue numbers are duplicated): "+" resid "+str(wat_hid)+" "+wat_hat," resid "+str(wid)+" O","resid "+str(nowat_hid)+" "+nowat_hat)
                             if angles < angle_th:   
                                         wr =(wat_hid,wat_hat,nowat_hin)
-                                        print("REMOVE incorrect H-bonds from the WB list:",wr)
+#                                        print("REMOVE incorrect H-bonds from the WB list:",wr)
                                         wb12 = wb12[~((wb12.acceptor_resid == wr[0]) & (wb12.acceptor_atom == wr[1]) & (wb12.donor_index == wr[2]))]
-                                        print("INTERMEDIATE -----------------\n",wb12[( (wb12.donor_index == wr[1]) )])
+#                                        print("INTERMEDIATE -----------------\n",wb12[( (wb12.donor_index == wr[1]) )])
         
 # 5(b) make a list water molecules  that have H-bonds with a ligand, but first revise table
  #                   print(time," -----------------\n",wb12)
@@ -962,13 +962,13 @@ def Water_bridges(u_mem, sel_ligands):
                                             u_mem.select_atoms("resid "+str(wat_hid)+" and type O",updating=True).positions,
                                         )
                                         )
-                                    print("Check angle: ",np.round(angles[0],1)," resid "+str(wat_hid)+" "+wat_hat," resid "+str(wid)+" O","resid "+str(oid_nonwat)+" "+oat_nonwat)
+#                                    print("Check angle: ",np.round(angles[0],1)," resid "+str(wat_hid)+" "+wat_hat," resid "+str(wid)+" O","resid "+str(oid_nonwat)+" "+oat_nonwat)
                             except:
                                     angles = 0     
                                     print("Warning: problem with WB angles (maybe some residue numbers are duplicated): "+" resid "+str(wat_hid)+" "+wat_hat," resid "+str(wid)+" O","resid "+str(oid_nonwat)+" "+oat_nonwat)
                             if angles < angle_th:   
                                         wr =(wat_hid,wat_hat,oin_nonwat)
-                                        print("REMOVE incorrect H-bonds from the WB list:",wr)
+#                                        print("REMOVE incorrect H-bonds from the WB list:",wr)
                                         wb12 = wb12[~((wb12.donor_resid == wr[0]) & (wb12.donor_atom == wr[1]) & (wb12.acceptor_index == wr[2]))]
                             
                                                        
