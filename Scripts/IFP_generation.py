@@ -221,7 +221,7 @@ def IFP_list(property_list, sel_ligands, RE=True, Lipids = []):
         if "Aromatic" in property_list.keys():
             for l in np.asarray(property_list["Aromatic"]): line = line + l +" "
             sel_b = '((resname '+sel_ligands+" ) and (name "+line+") )"
-            sel_a = at_positive +" or "+at_sulfur #"((resname ARG LYS ) and (name NH* NZ*)) or (backbone and name H)  
+            sel_a = at_positive # +" or "+at_sulfur #"((resname ARG LYS ) and (name NH* NZ*)) or (backbone and name H)  
             IFP_prop_list.append(IFP_prop("AR",line,sel_a,sel_b,r_cat))
     except:
         print("AR3 failed")
@@ -428,14 +428,14 @@ def IFP(u_mem,sel_ligands,property_list, WB_analysis = True, RE = True,Lipids = 
                             if( np.unique(np.asarray(u_ar_n)[np.where(u_ar==u.resid)[0]]).shape[0])== 1: 
                                 found.append([IFP_type.name+"_"+u.resname+str(u.resid),u.name])
                         # here we will check if cation (LYS or ARG) really contact an aromatic ring of the ligand
-                        elif(u.resname in ["LYS","ARG","CYS","MET"]):
+                        elif(u.resname in ["LYS","ARG"]):
  #                           if u.resname == "LYS" : cation = "LYS"
  #                           else: cation = "ARG"
                             cation = u.resname 
                             if("Aromatic" in property_list.keys()):
                                 line_ar = ""
                                 for l in np.asarray(property_list["Aromatic"]): line_ar = line_ar + l +" "
-                                line1 = "(resname "+sel_ligands+" and ( not type H O) and name "+line_ar+") and around "+str(r_cat)+" (resid "+str(u.resid[u.resname == cation][0]) + " and type N S)" 
+                                line1 = "(resname "+sel_ligands+" and ( not type H O) and name "+line_ar+") and around "+str(r_cat)+" (resid "+str(u.resid[u.resname == cation][0]) + " and type N )" 
                                 u1_list = (u_mem.select_atoms(line1,updating=True))
                                 if(len(u1_list) > 4): 
                                     found.append([IFP_type.name+"_"+u.resname+str(u.resid),u.name])
