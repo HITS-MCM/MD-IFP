@@ -42,12 +42,20 @@ Schloss-Wolfsbrunnenweg 35
      tr.sub_system = " proteins "
      tr.analysis_all_namd()
      
-     # consider only protein, water, ligand, RRN, and MN
+     # consider only protein, water, ligand, RRN, and some ions
      tr = trajectories()
      tr.sub_system = "protein or (resname G G3 G5 U5 C C3 MG MN CA Mg Mn) or (resname WAT HOH SOL)"
      tr.analysis_all_namd()
 
    
    3. For computation of IFP in a trajectory, protein (reference) structure in a pdb format must be provided in addition to a trajectory file. It must have the same structure. Note, that RMSD computed will be relative to the reference structure (not the first frame).
+   4. Currently, Gromacs trajectories (as xtc) must be pre-processed in order to build back molecules that can be splitted due to the motion under PBC. Trajectory analysis does not do this properly (to be fixed in future) One can use the following command:
+   
+    gmx trjconv -f ramd_trj.xtc  -s ramd_tpr.tpr  -pbc mol -o ramd_trj_fixed.xtc  <<< 0
+    or to save only the last 500 frames:
+    gmx trjconv -f ramd_trj.xtc  -s ramd_tpr.tpr  -pbc mol -o ramd_trj_fixed.xtc  -b + 500 <<< 0
+    
+   
+   
    
 
