@@ -52,7 +52,7 @@ Schloss-Wolfsbrunnenweg 35
    4. Currently, Gromacs trajectories (as xtc) must be pre-processed in order to build back molecules that can be splitted due to the motion under PBC. Trajectory analysis does not do this properly (to be fixed in future) One can use the following command:
    
     gmx trjconv -f ramd_trj.xtc  -s ramd_tpr.tpr  -pbc mol -o ramd_trj_fixed.xtc  <<< 0
-    or to save only the last 500 frames:
+    or to save only starting from 500ps:
     gmx trjconv -f ramd_trj.xtc  -s ramd_tpr.tpr  -pbc mol -o ramd_trj_fixed.xtc  -b + 500 <<< 0
     
    
