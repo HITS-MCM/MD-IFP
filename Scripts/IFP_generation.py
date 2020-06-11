@@ -216,7 +216,7 @@ def IFP_list(property_list, sel_ligands, RE=True, Lipids = []):
         print("AR2 failed")
         pass
     
-    try: #--- aromatic ligand - cation , amide, or S interactions
+    try: #--- aromatic ligand - cation , amide
         line = ""
         if "Aromatic" in property_list.keys():
             for l in np.asarray(property_list["Aromatic"]): line = line + l +" "
@@ -226,16 +226,16 @@ def IFP_list(property_list, sel_ligands, RE=True, Lipids = []):
     except:
         print("AR3 failed")
         pass
-    try: #--- aromatic ligand - cation , amide, or S interactions
-        line = ""
-        if "Aromatic" in property_list.keys():
-            for l in np.asarray(property_list["Aromatic"]): line = line + l +" "
-            sel_b = '((resname '+sel_ligands+" ) and (name "+line+") )"
-            sel_a = " type S " #  or ((type S) and (resname MET CYS))
-            IFP_prop_list.append(IFP_prop("AR",line,sel_a,sel_b,r_sar))
-    except:
-        print("AR4 failed")
-        pass
+#    try: #--- aromatic ligand - cation , amide, or S interactions
+#        line = ""
+#        if "Aromatic" in property_list.keys():
+#            for l in np.asarray(property_list["Aromatic"]): line = line + l +" "
+#            sel_b = '((resname '+sel_ligands+" ) and (name "+line+") )"
+#            sel_a = " type S " #  or ((type S) and (resname MET CYS))
+#            IFP_prop_list.append(IFP_prop("AR",line,sel_a,sel_b,r_sar))
+#    except:
+#        print("AR4 failed")
+#        pass
     
     try: #--- halogen bonds with atromatic, negatively charged or backbone carbonyl oxygen
         sel_b = '((resname '+sel_ligands+" ) and ( type I CL BR Br Cl) )"
