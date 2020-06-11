@@ -76,7 +76,7 @@ Generation and analysis of IFPs for conventional MD simulations and for RAMD tra
    1. Computing IFPs for a single equilibration trajectory (dcd format)
    3. Computing IFPs for a set of trajectories: system equilibration and ligand dissociation (RAMD) trajectories (dcd format)
 ![HSP90](/images/ifp_RAMD_4MQT.png)
-*Illustration of PL IFP variation in one of the ligand iperoxo bound to muscarinic receptor M2 dissociation trajectory.*
+*Illustration of PL IFP variation in one of the dissociation trajectories of iperoxo bound to muscarinic receptor M2 .*
 
 
 ### III. __IFP_generation_examples_Analysis.ipynb:__ 
