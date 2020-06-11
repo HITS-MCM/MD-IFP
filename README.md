@@ -73,8 +73,8 @@ Protein-Ligand Interaction Fingerprint (IFP) computations (only functions of IFP
 ### II. __IFP_generation_examples_TRAJ.ipynb:__ 
 
 Generation and analysis of IFPs for conventional MD simulations and for RAMD trajectories for Muscarinic Receptor M2 in a membrane.  In this example,  Trajectories.py is used for pre-processing trajectories and IFP_generation.py is used for computing IFPs
-   1. Computing IFPs for system equilibration trajectory (dcd format)
-   3. Computing IFPs for ligand dissociation trajectories (dcd format)
+   1. Computing IFPs for a single equilibration trajectory (dcd format)
+   3. Computing IFPs for a set of trajectories: system equilibration and ligand dissociation (RAMD) trajectories (dcd format)
 ![HSP90](/images/ifp_RAMD_4MQT.png)
 *Illustration of PL IFP variation in one of the ligand iperoxo bound to muscarinic receptor M2 dissociation trajectory.*
 
