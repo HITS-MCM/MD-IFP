@@ -736,7 +736,7 @@ def plot_graph_COM(df_ext,file_save = "",ligand = "",draw_round = False,water = 
     #indx_first_com = np.argwhere((np.asarray(label_rmsd) == min(label_rmsd)))[0][0]
     dist_rmsd = []
     for i,l in enumerate(labels_list): 
-        dist_rmsd.append(np.round(np.abs(label_rmsd[i]-min_rmsd)))
+        dist_rmsd.append(np.round(np.abs(label_rmsd[i]-min_rmsd),2))
     dist_com = (10*np.asarray(label_com)/np.max(label_com)).astype(int)
     dist_rmsd = (10*np.asarray(dist_rmsd)/np.max(dist_rmsd)).astype(int)
     print("COMs:",dist_com)
@@ -793,7 +793,7 @@ def plot_graph_COM(df_ext,file_save = "",ligand = "",draw_round = False,water = 
             color_com[labels_list[l]] = 10*dist_rmsd[l] #dist_com[l]
 
     # since the last node is usually very far from all others we will damp it's color
-    color_com[color_com == np.max(color_com)] = max(int(np.sort(color_com)[-2]+0.25*(np.sort(color_com)[-1]-np.sort(color_com)[-2] )),np.sort(color_com)[-1]-20) 
+    color_com[color_com == np.max(color_com)] = max(int(np.sort(color_com)[-2]+0.25*(np.sort(color_com)[-1]-np.sort(color_com)[-2] )),np.sort(color_com)[-1]-45) 
     print("COLORS: ",color_com)
 
     # set logarythmic scale
@@ -855,7 +855,7 @@ def plot_graph_COM(df_ext,file_save = "",ligand = "",draw_round = False,water = 
                 if  (np.abs((label_rmsd[l] - label_rmsd[n])) > 0.5* min(label_rmsd)) or (draw_round == False):
                     ax.annotate("", xy=xytext, xycoords='data',
                         xytext=xy, textcoords='data',
-                        size=eidges[l,n]*500,
+                        size=eidges[l,n]*600,
                         arrowprops=dict(arrowstyle="Fancy,head_length=0.2, head_width=0.4, tail_width=0.2", 
                                 fc="orange", ec="none", alpha=0.2 ,
                                 connectionstyle="arc3,rad=-0.5"),
@@ -873,7 +873,7 @@ def plot_graph_COM(df_ext,file_save = "",ligand = "",draw_round = False,water = 
             ax.annotate("", xy=xy, xycoords='data',
                         xytext=xytext, textcoords='data',
                         size=np.abs(flow)*5000,
-                        arrowprops=dict(arrowstyle="Simple,head_length=0.2, head_width=0.4, tail_width=0.2", 
+                        arrowprops=dict(arrowstyle="Fancy,head_length=0.2, head_width=0.4, tail_width=0.2", 
                                 fc="0.6", ec="none", alpha=0.8 ,
                                 connectionstyle="arc3,rad=-0.5"),
                         )
