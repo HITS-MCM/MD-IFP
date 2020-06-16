@@ -3,7 +3,7 @@
 ## v.1.0
 ## 03.05.2020
 
-__Authors:__
+__Authors and Contributors:__
 
 * Daria Kokh
 * Fabian Ormersbach - preprocessing PDB files using Chimera (Process_pdb.py, chimera_hydrogen_mol2.py; test examples revised) 
