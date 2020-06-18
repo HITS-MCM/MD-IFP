@@ -91,7 +91,60 @@ def rank_IFP_resi(df,ifp_type=['AR','HY','HA','HD','HL','IP','IN',"IO"]):
     columns_RE = np.asarray(columns_RE)[np.argsort(np.asarray(number))]
     return(columns_IFP,columns_RE)
 
+########################################################################
+# 
+########################################################################
 
+def remove_dissociated_parts(df_tot,max_rmsd=15,max_dcom=3,max_drmsd=3):
+    """    
+    this function checks if there is a jump in the ligand position in  two neighbour frames, which may appear due to incomplete wrapping system back to the box (i.e. because of the PBC),  
+    a part of the trajectory starting from the detected jump will be removed from the dataset
+    
+    Parameters:
+    df_tot - pkl table
+    columns_IFP - list of IFP types to be considered
+    max_rmsd - frames with RMSD below this threshold wil be analyzed
+    max_dcom - maximum distance between center of mass (COM) of the ligand from the first snapshot that will be considered as an indication of jump
+    max_drmsd - maximum distance between center of mass (RMSD) of the ligand from the first snapshot that will be considered as an indication of jump
+    Results:
+    df_new - new dataset
+    """
+    # remove trajectory part after dissociation
+    df_new= pd.DataFrame()
+    for l in np.unique(df_tot.ligand.values):
+        df_tot_lig = df_tot[df_tot.ligand == l]
+        for j in np.unique(df_tot_lig.Repl.values):
+            df_tot_Repl = df_tot_lig[df_tot_lig.Repl == j]
+            for i in np.unique(df_tot_Repl.Traj.values.astype(int)):
+                df_tot_Repl_Traj = df_tot_Repl[df_tot_Repl.Traj == str(i)]
+                s = np.sum(df_tot_Repl_Traj.values,axis=1)
+                rmsd = df_tot_Repl_Traj.RMSDl.values
+                comx = df_tot_Repl_Traj.COM_x.values
+                comy = df_tot_Repl_Traj.COM_y.values
+                comz = df_tot_Repl_Traj.COM_z.values
+                skip = -1
+                for r in range(1,rmsd.shape[0]):
+                    dcom = np.linalg.norm(np.asarray([float(comx[r-1]),float(comy[r-1]),float(comz[r-1])])-np.asarray([float(comx[r]),float(comy[r]),float(comz[r])]))
+                    drmsd = (rmsd[r]-rmsd[r-1]) 
+                    if  rmsd[r] < max_rmsd and (dcom > max_dcom or drmsd > max_drmsd):
+                        plt.plot(df_tot_Repl_Traj.time,df_tot_Repl_Traj.RMSDl)
+                        skip = r
+                        continue
+                if (np.argwhere(s == 0 ).flatten().shape[0] > 0) :
+                    mm = np.argwhere(s == 0 ).flatten()[0]
+                else: mm = -1
+                if  mm > 0 or skip > 0:
+                    if mm > 0 and skip > 0:   mmr = min(mm,r)
+                    elif mm > 0: mmr =mm
+                    else: mmr = skip
+                    df_new = df_new.append(df_tot_Repl_Traj[df_tot_Repl_Traj.time.astype(int) < mmr])
+                    plt.plot(df_tot_Repl_Traj.time,df_tot_Repl_Traj.RMSDl)
+                else:
+                    df_new = df_new.append(df_tot_Repl_Traj)
+    plt.xlabel("frame",fontsize=14)
+    plt.ylabel("ligand RMSD",fontsize=14)
+    plt.title("Trajectories with a ligand jump")
+    return(df_new)
 
 
 ########################################################################
@@ -181,19 +234,20 @@ def separate_IFP(complete_list_IFP):
     return(resi_list_sorted,resi_name_list_sorted,ifp_list)
 
 ########################################################################
+#  depricated, will be removed in the next version
 ########################################################################
 def get_from_prop(list_x, df,list_l= [],threshold = 0.1):
     """
-    
+    This function extracts a su-set of the pkl file for the user-defined list of IFPs and generated its properies
     Parameters:
-    list_x
+    list_x - list of IFPs to be analyzed
     df,list_l= []
     threshold = 0.1
     
     Returns:
-    ar
-    ar_SD
-    x
+    ar - array of mean values
+    ar_SD - array of standard deviations
+    x - list of IFPs with mean below a pre-defined threshold
     
     """
     if len(list_l) == 0:
@@ -268,13 +322,19 @@ def unify_resi(list_resi, df,resi_list_sorted,list_l= [], threshold=3):
     return(ar_complete,ar_SD_complete)
 
 ########################################################################
+#    depricated, will be removed in the next version
 ########################################################################
 def ar_complete_ligand(ligand,df_tot,resi_list_sorted,properties=["RE","AR","HD","HA","HY","WB"]):
     """
-    
+    combines an numpy array of selected part of the complete IFP dataset
+    selection can be done by ligand, residue, and IFP properties
     Parameters:
-    
+    ligand - ligand name
+    df_tot - ifp database 
+    resi_list_sorted - list of residues 
+    properties - ifp properties
     Returns:
+    mean value and STD for each property
     
     """
     df_ligand = df_tot[df_tot.ligand == ligand]
@@ -316,7 +376,7 @@ def read_databases(d,name_template,name_len = 8):
     list_IFP = {}    
     new_list_col = []
     for i,lig_pkl in enumerate(glob.glob(d+name_template)):
-        name= lig_pkl[len(d):len(d)+8]
+        name= lig_pkl[len(d):len(d)+name_len]
         print(lig_pkl,name)
         list_IFP.update( {name:lig_pkl})
         df_lig= pd.read_pickle(lig_pkl)
@@ -339,13 +399,14 @@ def read_databases(d,name_template,name_len = 8):
 
 
 ########################################################################
+# depricated, will be removed in the next version
 ########################################################################
 def clean_ramd(df_tot,threshold = 0.9,check_z = False):
     """
     Parameters:
     check_z - check if z coordinate is changed and drop trajectories where it did not
     
-    Parameters:
+    Returns:
     """
     df_tot_new = pd.DataFrame(columns=df_tot.columns.tolist())
     if "ligand" in np.unique(df_tot.columns.values):
@@ -386,9 +447,13 @@ def clean_ramd(df_tot,threshold = 0.9,check_z = False):
 ######################################################################
 def GRID_PRINT(file_name,pdrv,gr_orgn,gr_dim,grid_stp):
     """
-    
+    function that saved dx grid 
     Parameters:
-    
+    file_name - name of the grid file
+    pdrv - grid
+    gr_orgn - grid origin
+    gr_dim - grid dimention
+    grid_stp - grid setp
     Returns:
     
     """
@@ -424,8 +489,8 @@ def Map_3D_grid(df_tot_to_save,filename):
     Mapping ligand motion trajectory from the IFP file on the 3D grid and saving the grid in dx format
     
     Parameters:
-    df_tot_to_save
-    filename
+    df_tot_to_save - dataset containing COM as columns COM_x, COM_y, and COM_z
+    filename - the name of the output grid
     
     Returns:
     
@@ -589,8 +654,8 @@ def plot_graph_New(df_ext,file_save = "",ligand = "",draw_round = False,water = 
         plt.scatter(x=np.cos(alpha_regular),y=np.sin(alpha_regular), c='k',s=10)
         for l,p in zip(x_tick_lable,x_tick_pos):
             ax.annotate(str(l)+"A", (1.2*np.cos(0.9*2*3.14*p/max(x_tick_pos)),np.sin(0.9*2*3.14*p/max(x_tick_pos))),fontsize=14,color="gray")
-        plt.xlim(-1.3,1.3)
-        plt.ylim(-1.3,1.3)
+        plt.xlim=(-1.3,1.3)
+        plt.ylim=(-1.3,1.3)
     else:
         fig = plt.figure(figsize=(10, 6))
         gs = GS.GridSpec(1, 1) #, width_ratios=[1, 1]) 
@@ -599,6 +664,7 @@ def plot_graph_New(df_ext,file_save = "",ligand = "",draw_round = False,water = 
         ax.set_xlabel('<RMSD> /Angstrom', fontsize=18) 
         plt.xticks(x_tick_pos,x_tick_lable, fontsize=18)
         ax.tick_params(labelsize=18)
+        ax.set_ylim(-1,len(label_y)+1)
  #       plt.grid()
 
     
@@ -649,15 +715,14 @@ def plot_graph_New(df_ext,file_save = "",ligand = "",draw_round = False,water = 
                                 connectionstyle="arc3,rad=-0.5"),
                         )
 
-#    for i,txt in enumerate(labels_list):
-#            ax.annotate(txt, (label_x[txt],label_y[txt]+0.05*pow(i,0.5)),fontsize=18)
+    for i,txt in enumerate(labels_list):
+            ax.annotate(txt, (label_x[txt],label_y[txt]+0.05*pow(i,0.5)),fontsize=18)
     if water:         
         ax.scatter(label_x,label_y,facecolors='none',c=color_com,edgecolors="lightskyblue",s=500*np.asarray(label_size),cmap='Oranges',\
                linewidths=np.asarray(label_water))
         print("WATERS:",np.asarray(label_water))
     else:
         ax.scatter(label_x,label_y,facecolors='none',c=color_com,edgecolors="k",s=500*np.asarray(label_size),cmap='Oranges')
-        
     if file_save != "": plt.savefig(file_save,dpi=300)  
     else:    plt.show()
         
@@ -739,8 +804,8 @@ def plot_graph_COM(df_ext,file_save = "",ligand = "",draw_round = False,water = 
         dist_rmsd.append(np.round(np.abs(label_rmsd[i]-min_rmsd),2))
     dist_com = (10*np.asarray(label_com)/np.max(label_com)).astype(int)
     dist_rmsd = (10*np.asarray(dist_rmsd)/np.max(dist_rmsd)).astype(int)
-    print("COMs:",dist_com)
-    print("RMSDs:",dist_rmsd)
+    print("COM displacement in each cluster to be used for plotting:",dist_com)
+    print("RMSDs displacement in each cluster to be used for plotting:",dist_rmsd)
     print("COM min:",min_COM)
     print("RMSD min:",min_rmsd)
     #------------------------------------------------
@@ -794,7 +859,7 @@ def plot_graph_COM(df_ext,file_save = "",ligand = "",draw_round = False,water = 
 
     # since the last node is usually very far from all others we will damp it's color
     color_com[color_com == np.max(color_com)] = max(int(np.sort(color_com)[-2]+0.25*(np.sort(color_com)[-1]-np.sort(color_com)[-2] )),np.sort(color_com)[-1]-45) 
-    print("COLORS: ",color_com)
+    print("COLORS (i.e. averade RMSD) to be used in each cluster for plotting: ",color_com)
 
     # set logarythmic scale
     label_x = np.log10(label_x)
@@ -828,6 +893,7 @@ def plot_graph_COM(df_ext,file_save = "",ligand = "",draw_round = False,water = 
         ax.set_xlabel(r'< $\Delta{COM} $ > [Angstrom]', fontsize=18) 
         plt.xticks(x_tick_pos,x_tick_lable, fontsize=18)
         ax.tick_params(labelsize=18)
+        plt.ylim(-0.8,len(label_y)+0.8)
  #       plt.grid()
 
     
@@ -872,7 +938,7 @@ def plot_graph_COM(df_ext,file_save = "",ligand = "",draw_round = False,water = 
             xytext=(label_x[a],label_y[a])   
             ax.annotate("", xy=xy, xycoords='data',
                         xytext=xytext, textcoords='data',
-                        size=np.abs(flow)*5000,
+                        size=np.abs(flow)*8000,
                         arrowprops=dict(arrowstyle="Fancy,head_length=0.2, head_width=0.4, tail_width=0.2", 
                                 fc="0.6", ec="none", alpha=0.8 ,
                                 connectionstyle="arc3,rad=-0.5"),
@@ -901,7 +967,7 @@ def plot_graph_COM(df_ext,file_save = "",ligand = "",draw_round = False,water = 
 #######################################
 def Plot_COM(df_ext):
     """
-    
+    plotting average COM (x, y, and z separately) and the nu,mber of water molecules in the ligand solvation shell in each clusters
     Parameters:
     df_ext - IFP database with COM columns
     
@@ -942,13 +1008,18 @@ def Plot_COM(df_ext):
 
 
 
+########################################################################
+# depricated, will be removed in the next version
+########################################################################
+
 def Print_IFP_averaged(df_tot,resi_list_sorted,ligandsi,resi_name_list_sorted,properties=["AR","HD","HA","HY","WB","IP","IN"],threshold = 0.01):
     """
     generate a list of residues, combine all properties for each residue, sort them by the residue number
     
     Parameters:
-    
+        
     Returns:
+    IFP plot
     
     """
     index_no_zero_IFP = np.asarray([])
@@ -1011,11 +1082,17 @@ def Print_IFP_averaged(df_tot,resi_list_sorted,ligandsi,resi_name_list_sorted,pr
 ##################################
 def last_frames_by_contact(df_tot,columns_IFP,contacts):
     """
-    
+    functin that build an numpy array of the IFP properties extracting from the TFP dataset only the several last frame with a pre-defined number of the protein-ligand contacts 
     Parameters:
-    
+    contacts - number of contacts 
+    df_tot - complete dataset
+    columns_IFP - columns to be analized
     Returns:
-    
+    ar - numpy array containg IFP of the selected frames
+    r_t_f - list of selected replica-trajectory-frame  
+    df - IFP database from selected frames
+    np.asarray(com_tot) - just COM valsues
+    np.asarray(diss) - just trajectory length (column "length" from the original data set )
     """
     r_t_f = []
     com_tot = []
@@ -1042,14 +1119,13 @@ def last_frames_by_contact(df_tot,columns_IFP,contacts):
 #
 ##################################
 
-
 def bootstrapp(t):
     """
-    
+    function for getting approximate residence time for a sub-set of trajectories (for example from a selected channel)
     Parameters:
-    
+    t - set of trajectory length to be used for bootsrapping
     Returns:
-    
+    relative residence time
     """
     max_shuffle = 500
     alpha = 0.9
