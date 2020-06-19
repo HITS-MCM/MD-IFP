@@ -84,7 +84,7 @@ Generation and analysis of IFPs for conventional MD simulations and for RAMD tra
 This example shows how RAMD dissociation trajectories can be analyzed using pre-generated IFP databases 
 ![HSP90](/images/cluster-traj.png)
 
-*This plot illustrates ligand dissociation pathways in a graph representation derived from clustering ligand trajectories in IFP space and plotting them with respect to RMSD from the initial bound position.*
+*This plot illustrates ligand dissociation pathways in a graph representation derived from clustering ligand trajectories in IFP space and plotting them with respect to COM from the initial bound position.*
    
    
 ### IV. __membrane_analysis_example.ipynb__
