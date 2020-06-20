@@ -5,7 +5,6 @@
 
 ## Associated publications: 
    1. IFP analysis of dissociation trajectories for 3 compounds of HSP90 implemented in __IFP_generation_examples_Analysis.ipynb__  
-   
    is reported in  D. B. Kokha, B. Doser, S. Richter, F. Ormersbach, X. Cheng , R.C. Wade  "A Workflow for Exploring Ligand Dissociation from a Macromolecule: Efficient Random Acceleration Molecular Dynamics Simulation and Interaction Fingerprints Analysis of Ligand Trajectories" (2020) submitted to JCP  - 
    
 
