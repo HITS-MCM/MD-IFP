@@ -57,5 +57,13 @@ Schloss-Wolfsbrunnenweg 35
     
    
    
+ # __Structure of the MD-IFP scripts:__
+
+## A set of  Python scripts  collected in the directory Scripts
+
+   1. Trajectories.py
+   2. IFP_generation.py
+   3. Clustering.py
    
+  
 
