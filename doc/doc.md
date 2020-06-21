@@ -57,7 +57,7 @@ Schloss-Wolfsbrunnenweg 35
     
    
    
- # __Structure of the MD-IFP scripts:__
+ # __Structure of the MD-IFP library:__
 
 ## A set of  Python scripts  collected in the directory Scripts
 
