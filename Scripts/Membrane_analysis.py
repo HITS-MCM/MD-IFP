@@ -13,12 +13,18 @@
 # 
 # 
 # 
-# ### Author: Daria Kokh
-#     v.1.0
-#     Copyright (c) 2019
-#     Released under the GNU Public Licence, v2 or any higher version
-#     
-# 
+#############################
+### v 1.0
+#
+#    Copyright (c) 2020
+#    Released under the GNU Public Licence, v2 or any higher version
+#    
+### Author: Daria Kokh
+#    Daria.Kokh@h-its.org
+#    Heidelberg Institute of Theoretical Studies (HITS, www.h-its.org)
+#    Schloss-Wolfsbrunnenweg 35
+#    69118 Heidelberg, Germany
+################################# 
 # 
 # ### Input data required:
 #     trajectory file 
@@ -146,7 +152,7 @@ class Membrane_properties:
         self.dens_p = []
         self.dens_w = []
         self.dens_m = []    
-        self.dens_m_r = []
+        self.m_r_per_area = []
             # arrays of arrays: [frame][z][x]  
         self.resid_array_zx = []
             # vector [frame]
@@ -179,7 +185,7 @@ class Membrane_properties:
         
         traj - trajectory file
         
-        RESULTS:
+        Returns:
         
         arrays containing per-frame system analysis:
         1.  arrays of the shape [frame][z, x, y] containing
@@ -355,7 +361,7 @@ class Membrane_properties:
         Results:
             dens_p - density of  protein (and ligand) atoms
             dens_m - density of  membrane atoms
-            dens_m_r - dencity of membrane residues
+            m_r_per_area - membrane residues per squered Angstrom
             
             mem_slab_frame - [z][x,y] x/y distribution of membrane atoms for a set of z slabs
             prot_slab_frame - [z][x,y] x/y distribution of protein atoms for a set of z slabs
@@ -390,7 +396,7 @@ class Membrane_properties:
     
             # ---- density of membrane atoms and residues as function of z   
             for n,(a,d,r) in enumerate(zip(area_m,number_m,self.resid_array[frame])): # loop over z
-                # dencity is non-zero only if area is non-zero, the number of lipids is more than 10 and the number of atoms is more than 75
+                # density is non-zero only if area is non-zero, the number of lipids is more than 10 and the number of atoms is more than 75
                 if(a > 0 ):  #and r > 75 d > 10
                     dens_m0.append(d/a)
                     if(d/a > 0.025):  dens_r0.append(a/r)
@@ -401,7 +407,7 @@ class Membrane_properties:
 
 
             self.dens_m.append(np.asarray(dens_m0))
-            self.dens_m_r.append(np.asarray(dens_r0))
+            self.m_r_per_area.append(np.asarray(dens_r0))
         
             # ---- density of membrane residues as function of z and x
             for i,z in enumerate(range(self.start_mem ,self.stop_mem,self.step_mem)): # loop over z and average over frames
@@ -447,26 +453,26 @@ class Membrane_properties:
         """
         PARAMETERS:
         dens_p,dens_m - density of the protein and membrane atoms, respectively, as a function of z
-        dens_m_r - density of the membrane residues, respectively, as a function of z
+        m_r_per_area - membrane residues per squered Angstrom  as a function of z
         prot_area, mem_area,wat_area - area occupied by atoms of protein, membrane, and water, respectively, as a function of z
 
         """
     
         dens_p = self.dens_p
         dens_m = self.dens_m
-        dens_m_r = self.dens_m_r
+        m_r_per_area = self.m_r_per_area
         prot_area = self.prot_area
         mem_area = self.mem_area
         wat_area = self.wat_area
     
         X = self.dh*np.asarray(range(0,len(dens_p[0])))            
-        fig = plt.figure(figsize=(12, 6))
+        fig = plt.figure(figsize=(12, 6),dpi=150)
         gs = gridspec.GridSpec(2, 2,hspace=0.5) #height_ratios=[2,2,1]) #,width_ratios=[2,2,1,1])
         ax2 = plt.subplot(gs[0])
-        plt.errorbar(x=X,y=np.mean(np.asarray(dens_p),axis=0),             yerr= np.std(np.asarray(dens_p),axis=0), color = "gray" , fmt='o--', markersize=1)
+        plt.errorbar(x=X,y=np.mean(np.asarray(dens_p),axis=0),  yerr= np.std(np.asarray(dens_p),axis=0), color = "gray" , fmt='o--', markersize=1)
         plt.scatter(x=X,y=np.mean(np.asarray(dens_p),axis=0),color = 'red',alpha=0.5,s=50, label="protein")
 
-        plt.errorbar(x=X,y=np.mean(np.asarray(dens_m),axis=0),             yerr= np.std(np.asarray(dens_m),axis=0), color = "gray" , fmt='o--', markersize=1 )
+        plt.errorbar(x=X,y=np.mean(np.asarray(dens_m),axis=0), yerr= np.std(np.asarray(dens_m),axis=0), color = "gray" , fmt='o--', markersize=1 )
         plt.scatter(x=X,y=np.mean(np.asarray(dens_m),axis=0),color = 'green',alpha=0.5,s=50, label="membr.")
 
         ax2.legend(framealpha = 0.0,edgecolor ='None',loc='best')
@@ -477,11 +483,11 @@ class Membrane_properties:
 
         ax4 = plt.subplot(gs[1])
 
-        plt.errorbar(x=X,y=np.mean(np.asarray(dens_m_r),axis=0),             yerr= np.std(np.asarray(dens_m_r),axis=0), color = "gray" , fmt='o', markersize=1)
-        plt.scatter(x=X,y=np.mean(np.asarray(dens_m_r),axis=0),color = 'green',alpha=0.5,s=50, label="membr.")
-        ysmoothed = gaussian_filter1d(np.mean(np.asarray(dens_m_r),axis=0), sigma=1)
+        plt.errorbar(x=X,y=np.mean(np.asarray(m_r_per_area),axis=0),yerr= np.std(np.asarray(m_r_per_area),axis=0), color = "gray" , fmt='o', markersize=1)
+        plt.scatter(x=X,y=np.mean(np.asarray(m_r_per_area),axis=0),color = 'green',alpha=0.5,s=50, label="membr.")
+        ysmoothed = gaussian_filter1d(np.mean(np.asarray(m_r_per_area),axis=0), sigma=1)
         plt.plot(X,ysmoothed,color = "green" , lw = 1)
-        ax4.set_ylim(0,max(np.mean(np.asarray(dens_m_r),axis=0)))
+        ax4.set_ylim(0,max(np.mean(np.asarray(m_r_per_area),axis=0)))
         ax4.legend(framealpha = 0.0,edgecolor ='None',loc='best')
         ax4.set_ylabel('area [A^2]', fontsize=14)
         ax4.set_xlabel('z-distance', fontsize=14)
@@ -496,12 +502,12 @@ class Membrane_properties:
         plt.scatter(x=X,y=np.mean(np.asarray(mem_area),axis=0),color = 'green',alpha=0.5,s=50, label="membr. ")
 
         plt.errorbar(x=X,y=np.mean(np.asarray(wat_area),axis=0),             yerr= np.std(np.asarray(wat_area),axis=0), color = "gray" , fmt='o--', markersize=1 )
-        plt.scatter(x=X,y=np.mean(np.asarray(wat_area),axis=0),color = 'blue',alpha=0.5,s=50, label="membr. ")
+        plt.scatter(x=X,y=np.mean(np.asarray(wat_area),axis=0),color = 'blue',alpha=0.5,s=50, label="water ")
 
         ax3.legend(framealpha = 0.0,edgecolor ='None',loc='best')
-        ax3.set_ylabel('[A^2]', fontsize=14)
+        ax3.set_ylabel(r' $Angstrom^2 $ ', fontsize=14)
         ax3.set_xlabel('z-distance [A]', fontsize=14)
-        ax3.set_title('Area ')
+        ax3.set_title('Area in the xy plane occupied by atoms of each part of the system')
         ax3.grid(color ='gray', linestyle='-', linewidth=0.2)
         
         ax5 = plt.subplot(gs[3])
