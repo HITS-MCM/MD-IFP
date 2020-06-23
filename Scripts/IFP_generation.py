@@ -15,7 +15,7 @@
 ### v 1.0
 #
 #    Copyright (c) 2020
-#    Released under the GNU Public Licence, v2 or any higher version
+#    Released under the EUPL Licence, v1.2 or any higher version
 #    
 ### Author: Daria Kokh
 #    Daria.Kokh@h-its.org
@@ -82,8 +82,8 @@ from MDAnalysis.lib.distances import capped_distance, calc_angles
 import warnings
 warnings.filterwarnings("ignore")
 
-mda.core.flags['use_periodic_selections'] = True
-mda.core.flags['use_KDTree_routines'] = False
+#mda.core.flags['use_periodic_selections'] = True
+#mda.core.flags['use_KDTree_routines'] = False
 
 
 #################################at_negative####

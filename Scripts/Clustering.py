@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 # coding: utf-8
 #
-#  Package for analysis of RAMD dissociation tarjectories using Interaction Fingerprints 
+#  Package for analysis of RAMD dissociation trajectories using Interaction Fingerprints 
 #
 #############################
 ### v 1.0
 #
 #    Copyright (c) 2020
-#    Released under the GNU Public Licence, v2 or any higher version
+#    Released under the EUPL Licence, v1.2 or any higher version
 #    
 ### Author: Daria Kokh
 #    Daria.Kokh@h-its.org
@@ -234,7 +234,7 @@ def separate_IFP(complete_list_IFP):
     return(resi_list_sorted,resi_name_list_sorted,ifp_list)
 
 ########################################################################
-#  depricated, will be removed in the next version
+#  deprecated, will be removed in the next version
 ########################################################################
 def get_from_prop(list_x, df,list_l= [],threshold = 0.1):
     """
@@ -322,7 +322,7 @@ def unify_resi(list_resi, df,resi_list_sorted,list_l= [], threshold=3):
     return(ar_complete,ar_SD_complete)
 
 ########################################################################
-#    depricated, will be removed in the next version
+#    deprecated, will be removed in the next version
 ########################################################################
 def ar_complete_ligand(ligand,df_tot,resi_list_sorted,properties=["RE","AR","HD","HA","HY","WB"]):
     """
@@ -367,7 +367,7 @@ def read_databases(d,name_template,name_len = 8):
     name_template - name of IFP pkl files (may contain *)
     name_len - number of the first letters in the name of  pkl files to be used as a ligand name
     Results:
-    df_tot - concatinated dataset
+    df_tot - concatenated dataset
     ligandsi - a set of ligand names
     
     """
@@ -399,7 +399,7 @@ def read_databases(d,name_template,name_len = 8):
 
 
 ########################################################################
-# depricated, will be removed in the next version
+# deprecated, will be removed in the next version
 ########################################################################
 def clean_ramd(df_tot,threshold = 0.9,check_z = False):
     """
@@ -452,8 +452,8 @@ def GRID_PRINT(file_name,pdrv,gr_orgn,gr_dim,grid_stp):
     file_name - name of the grid file
     pdrv - grid
     gr_orgn - grid origin
-    gr_dim - grid dimention
-    grid_stp - grid setp
+    gr_dim - grid dimension
+    grid_stp - grid step
     Returns:
     
     """
@@ -534,7 +534,7 @@ def plot_graph_New(df_ext,file_save = "",ligand = "",draw_round = False,water = 
     file_save - file name to save an image
     ligand - generate dissociation pathways for a selected ligand only (note, that clusters properties still include data for all ligands)
     draw_round - type of representation (plain/round)
-    water - visualize number of wather molecules in the ligand solvation shell for each clutser
+    water - visualize number of water molecules in the ligand solvation shell for each clutser
     
     Returns:
     cluster label sorted by increase of the average ligand RMSD in each cluster
@@ -546,9 +546,9 @@ def plot_graph_New(df_ext,file_save = "",ligand = "",draw_round = False,water = 
     if len(ligand)> 0:
         try:
             df_ext_ligand = df_ext[df_ext.ligand.isin(ligand)]
-            print("Eidges will be shown for one ligand:",ligand)
+            print("Edges will be shown for one ligand:",ligand)
         except:
-            print("ligand "+ligand+" was not found in the database. Whole database will be analized")
+            print("ligand "+ligand+" was not found in the database. Whole database will be analyzed")
    
     label_rmsd = []    # rmsd
     label_com = []    # COM
@@ -557,7 +557,7 @@ def plot_graph_New(df_ext,file_save = "",ligand = "",draw_round = False,water = 
 
 
     labels_list,nodes = np.unique(df_ext.label.values,return_counts= True)
-    eidges = np.zeros((labels_list.shape[0],labels_list.shape[0]),dtype = float)
+    edges = np.zeros((labels_list.shape[0],labels_list.shape[0]),dtype = float)
     coms = np.zeros((labels_list.shape[0],labels_list.shape[0]),dtype = float)
 
     
@@ -576,9 +576,9 @@ def plot_graph_New(df_ext,file_save = "",ligand = "",draw_round = False,water = 
     for l,(df_label,df_time) in enumerate(zip(df_ext_ligand.label.values,df_ext_ligand.time.values)):
         if df_time != 0: 
             if(df_ext_ligand.label.values[l-1] != df_label):
-                eidges[df_ext_ligand.label.values[l-1],df_label] += labels_list.shape[0]/df_ext_ligand.label.values.shape[0] 
+                edges[df_ext_ligand.label.values[l-1],df_label] += labels_list.shape[0]/df_ext_ligand.label.values.shape[0] 
          
- #   print(np.max(eidges), eidges[eidges > 0.5*np.max(eidges)])
+ #   print(np.max(edges), edges[edges > 0.5*np.max(edges)])
     indx_first_com = np.argwhere((np.asarray(label_rmsd) == min(label_rmsd)))[0][0]
     dist_com = []
     for i,l in enumerate(labels_list): dist_com.append(np.round(distance.euclidean(label_com[i],label_com[indx_first_com]),2))
@@ -589,10 +589,10 @@ def plot_graph_New(df_ext,file_save = "",ligand = "",draw_round = False,water = 
     gs = GS.GridSpec(1,2, width_ratios=[ 1,1],wspace=0.08) 
     ax = plt.subplot(gs[0]) 
     plt.title("Transition density")
-    plt.imshow(eidges,cmap='Blues')
+    plt.imshow(edges,cmap='Blues')
     ax = plt.subplot(gs[1])
     plt.title("Flow")
-    flow = eidges-eidges.T
+    flow = edges-edges.T
     plt.imshow(flow,cmap='Reds')
     plt.plot()
 
@@ -680,11 +680,11 @@ def plot_graph_New(df_ext,file_save = "",ligand = "",draw_round = False,water = 
                 b = n
             xy=(label_x[b],label_y[b])
             xytext=(label_x[a],label_y[a])   
-            if (eidges[l,n] > 0) :
+            if (edges[l,n] > 0) :
                 if  (np.abs((label_rmsd[l] - label_rmsd[n])) > 0.5* min(label_rmsd)) or (draw_round == False):
                     ax.annotate("", xy=xy, xycoords='data',
                         xytext=xytext, textcoords='data',
-                        size=eidges[l,n]*500,
+                        size=edges[l,n]*500,
                         arrowprops=dict(arrowstyle="Fancy,head_length=0.2, head_width=0.4, tail_width=0.2", 
                                 fc="orange", ec="none", alpha=0.2 ,
                                 connectionstyle="arc3,rad=-0.5"),
@@ -692,13 +692,13 @@ def plot_graph_New(df_ext,file_save = "",ligand = "",draw_round = False,water = 
                 if  (np.abs((label_rmsd[l] - label_rmsd[n])) > 0.5* min(label_rmsd)) or (draw_round == False):
                     ax.annotate("", xy=xytext, xycoords='data',
                         xytext=xy, textcoords='data',
-                        size=eidges[l,n]*500,
+                        size=edges[l,n]*500,
                         arrowprops=dict(arrowstyle="Fancy,head_length=0.2, head_width=0.4, tail_width=0.2", 
                                 fc="orange", ec="none", alpha=0.2 ,
                                 connectionstyle="arc3,rad=-0.5"),
                         )
             #  the flow
-            flow = eidges[l,n] - eidges[n,l]  # flow l ----> n
+            flow = edges[l,n] - edges[n,l]  # flow l ----> n
             if (flow > 0) :
                 a = l
                 b = n
@@ -743,7 +743,7 @@ def plot_graph_COM(df_ext,file_save = "",ligand = "",draw_round = False,water = 
     file_save - file name to save an image
     ligand - generate dissociation pathways for a selected ligand only (note, that clusters properties still include data for all ligands)
     draw_round - type of representation (plain/round)
-    water - visualize number of wather molecules in the ligand solvation shell for each clutser
+    water - visualize number of water molecules in the ligand solvation shell for each clutser
     
     Returns:
     cluster label sorted by increase of the average ligand RMSD in each cluster
@@ -755,9 +755,9 @@ def plot_graph_COM(df_ext,file_save = "",ligand = "",draw_round = False,water = 
     if len(ligand)> 0:
         try:
             df_ext_ligand = df_ext[df_ext.ligand.isin(ligand)]
-            print("Eidges will be shown for one ligand:",ligand)
+            print("Edges will be shown for one ligand:",ligand)
         except:
-            print("ligand "+ligand+" was not found in the database. Whole database will be analized")
+            print("ligand "+ligand+" was not found in the database. Whole database will be analyzed")
    
     #-------- collect data ------------------------
     label_rmsd = []    # rmsd
@@ -766,7 +766,7 @@ def plot_graph_COM(df_ext,file_save = "",ligand = "",draw_round = False,water = 
     label_water = []
 
     labels_list,nodes = np.unique(df_ext.label.values,return_counts= True)
-    eidges = np.zeros((labels_list.shape[0],labels_list.shape[0]),dtype = float)
+    edges = np.zeros((labels_list.shape[0],labels_list.shape[0]),dtype = float)
     coms = np.zeros((labels_list.shape[0],labels_list.shape[0]),dtype = float)
 
     df_min_rmsd = df_ext[df_ext.RMSDl == df_ext.RMSDl.min()]
@@ -793,7 +793,7 @@ def plot_graph_COM(df_ext,file_save = "",ligand = "",draw_round = False,water = 
     for l,(df_label,df_time) in enumerate(zip(df_ext_ligand.label.values,df_ext_ligand.time.values)):
         if df_time != 0: 
             if(df_ext_ligand.label.values[l-1] != df_label):
-                eidges[df_ext_ligand.label.values[l-1],df_label] += labels_list.shape[0]/df_ext_ligand.label.values.shape[0] 
+                edges[df_ext_ligand.label.values[l-1],df_label] += labels_list.shape[0]/df_ext_ligand.label.values.shape[0] 
        
     #-----------------------------------------------------
     
@@ -815,10 +815,10 @@ def plot_graph_COM(df_ext,file_save = "",ligand = "",draw_round = False,water = 
     gs = GS.GridSpec(1,2, width_ratios=[ 1,1],wspace=0.08) 
     ax = plt.subplot(gs[0]) 
     plt.title("Transition density")
-    plt.imshow(eidges,cmap='Blues')
+    plt.imshow(edges,cmap='Blues')
     ax = plt.subplot(gs[1])
     plt.title("Flow")
-    flow = eidges-eidges.T
+    flow = edges-edges.T
     plt.imshow(flow,cmap='Reds')
     plt.plot()
 
@@ -909,11 +909,11 @@ def plot_graph_COM(df_ext,file_save = "",ligand = "",draw_round = False,water = 
                 b = n
             xy=(label_x[b],label_y[b])
             xytext=(label_x[a],label_y[a])   
-            if (eidges[l,n] > 0) :
+            if (edges[l,n] > 0) :
                 if  (np.abs((label_rmsd[l] - label_rmsd[n])) > 0.5* min(label_rmsd)) or (draw_round == False):
                     ax.annotate("", xy=xy, xycoords='data',
                         xytext=xytext, textcoords='data',
-                        size=eidges[l,n]*500,
+                        size=edges[l,n]*500,
                         arrowprops=dict(arrowstyle="Fancy,head_length=0.2, head_width=0.4, tail_width=0.2", 
                                 fc="orange", ec="none", alpha=0.2 ,
                                 connectionstyle="arc3,rad=-0.5"),
@@ -921,13 +921,13 @@ def plot_graph_COM(df_ext,file_save = "",ligand = "",draw_round = False,water = 
                 if  (np.abs((label_rmsd[l] - label_rmsd[n])) > 0.5* min(label_rmsd)) or (draw_round == False):
                     ax.annotate("", xy=xytext, xycoords='data',
                         xytext=xy, textcoords='data',
-                        size=eidges[l,n]*600,
+                        size=edges[l,n]*600,
                         arrowprops=dict(arrowstyle="Fancy,head_length=0.2, head_width=0.4, tail_width=0.2", 
                                 fc="orange", ec="none", alpha=0.2 ,
                                 connectionstyle="arc3,rad=-0.5"),
                         )
             #  the flow
-            flow = eidges[l,n] - eidges[n,l]  # flow l ----> n
+            flow = edges[l,n] - edges[n,l]  # flow l ----> n
             if (flow > 0) :
                 a = l
                 b = n
@@ -1009,7 +1009,7 @@ def Plot_COM(df_ext):
 
 
 ########################################################################
-# depricated, will be removed in the next version
+# deprecated, will be removed in the next version
 ########################################################################
 
 def Print_IFP_averaged(df_tot,resi_list_sorted,ligandsi,resi_name_list_sorted,properties=["AR","HD","HA","HY","WB","IP","IN"],threshold = 0.01):
@@ -1086,7 +1086,7 @@ def last_frames_by_contact(df_tot,columns_IFP,contacts):
     Parameters:
     contacts - number of contacts 
     df_tot - complete dataset
-    columns_IFP - columns to be analized
+    columns_IFP - columns to be analyzed
     Returns:
     ar - numpy array containg IFP of the selected frames
     r_t_f - list of selected replica-trajectory-frame  
