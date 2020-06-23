@@ -44,8 +44,6 @@ conda env create -f IFP_trajectory.yml
 
 __IFP_generation.py__  -  functions for generation of IFPs
 
-__Membrane_analysis.py__ - functions for analysis of membrane-protein systems 
-
 __Clustering.py__   - functions for analysis of trajectories using IFP data   (is still under developments)
 
 __Process_pdb.py__   - preprocessing PDB files (splitting into ligand and protein files)
@@ -89,7 +87,3 @@ This example shows how RAMD dissociation trajectories can be analyzed using pre-
 
 *This plot illustrates ligand dissociation pathways in a graph representation derived from clustering ligand trajectories in IFP space and plotting them with respect to the ligand COM from the initial bound position.*
    
-   
-### IV. __membrane_analysis_example.ipynb__
-
-Exploring the behavior of a membrane-protein system in MD simulations. The membrane surface is assumed to be in the X/Y plane 
