@@ -10,7 +10,7 @@
    
    was implemented in  __IFP_generation_examples_Analysis.ipynb__ 
    
-###  Authors and Contributors:
+##  Authors and Contributors:
 
 * Daria Kokh
 * Fabian Ormersbach - preprocessing PDB files using Chimera (Process_pdb.py, chimera_hydrogen_mol2.py; test examples revised) 
@@ -38,9 +38,7 @@ __To configure environment in anaconda use:__
 conda env create -f IFP_trajectory.yml
 
 
-
 ## Scripts:
-
 
 ### __Trajectories.py__  - functions for building a trajectory object for reading and analysis of standard MD and RAMD trajectories and computation of relative residence times
 
