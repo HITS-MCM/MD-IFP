@@ -4,8 +4,8 @@
 ### 03.05.2020
 
 ## Associated publications: 
-   1. IFP analysis of dissociation trajectories for 3 compounds of HSP90, implemented in __IFP_generation_examples_Analysis.ipynb__ , 
-   is reported in  D. B. Kokha, B. Doser, S. Richter, F. Ormersbach, X. Cheng , R.C. Wade  "A Workflow for Exploring Ligand Dissociation from a Macromolecule: Efficient Random Acceleration Molecular Dynamics Simulation and Interaction Fingerprints Analysis of Ligand Trajectories" (2020) submitted to JCP  - 
+####  1. IFP analysis of dissociation trajectories for 3 compounds of HSP90, implemented in __IFP_generation_examples_Analysis.ipynb__ , 
+is reported in  D. B. Kokha, B. Doser, S. Richter, F. Ormersbach, X. Cheng , R.C. Wade  "A Workflow for Exploring Ligand Dissociation from a Macromolecule: Efficient Random Acceleration Molecular Dynamics Simulation and Interaction Fingerprints Analysis of Ligand Trajectories" (2020) submitted to JCP  - 
    
 
 
@@ -96,5 +96,3 @@ This example shows how RAMD dissociation trajectories can be analyzed using pre-
 ### IV. __membrane_analysis_example.ipynb__
 
 Exploring the behavior of a membrane-protein system in MD simulations. The membrane surface is assumed to be in the X/Y plane 
-![HSP90](/images/Membrane.png)
-*Illustratration of the analysis of the muscarinic receptor M2 GPCR embedded in a mixed membrane with 50% cholesterol content*
