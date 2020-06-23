@@ -8,15 +8,12 @@
    
    D. B. Kokha, B. Doser, S. Richter, F. Ormersbach, X. Cheng , R.C. Wade  "A Workflow for Exploring Ligand Dissociation    from a Macromolecule: Efficient Random Acceleration Molecular Dynamics Simulation and Interaction Fingerprints Analysis of Ligand         Trajectories" (2020) submitted to JCP  - https://arxiv.org/abs/2006.11066
    
-####   was implemented in  __IFP_generation_examples_Analysis.ipynb__ 
+   was implemented in  __IFP_generation_examples_Analysis.ipynb__ 
    
-
-
 ###  Authors and Contributors:
 
 * Daria Kokh
 * Fabian Ormersbach - preprocessing PDB files using Chimera (Process_pdb.py, chimera_hydrogen_mol2.py; test examples revised) 
-
 
 Daria.Kokh@h-its.org
 
@@ -26,7 +23,6 @@ Schloss-Wolfsbrunnenweg 35
 
 69118 Heidelberg, Germany
     
-
 *This open source software code was developed in part in the __Human Brain Project__, funded from the European Union’s Horizon 2020 Framework Programme for Research and Innovation under Specific Grant Agreements  No. 785907 (Human Brain Project  SGA2).*
 
 ## __Packages requirements:__
