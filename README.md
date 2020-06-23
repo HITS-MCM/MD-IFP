@@ -35,7 +35,7 @@ __Chimera__ - only for the scripts used for preprocessing pdb files (structure p
 __Codes were written on Python 3.x and tested on Python 3.7__
 
 __To configure environment in anaconda use:__
-conda env create -f IFP_trajectory.yml
+conda env create -f MD-IFP.yml
 
 
 ## Scripts:
