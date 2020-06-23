@@ -48,9 +48,7 @@ __Clustering.py__   - functions for analysis of trajectories using IFP data   (i
 
 __Process_pdb.py__   - preprocessing PDB files (splitting into ligand and protein files)
 
-__chimera_hydrogen_mol2.py__  - generation of ligand mol2 file
-
-__Membrane_analysis.py__ - computation of the membrane surface area per lipid and membrane/protein/water atom density distribution  
+__chimera_hydrogen_mol2.py__  - generation of ligand mol2 file 
 
        
 ## Application examples (folder Examples):
