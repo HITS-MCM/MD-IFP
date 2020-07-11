@@ -40,7 +40,7 @@ conda env create -f MD-IFP.yml
 
 ## Scripts:
 
-### __Trajectories.py__  - functions for building a trajectory object for reading and analysis of standard MD and RAMD trajectories and computation of relative residence times
+ __Trajectories.py__  - functions for building a trajectory object for reading and analysis of standard MD and RAMD trajectories and computation of relative residence times
 
 __IFP_generation.py__  -  functions for generation of IFPs
 
@@ -54,7 +54,6 @@ __chimera_hydrogen_mol2.py__  - generation of ligand mol2 file
 ## Application examples (folder Examples):
 
    1. Generation of the IFP databease for a single MD trajectory of a protein-ligand complex
-   2. Analysis and visualization of a set of IFP databases for different ligand 
 
 ## Test Examples as Python Jupyter Notebooks :
 
