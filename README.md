@@ -10,6 +10,13 @@
    
    was implemented in  __IFP_generation_examples_Analysis.ipynb__ 
    
+## Related publications and tutorials: 
+1. Youtube tutorial: "tauRAMD workflow: fast estimation of protein-ligand residence times with insights into dissociation mechanisms"
+
+   https://kbbox.h-its.org/toolbox/tutorials/estimation-of-relative-residence-times-of-protein-ligand-complexes-using-random-acceleration-molecular-dynamics-ramd-implementation-in-gromacs/
+
+
+
 ##  Authors and Contributors:
 
 * Daria Kokh
