@@ -31,7 +31,7 @@ Schloss-Wolfsbrunnenweg 35
       -  Negative ion property of the phosphate atom
       -  Acceptor property of the oxygen atoms bound to phosphorus atoms in phosphate groups
   5. __Important__, the name of the ligand in mol2 file (or the residue name in the pdb file if mol2 is absent) is used to detect ligand in a trajectory or in a complex. If the residue name is different - IFP will not be computed!
-  6. __Important__: sometimes RDkit does not recognize ligand properties correctly, they should be checked and corrected if nessesary:
+  6. __Important__: sometimes RDkit does not recognize ligand properties correctly, they can be checked and corrected if necessary:
   
     #  reading ligand input file and generating ligand chemical properties :
     my_ligand = Ligand("./",ligand_pdb,ligand_mol2)
