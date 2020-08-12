@@ -65,7 +65,7 @@ __chimera_hydrogen_mol2.py__  - generation of ligand mol2 file
 ## Test Examples as Python Jupyter Notebooks :
 
 ### Data employed in test examples 
-   can be downloaded from  https://zenodo.org/record/3755337#.XrF-iGgzaUk
+   can be downloaded from  https://zenodo.org/record/3981155#.XzQEUCgzaUk
 
 ### I. __IFP_generation_examples_PDB.ipynb:__
 
