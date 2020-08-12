@@ -811,16 +811,20 @@ def plot_graph_COM(df_ext,file_save = "",ligand = "",draw_round = False,water = 
     #------------------------------------------------
     
     print( min(label_rmsd),dist_com)
-    fig = plt.figure(figsize = (6,2),facecolor='w',dpi=150) 
-    gs = GS.GridSpec(1,2, width_ratios=[ 1,1],wspace=0.08) 
+    fig = plt.figure(figsize = (8,3),facecolor='w',dpi=150) 
+    gs = GS.GridSpec(1,2, width_ratios=[1,1],wspace=0.2) 
     ax = plt.subplot(gs[0]) 
     plt.title("Transition density")
-    plt.imshow(edges,cmap='Blues')
+    ec = plt.imshow(edges,cmap='Oranges')
+    cbar = plt.colorbar(ec)
+    cbar.set_label('density')
     ax = plt.subplot(gs[1])
     plt.title("Flow")
     flow = edges-edges.T
-    plt.imshow(flow,cmap='Reds')
-    plt.plot()
+    ec1 = plt.imshow(flow,cmap='Greys')
+    cbar = plt.colorbar(ec1)
+    cbar.set_label('density')
+    plt.show()
 
 
     starting_labels = df_ext[df_ext.time == 0].label.values # list of clusters of all first frames in all trajectories
@@ -890,9 +894,9 @@ def plot_graph_COM(df_ext,file_save = "",ligand = "",draw_round = False,water = 
         gs = GS.GridSpec(1, 1) #, width_ratios=[1, 1]) 
         ax = plt.subplot(gs[0])
         ax.set_ylabel('Cluster', fontsize=18)
-        ax.set_xlabel(r'< $\Delta{COM} $ > [Angstrom]', fontsize=18) 
-        plt.xticks(x_tick_pos,x_tick_lable, fontsize=18)
-        ax.tick_params(labelsize=18)
+        ax.set_xlabel(r'< $\Delta{COM}  > [Angstrom]$', fontsize=16) 
+        plt.xticks(x_tick_pos,x_tick_lable, fontsize=16)
+        ax.tick_params(labelsize=16)
         plt.ylim(-0.8,len(label_y)+0.8)
  #       plt.grid()
 
@@ -915,7 +919,7 @@ def plot_graph_COM(df_ext,file_save = "",ligand = "",draw_round = False,water = 
                         xytext=xytext, textcoords='data',
                         size=edges[l,n]*500,
                         arrowprops=dict(arrowstyle="Fancy,head_length=0.2, head_width=0.4, tail_width=0.2", 
-                                fc="orange", ec="none", alpha=0.2 ,
+                                fc="orange", ec="none", alpha=0.4 ,
                                 connectionstyle="arc3,rad=-0.5"),
                         )
                 if  (np.abs((label_rmsd[l] - label_rmsd[n])) > 0.5* min(label_rmsd)) or (draw_round == False):
@@ -923,7 +927,7 @@ def plot_graph_COM(df_ext,file_save = "",ligand = "",draw_round = False,water = 
                         xytext=xy, textcoords='data',
                         size=edges[l,n]*600,
                         arrowprops=dict(arrowstyle="Fancy,head_length=0.2, head_width=0.4, tail_width=0.2", 
-                                fc="orange", ec="none", alpha=0.2 ,
+                                fc="orange", ec="none", alpha=0.4 ,
                                 connectionstyle="arc3,rad=-0.5"),
                         )
             #  the flow
