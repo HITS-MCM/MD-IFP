@@ -10,6 +10,9 @@
    
    was implemented in  __IFP_generation_examples_Analysis.ipynb__ 
    
+## Associated pdata: 
+https://zenodo.org/record/3981155#.XzQEUCgzaUk
+
 ## Related publications and tutorials: 
 1. Youtube lecture/tutorial for 2020 MolSSI School on Open Source Software in Rare Event Path Sampling Strategies: "tauRAMD workflow: fast estimation of protein-ligand residence times with insights into dissociation mechanisms" : https://www.youtube.com/watch?v=kCUyQtoo4cE&feature=youtu.be
 
