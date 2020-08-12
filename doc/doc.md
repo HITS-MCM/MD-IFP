@@ -31,6 +31,21 @@ Schloss-Wolfsbrunnenweg 35
       -  Negative ion property of the phosphate atom
       -  Acceptor property of the oxygen atoms bound to phosphorus atoms in phosphate groups
   5. __Important__, the name of the ligand in mol2 file (or the residue name in the pdb file if mol2 is absent) is used to detect ligand in a trajectory or in a complex. If the residue name is different - IFP will not be computed!
+  6. __Important__: sometimes RDkit does not recognize ligand properties correctly, they can be checked and corrected if necessary:
+  
+    #  reading ligand input file and generating ligand chemical properties :
+    my_ligand = Ligand("./",ligand_pdb,ligand_mol2)
+    properties = my_ligand.property_list
+    #  checking properties
+    print("Ligand properties: ",properties
+    #...............Ligand properties:................
+    # Acceptor ['O09', 'O12']
+    # PosIonizable ['N02']
+    # Hydrophobe ['C14', 'C06', 'C07']
+    #   correcting properties: let define atom N02 as one more  acceptor atom, for this we can re-define properties['Acceptor'] as:
+    properties['Acceptor'] = ['O09', 'O12','N02']
+    # then we can run IFP generation as usual, passing new properties as an input parameter:
+    df_prop,df_HB,df_WB = IFP(u_mem, sel_ligands, properties, WB_analysis=True)
   
  ## Complex structure/trajectory 
    1. __System (protein/ligand/water) must be protonated__. This is nessesary for detection of hydrogen bonds.
