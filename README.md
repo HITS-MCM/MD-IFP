@@ -35,7 +35,7 @@ Schloss-Wolfsbrunnenweg 35
 ## __Packages requirements:__
 __Python 3.x__
 
-__Python Libraries:__ numpy;    pandas;  matplotlib;  MDAnalysis;  seaborn; RDkit; sklearn;  scipy; ngview 
+__Python Libraries:__ numpy;    pandas;  matplotlib;  seaborn; RDkit; sklearn;  scipy; ngview; __MDAnalysis Version: 0.20.1__ (Important: an old module for H-bond analysis is currently used, it will be removed in version 2.0 )
 
 __Chimera__ - only for the scripts used for preprocessing pdb files (structure protonation and generation of the ligand mol2 file); not required if protonation and mol2 file are already prepared by a user)
     
