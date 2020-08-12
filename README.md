@@ -10,7 +10,7 @@
    
    was implemented in  __IFP_generation_examples_Analysis.ipynb__ 
    
-## Associated pdata: 
+## Associated data: 
 https://zenodo.org/record/3981155#.XzQEUCgzaUk
 
 ## Related publications and tutorials: 
