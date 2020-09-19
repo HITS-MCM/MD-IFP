@@ -100,7 +100,7 @@ r_dis = 5.0 # all protein-ligand contacts
 r_lip = 5.0 # specific residues
 r_ion = 3.4  # salt bridges with ions
 
-at_aromatic = "((resname PHE TRP TYR HIS HIE HID HE2) and (name CZ* CD* CE* CG* CH* NE* ND*))" 
+at_aromatic = "((resname PHE TRP TYR HIS HIE HID HE2) and (name CZ* CD* CE* CG* CH* NE* ND*))"
 at_positive =  "((resname ARG LYS ) and (name NH* NZ)) or ((resname HI2 ) and (name HD HE))"
 at_negative = " ((resname ASP GLU) and (name OE* OD*))"
 at_sulfur = "(protein and (type S))"
@@ -194,6 +194,8 @@ def IFP_list(property_list, sel_ligands, RE=True, Lipids = []):
         pass
     
     try:  #--- cation-aril interactions  and aromatic stacking
+        """
+
         line = ""
         if "PosIonizable" in property_list.keys():
             for l in tuple(set(property_list["PosIonizable"])): line = line + l +" "
@@ -205,10 +207,23 @@ def IFP_list(property_list, sel_ligands, RE=True, Lipids = []):
             IFP_prop_list.append(IFP_prop("AR",line,sel_a,sel_b,r_cat))
         if("Aromatic" in property_list.keys()):
             IFP_prop_list.append(IFP_prop("AR",line,sel_a,sel_b,r_ari))
+        """
+        line_p = ""
+        line_a = ""
+        sel_a = at_aromatic    #"((resname PHE TRP TYR HI2 HIS HIE HID) and (name CZ* CD* CE* CG* CH* NE* ND*)) "   
+        if "PosIonizable" in property_list.keys():
+            for l in tuple(set(property_list["PosIonizable"])): line_p = line_p + l +" "
+            sel_b = '((resname '+sel_ligands+" ) and (name "+line_p+"))"
+            IFP_prop_list.append(IFP_prop("AR",line_p,sel_a,sel_b,r_cat))
+        if "Aromatic" in property_list.keys():  # pi-pi
+            for l in np.asarray(property_list["Aromatic"]): line_a = line_a + l +" "
+            sel_b = '((resname '+sel_ligands+" ) and (name "+line_a+"))"
+            IFP_prop_list.append(IFP_prop("AR",line_a,sel_a,sel_b,r_ari))
+        
     except:
         print("AR1 failed")
         pass
-
+    """
     try: #--- S -aromatic 
         sel_b = '((resname '+sel_ligands+") and (type S ))"
         sel_a = at_aromatic #"((resname PHE TRP TYR HI2 HIS HIE HID) and (name CZ* CD* CE* CG* CH* NE* ND*)) "
@@ -216,7 +231,7 @@ def IFP_list(property_list, sel_ligands, RE=True, Lipids = []):
     except:
         print("AR2 failed")
         pass
-    
+    """
     try: #--- aromatic ligand - cation , amide
         line = ""
         if "Aromatic" in property_list.keys():
@@ -227,16 +242,6 @@ def IFP_list(property_list, sel_ligands, RE=True, Lipids = []):
     except:
         print("AR3 failed")
         pass
-#    try: #--- aromatic ligand - cation , amide, or S interactions
-#        line = ""
-#        if "Aromatic" in property_list.keys():
-#            for l in np.asarray(property_list["Aromatic"]): line = line + l +" "
-#            sel_b = '((resname '+sel_ligands+" ) and (name "+line+") )"
-#            sel_a = " type S " #  or ((type S) and (resname MET CYS))
-#            IFP_prop_list.append(IFP_prop("AR",line,sel_a,sel_b,r_sar))
-#    except:
-#        print("AR4 failed")
-#        pass
     
     try: #--- halogen bonds with atromatic, negatively charged or backbone carbonyl oxygen
         sel_b = '((resname '+sel_ligands+" ) and ( type I CL BR Br Cl) )"
@@ -431,8 +436,6 @@ def IFP(u_mem,sel_ligands,property_list, WB_analysis = True, RE = True,Lipids = 
                                 found.append([IFP_type.name+"_"+u.resname+str(u.resid),u.name])
                         # here we will check if cation (LYS or ARG) really contact an aromatic ring of the ligand
                         elif(u.resname in ["LYS","ARG"]):
- #                           if u.resname == "LYS" : cation = "LYS"
- #                           else: cation = "ARG"
                             cation = u.resname 
                             if("Aromatic" in property_list.keys()):
                                 line_ar = ""
@@ -442,13 +445,13 @@ def IFP(u_mem,sel_ligands,property_list, WB_analysis = True, RE = True,Lipids = 
                                 if(len(u1_list) > 4): 
                                     found.append([IFP_type.name+"_"+u.resname+str(u.resid),u.name])
     #                            print("!!!!!!!!!!!!!  Cat-Ar  interactions found",len(u1_list),u1_list)
-                        # now we check if aromatc residue (HIS) is perpendicular to the aromatic fragment of the ligand
+                        # now we check if aromatc residue is perpendicular to the aromatic fragment of the ligand (face-to-edge)
                         ### TOBE checked if this works!!!!!================================================
-                        elif(u.resname in resi_aromatic) and (u.resid in ar_resid[ar_n < 4]):
+                        elif(u.resname in resi_aromatic) and (u.resid in ar_resid[ar_n <= 4]):
                             if("Aromatic" in property_list.keys()):
                                 line_ar = ""
                                 for l in np.asarray(property_list["Aromatic"]): line_ar = line_ar + l +" "
-                                line1 = "(resname "+sel_ligands+" and ( not type H O) and name "+line_ar+") and around 5.0 (resid "+str(u.resid) + " and (name NE* ND* CE* CD* CZ* CH*))" 
+                                line1 = "(resname "+sel_ligands+" and ( not type H O) and name "+line_ar+") and around "+str(r_ari)+" (resid "+str(u.resid) + " and (name NE* ND* CE* CD* CZ* CH* CG*))" 
                                 u1_list = (u_mem.select_atoms(line1,updating=True))
                                 if(len(u1_list) > 4): 
                                     found.append([IFP_type.name+"_"+u.resname+str(u.resid),u.name])
