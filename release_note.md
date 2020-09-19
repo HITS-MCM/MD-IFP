@@ -1,4 +1,6 @@
-MD-IFP 
+__MD-IFP__
+
+
 version 1.0   (Kokh et al. JCP 2020) 
 version 1.1
    patches:
