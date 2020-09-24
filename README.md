@@ -33,9 +33,11 @@ Schloss-Wolfsbrunnenweg 35
 *This open source software code was developed in part in the __Human Brain Project__, funded from the European Union’s Horizon 2020 Framework Programme for Research and Innovation under Specific Grant Agreements  No. 785907 (Human Brain Project  SGA2).*
 
 ## __Packages requirements:__
-__Python 3.x__
+__Python 3.x__ we strongly reccomend to create conda envirenment (see https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html)
 
-__Python Libraries:__ numpy;    pandas;  matplotlib;  seaborn; RDkit; sklearn;  scipy; ngview; __MDAnalysis Version: 0.20.1__ (Important: an old module for H-bond analysis is currently used, it will be removed in version 2.0 )
+__Python Libraries:__ numpy;    pandas;  matplotlib;  seaborn; RDkit; sklearn;  scipy; ngview;
+
+__MDAnalysis Version: 0.20.1__ (Important: an old module for H-bond analysis is currently used, it will be removed in version 2.0 )
 
 __Chimera__ - only for the scripts used for preprocessing pdb files (structure protonation and generation of the ligand mol2 file); not required if protonation and mol2 file are already prepared by a user)
     
