@@ -35,7 +35,7 @@ Schloss-Wolfsbrunnenweg 35
 ## __Packages requirements:__
 __Python 3.x__ we strongly reccomend to create conda envirenment (see https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html)
 
-__Python Libraries:__ numpy;    pandas;  matplotlib;  seaborn; RDkit; sklearn;  scipy; ngview;
+__Python Libraries:__ numpy;    pandas;  matplotlib;  seaborn; RDkit; sklearn;  scipy; ngview; (installation of ngview can be tricky, the following way may work: after installation of the Python envirenment - conda install -c conda-forge nglview=2.7.1 and then jupyter-nbextension enable nglview --py --sys-prefix)
 
 __MDAnalysis Version: 0.20.1__ (Important: an old module for H-bond analysis is currently used, it will be removed in version 2.0 )
 
