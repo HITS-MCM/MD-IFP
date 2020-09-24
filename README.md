@@ -36,10 +36,10 @@ Schloss-Wolfsbrunnenweg 35
 __Python 3.x__ we strongly reccomend to create conda envirenment (see https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html)
 
 __Python Libraries:__ 
-  numpy;    pandas;  matplotlib;  seaborn; sklearn;  scipy; 
-  __RDkit__ 
-  __ngview__ (installation of ngview can be tricky, the following way may work: after installation of the Python envirenment - conda install -c conda-forge nglview=2.7.1 and then jupyter-nbextension enable nglview --py --sys-prefix)
-  __MDAnalysis Version: 0.20.1__ (Important: an old module for H-bond analysis is currently used, it will be removed in version 2.0 )
+   1. numpy;    pandas;  matplotlib;  seaborn; sklearn;  scipy; 
+   2.__RDkit__ 
+   3.__ngview__ - used for visualization (installation of ngview can be tricky, the following way may work: after installation of the Python envirenment - conda install -c conda-forge nglview=2.7.1 and then jupyter-nbextension enable nglview --py --sys-prefix). If you don't need visualization, you can skip this, but JN must be edited accordingly
+   4. __MDAnalysis Version: 0.20.1__ (Important: an old module for H-bond analysis is currently used, it will be removed in version 2.0 )
 
 __Chimera__ - only for the scripts used for preprocessing pdb files (structure protonation and generation of the ligand mol2 file); not required if protonation and mol2 file are already prepared by a user)
     
