@@ -33,7 +33,7 @@ Schloss-Wolfsbrunnenweg 35
 *This open source software code was developed in part in the __Human Brain Project__, funded from the European Union’s Horizon 2020 Framework Programme for Research and Innovation under Specific Grant Agreements  No. 785907 (Human Brain Project  SGA2).*
 
 ## __Packages requirements:__
-__Python 3.x__ we strongly reccomend to create conda envirenment (see https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html)
+__Python 3.x__ 
 
 __Python Libraries:__ 
    1. numpy;    pandas;  matplotlib;  seaborn; sklearn;  scipy; 
