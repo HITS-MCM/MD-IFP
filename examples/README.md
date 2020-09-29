@@ -119,3 +119,4 @@ All steps are also included in IFP.py, that can be adjusted for a particular tas
         IFP_table = tr.namd.IFP_save(file_name)
         
 ## 2. Visualization  of IFPs
+    IFP_contacts_quickView.py
