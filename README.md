@@ -64,7 +64,8 @@ __chimera_hydrogen_mol2.py__  - generation of ligand mol2 file
        
 ## Application examples (folder Examples):
 
-   1. Generation of the IFP databease for a single MD trajectory of a protein-ligand complex
+   1. IFP.py - Generation of the IFP databease for a single MD trajectory of a protein-ligand complex
+   2. IFP_contacts_quickView.py  - generation of a plot with average IFPs extracted from a trajectory
 
 ## Test Examples as Python Jupyter Notebooks :
 
