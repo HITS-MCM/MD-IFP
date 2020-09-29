@@ -19,7 +19,7 @@ Schloss-Wolfsbrunnenweg 35
 *This open source software code was developed in part in the __Human Brain Project__, funded from the European Union’s Horizon 2020 Framework Programme for Research and Innovation under Specific Grant Agreements  No. 785907 (Human Brain Project  SGA2).*
 
 
-# __Important notes regarding the file preparation procedure for IFP computations:__
+# __I. Important notes regarding the file preparation procedure for IFP computations:__
 
 ## Ligand structure
   1. __Ligand must be protonated__. For analysis of multiple structures, one can use the automated procedure implemented in the script Process_pdb.py that employs the Chimera software (https://www.cgl.ucsf.edu/chimera/). 
@@ -71,7 +71,7 @@ Schloss-Wolfsbrunnenweg 35
     
    
    
- # __Structure of the MD-IFP library:__
+ # __II. Structure of the MD-IFP library:__
 
 ## A set of  Python scripts  collected in the directory Scripts
 
@@ -80,7 +80,7 @@ Schloss-Wolfsbrunnenweg 35
    3. Clustering.py
    
   
- # __Generation of the Interaction Fingerprint table for a set of MD trajectories obtained either from standard MD simulations or RAMD simulations__
+ # __III. Generation of the Interaction Fingerprint table for a set of MD trajectories obtained either from standard MD simulations or RAMD simulations__
 Most steps included in the present examples are also demonstrated in the JN IFP_generation_examples_TRAJ.ipynb
 However, to analyze a large set of trajectories a simple python script is usually more useful.
 
