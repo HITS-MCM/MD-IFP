@@ -11,3 +11,4 @@ __version 1.1__
    - ligand S - aromatic residue interaction removed
    - in adding contacts thet were not counted - (< 4) updated to (<= 4)
    added JN for testing IF on 40 PDB complexes  
+   - selection of atoms by type (for example "type H") was replaced by by selection by name ("name H*")
