@@ -3,5 +3,5 @@
 
 ## 1. Generation of the Interaction Fingerprint table for a set of MD trajectories obtained either from standard MD simulations or RAMD simulations
     IFP.py
-## 2. Visualization  of IFPs
+## 2. Visualization  of computed IFPs (from pkl file with IFPs)
     IFP_contacts_quickView.py
