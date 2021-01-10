@@ -1401,7 +1401,7 @@ def pbc(u,Rgr0):
         Rgr = u.select_atoms(sel_p).radius_of_gyration()  
 #        print("Radius of gyration is now: %s  of the first frame" %(Rgr/Rgr0)) 
     if Rgr > Rgr0*1.1:
-        print("failed to pack the system back into a box adius of gyration is too large: %s of that in the first frame" %(Rgr/Rgr0))
+        print("failed to pack the system back into a box radius of gyration is too large: %s of that in the first frame" %(Rgr/Rgr0))
     return (Rgr)
 
 
