@@ -103,10 +103,12 @@ r_ion = 3.4  # salt bridges with ions
 at_aromatic = "((resname PHE TRP TYR HIS HIE HID HE2) and (name CZ* CD* CE* CG* CH* NE* ND*))"
 at_positive =  "((resname ARG LYS ) and (name NH* NZ)) or ((resname HI2 ) and (name HD HE))"
 at_negative = " ((resname ASP GLU) and (name OE* OD*))"
-at_sulfur = "(protein and (type S))"
-at_hydrophob = " (protein and (type C  S) and (not  (name CG and resname ASN ASP))   and (not  (name CD and resname GLU GLN ARG))  and (not  (name CZ and resname TYR ARG))  and (not  (name CE and resname LYS)) and (not  (name CB and resname SER THR))   and (not backbone))"
+at_sulfur = "(protein and (name S*))"
+at_hydrophob = " (protein  and (name C*  S*) and (not  (name CG and resname ASN ASP))   and (not  (name CD and resname GLU GLN ARG))  and (not  (name CZ and resname TYR ARG))  and (not  (name CE and resname LYS)) and (not  (name CB and resname SER THR))   and (not backbone))"
 at_pos_ions = "(resname  MN ZN Mn Zn Ca CA NA Na)"
 at_water = "(resname WAT HOH SOL TIP3)"
+at_halogens = "( type I CL BR Br Cl)"
+at_noH = "( not name H* )"
 
 angle_CHal_O = 150  # currently is not used
 
@@ -155,7 +157,6 @@ def IFP_list(property_list, sel_ligands, RE=True, Lipids = []):
     Returns:
     a list of properties that can be then used to extract IFP from a snapshot
     """
-    
     IFP_prop_list = []
     try:  # hydrophobic
         line = ""
@@ -244,7 +245,7 @@ def IFP_list(property_list, sel_ligands, RE=True, Lipids = []):
         pass
     
     try: #--- halogen bonds with atromatic, negatively charged or backbone carbonyl oxygen
-        sel_b = '((resname '+sel_ligands+" ) and ( type I CL BR Br Cl) )"
+        sel_b = '((resname '+sel_ligands+" ) and "+at_halogens+" )"
         sel_a = at_aromatic +" or "+at_negative+" or "+ " (backbone and name O) "+" or "+at_sulfur #((resname CYS MET) and (type S))"
         IFP_prop_list.append(IFP_prop("HL","HL",sel_a,sel_b,r_hal))
     except:
@@ -252,8 +253,8 @@ def IFP_list(property_list, sel_ligands, RE=True, Lipids = []):
         pass
     try: # water shell  
 #        sel_a = "((sphzone 12.0 resname "+sel_ligands+") and (resname WAT and type O))"
-        sel_a = " (resname WAT HOH SOL TIP3 and type O) "
-        sel_b = '(resname '+sel_ligands+" ) and ( not type H )"
+        sel_a = " (resname WAT HOH SOL TIP3 and name O*) "
+        sel_b = '(resname '+sel_ligands+" ) and "+at_noH
         IFP_prop_list.append(IFP_prop("WA","HE",sel_a,sel_b,r_wat))
     except:
         print("WA failed")
@@ -261,8 +262,8 @@ def IFP_list(property_list, sel_ligands, RE=True, Lipids = []):
     
     if RE:
         try: # any protein-ligand contacts 
-            sel_a = "(not resname WAT HOH SOL TIP3) and (not type H)"
-            sel_b = '(resname '+sel_ligands+" ) and ( not type H )"
+            sel_a = "(not resname WAT HOH SOL TIP3) and (not name H*)"
+            sel_b = '(resname '+sel_ligands+" ) and "+at_noH
             IFP_prop_list.append(IFP_prop("RE","HE",sel_a,sel_b,r_dis))
         except:
             print("RE failed")
@@ -272,8 +273,8 @@ def IFP_list(property_list, sel_ligands, RE=True, Lipids = []):
         try: # any lipid-ligand contacts 
             line = ""
             for l in Lipids: line = line + l +" "
-            sel_a = '((resname '+line+' ) and (not type H)) '
-            sel_b = '(resname '+sel_ligands+") and (not type H)"
+            sel_a = "((resname '+line+' ) and "+at_noH +") "
+            sel_b = '(resname '+sel_ligands+") and "+at_noH
             IFP_prop_list.append(IFP_prop("LL",line,sel_a,sel_b,r_lip))
         except:
             pass
@@ -460,7 +461,7 @@ def IFP(u_mem,sel_ligands,property_list, WB_analysis = True, RE = True,Lipids = 
                 for u in u_list:   
                     # here we will check if the angle  C-HAL.... O is about 180grad fro this we look what atoms within r_hal+1 from O - should be only Hal
                     if (u.type == "O") or (u.type == "S"):
-                        line1 ="(resname "+sel_ligands+" ) and around "+str(r_hal+1.0)+" (protein and resid "+str(u.resid)+" and type O S )"
+                        line1 ="(resname "+sel_ligands+" ) and around "+str(r_hal+1.0)+" (protein and resid "+str(u.resid)+" and name O* S* )"
                         u1_list = (u_mem.select_atoms(line1,updating=True))
 #                        print(u.resid,u.name,":::",len(u1_list),u1_list)
                         if len(u1_list) < 2:
@@ -491,6 +492,7 @@ def IFP(u_mem,sel_ligands,property_list, WB_analysis = True, RE = True,Lipids = 
 #                    else: print("HL-aromatic contact found but will not be counted because it has less than 4 contacts with aromatic atoms:",ar_resid,ar_n)
                  ### TOBE checked if this works!!!!!====HAL========================================
             else:  
+                #print("HY/IP: ",IFP_type.name,len(u_list))
                 for u in u_list:
                         found.append([IFP_type.name+"_"+u.resname+str(u.resid),u.name]) 
 #                        if IFP_type.name == "HL": print("HAL:",u.resname,u.resid,u.name)
@@ -802,7 +804,7 @@ def rank_IFP_resi(df,ifp_type=['AR','HY','HA','HD','HL','IP','IN',"IO","WB"]):
 #
 ##################################
 
-def Plot_IF_trajectory(df_tot,ifp_type = np.asarray(['AR','HA','HD','HY','IP','IN',"IO","WB"]),head_tail=-1):
+def Plot_IF_trajectory(df_tot,ifp_type = np.asarray(['AR','HA','HD','HY','IP','IN',"IO","WB"]),head_tail=-1,save_file = ""):
     
     columns_IFP,columns_RE= rank_IFP_resi(df_tot, ifp_type)
     columns_sel = columns_IFP
@@ -824,6 +826,7 @@ def Plot_IF_trajectory(df_tot,ifp_type = np.asarray(['AR','HA','HD','HY','IP','I
     plt.bar(np.asarray(range(0,len(columns_sel))),df[columns_sel].mean(),color="",label="all frames",edgecolor ='k',hatch="/")
     plt.xticks(range(0,len(columns_sel)), columns_sel, rotation='vertical',fontsize=10)
     plt.legend(fontsize=10, loc = 'upper left')
+    if save_file != "": plt.savefig(file_save,format='png', dpi=300, bbox_inches='tight',transparent=True) 
     plt.show()
     return
 
@@ -967,7 +970,7 @@ def Water_bridges(u_mem, sel_ligands, WB_debug = False):
                                     angles = np.rad2deg(
                                         calc_angles(
                                             u_mem.select_atoms("resid "+str(wat_hid)+" and name "+wat_hat,updating=True).positions,
-                                            u_mem.select_atoms("resid "+str(wat_hid)+" and type O",updating=True).positions,
+                                            u_mem.select_atoms("resid "+str(wat_hid)+" and name O*",updating=True).positions,
                                             u_mem.select_atoms("resid "+str(nowat_hid)+" and name "+nowat_hat,updating=True).positions,
                                         )
                                         )
@@ -1015,7 +1018,7 @@ def Water_bridges(u_mem, sel_ligands, WB_debug = False):
                                         calc_angles(
                                             u_mem.select_atoms("resid "+str(oid_nonwat)+" and name "+oat_nonwat,updating=True).positions,
                                             u_mem.select_atoms("resid "+str(wat_hid)+" and name "+wat_hat,updating=True).positions,
-                                            u_mem.select_atoms("resid "+str(wat_hid)+" and type O",updating=True).positions,
+                                            u_mem.select_atoms("resid "+str(wat_hid)+" and name O*",updating=True).positions,
                                         )
                                         )
 #                                    print("Check angle: ",np.round(angles[0],1)," resid "+str(wat_hid)+" "+wat_hat," resid "+str(wid)+" O","resid "+str(oid_nonwat)+" "+oat_nonwat)

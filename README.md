@@ -1,12 +1,12 @@
 # MD-IFP: MD trajectory analysis using protein-ligand Interaction Fingerprints
 ## A Python Workflow for the Generation and Analysis of Protein-Ligand Interaction Fingerprints from Molecular Dynamics trajectories
-### v.1.01
-### 03.05.2020
+### v.1.1
+### 19.09.2020
 
 ## Associated publications: 
 1. IFP analysis of dissociation trajectories for 3 compounds of HSP90  reported in the paper 
    
-   D. B. Kokh, B. Doser, S. Richter, F. Ormersbach, X. Cheng , R.C. Wade  "A Workflow for Exploring Ligand Dissociation    from a Macromolecule: Efficient Random Acceleration Molecular Dynamics Simulation and Interaction Fingerprints Analysis of Ligand         Trajectories" J. Chem Phys.(2020) 158  doi: 10.1063/5.0019088; https://arxiv.org/abs/2006.11066
+   D. B. Kokh, B. Doser, S. Richter, F. Ormersbach, X. Cheng , R.C. Wade  "A Workflow for Exploring Ligand Dissociation    from a Macromolecule: Efficient Random Acceleration Molecular Dynamics Simulation and Interaction Fingerprints Analysis of Ligand         Trajectories" J. Chem Phys.(2020) 158  125102  doi: 10.1063/5.0019088; https://arxiv.org/abs/2006.11066
    
    was implemented in  __IFP_generation_examples_Analysis.ipynb__ 
    
@@ -33,11 +33,13 @@ Schloss-Wolfsbrunnenweg 35
 *This open source software code was developed in part in the __Human Brain Project__, funded from the European Union’s Horizon 2020 Framework Programme for Research and Innovation under Specific Grant Agreements  No. 785907 (Human Brain Project  SGA2).*
 
 ## __Packages requirements:__
-__Python 3.x__: we strongly reccomend to create conda envirenment (see https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html)
+__Python 3.x__ 
 
-__Python Libraries:__ numpy;    pandas;  matplotlib;  seaborn; RDkit; sklearn;  scipy; ngview; (installation of ngview can be tricky, the following way may work: after installation of the Python envirenment - conda install -c conda-forge nglview=2.7.1 and then jupyter-nbextension enable nglview --py --sys-prefix)
-
-__MDAnalysis Version: 0.20.1__ (Important: an old module for H-bond analysis is currently used, it will be removed in version 2.0 )
+__Python Libraries:__ 
+   1. numpy;    pandas;  matplotlib;  seaborn; sklearn;  scipy; 
+   2. __RDkit__ 
+   3. __ngview__ - used for visualization (installation of ngview can be tricky, the following way may work: after installation of the Python envirenment - conda install -c conda-forge nglview=2.7.1 and then jupyter-nbextension enable nglview --py --sys-prefix). If you don't need visualization, you can skip this, but JN must be edited accordingly
+   4. __MDAnalysis Version: 0.20.1__ (Important: an old module for H-bond analysis is currently used, it will be removed in version 2.0 )
 
 __Chimera__ - only for the scripts used for preprocessing pdb files (structure protonation and generation of the ligand mol2 file); not required if protonation and mol2 file are already prepared by a user)
     
@@ -62,7 +64,8 @@ __chimera_hydrogen_mol2.py__  - generation of ligand mol2 file
        
 ## Application examples (folder Examples):
 
-   1. Generation of the IFP databease for a single MD trajectory of a protein-ligand complex
+   1. IFP.py - Generation of the IFP databease for a single MD trajectory of a protein-ligand complex
+   2. IFP_contacts_quickView.py  - generation of a plot with average IFPs extracted from a trajectory
 
 ## Test Examples as Python Jupyter Notebooks :
 
@@ -93,3 +96,6 @@ This example shows how RAMD dissociation trajectories can be analyzed using pre-
 
 *This plot illustrates ligand dissociation pathways in a graph representation derived from clustering ligand trajectories in IFP space and plotting them with respect to the ligand COM from the initial bound position.*
    
+### IV. __MD-IFP_test.ipynb:__
+
+JN designed for validation of the IFP sctipt on 40 PDB complexes (used in paper J. Chem. Phys. 2020)
