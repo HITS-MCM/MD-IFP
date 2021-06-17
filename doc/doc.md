@@ -173,7 +173,7 @@ All steps are also included in IFP.py, that can be adjusted for a particular tas
    (a) _for equilibration trajectories:_ 
       - One can define if water bridges must be computed (WB_analysis = True/False, default-False). 
         For computation of water bridges  water must be included in the sub-system in the previous step
-      - number of contacts with lipids can be computed - lipid residue names are defined as a list, 
+      - number of contacts with lipids (ligand atom-residue distance < 5A) can be computed - lipid residue names are defined as a list, 
         for example: Lipids = ["PC","CHL","PA"]
       - first frame and stride are defined by the parameters step_analysis and start_analysis
         Saving results  in a data frame file (pkl)         
