@@ -103,4 +103,7 @@ This example shows how RAMD dissociation trajectories can be analyzed using pre-
 JN designed for validation of the IFP sctipt on 40 PDB complexes (used in paper J. Chem. Phys. 2020)
 
 ![HSP90](/images/IFP_validation.png)
-*Validation of PL IFP on 40 PDB structures .*
+
+*Validation of PL IFP on 40 PDB structures .Interactions are considered false positives (FP) if no other method (FLIP, PLIP, LPC, MOE) was able to find them and 
+false negative (FN) if all four (three for water bridges and halogen bonds) found the missing interaction.
+Interactions are considered true positives (TP) if at least one method (FLIP, PLIP, LPC, MOE) was able to find it*
