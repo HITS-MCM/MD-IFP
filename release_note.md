@@ -10,5 +10,8 @@ __version 1.1__
    - prot.-ligand and ligand - protein dist. 5.5 A
    - ligand S - aromatic residue interaction removed
    - in adding contacts thet were not counted - (< 4) updated to (<= 4)
-   added JN for testing IF on 40 PDB complexes  
+   2. added JN for testing IF on 40 PDB complexes  
    - selection of atoms by type (for example "type H") was replaced by by selection by name ("name H*")
+__version 1.2__ (currently master branch)
+   1. Added IFP_preprocess_Gromacs.py 
+   2. 
