@@ -61,6 +61,8 @@ __Process_pdb.py__   - preprocessing PDB files (splitting into ligand and protei
 
 __chimera_hydrogen_mol2.py__  - generation of ligand mol2 file 
 
+__IFP_preprocess_Gromacs.py__  - enables wrapping system back into the box scripts are designed for a specific file structure, for usage, please adjust accordingly
+
        
 ## Application examples (folder Examples):
 
