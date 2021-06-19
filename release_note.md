@@ -12,6 +12,7 @@ __version 1.1__
    - in adding contacts thet were not counted - (< 4) updated to (<= 4)
    2. added JN for testing IF on 40 PDB complexes  
    3. selection of atoms by type (for example "type H") was replaced by by selection by name ("name H*")
+   
 __version 1.2__ (currently master branch)
    1. Added IFP_preprocess_Gromacs.py 
    2. In Cluster.py , function remove_dissociated_parts, a bug related to numpy type is fixed
