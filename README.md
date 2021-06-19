@@ -101,3 +101,6 @@ This example shows how RAMD dissociation trajectories can be analyzed using pre-
 ### IV. __MD-IFP_test.ipynb:__
 
 JN designed for validation of the IFP sctipt on 40 PDB complexes (used in paper J. Chem. Phys. 2020)
+
+![HSP90](/images/IFP_validation.png)
+*Validation of PL IFP on 40 PDB structures .*
