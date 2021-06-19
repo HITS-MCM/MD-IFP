@@ -38,11 +38,11 @@ DIR_ramd = "RAMD-2020.2/TRJ1-*"   # a set of dirrectories with RAMD trajectories
 
 frame2save = 2001    #  the last 2001 frames will be analyzed and saved as  traj_comp_whole.xtc
 
-ramd_trj = "traj_comp.xtc"
-ramd_trj_fixed = "traj_comp_whole.xtc"
-ramd_tpr = "gromacs_ramd.tpr"
-ramd_trj_fixed1 = "traj_comp_whole1.xtc"
-ramd_trj_fixed2 = "traj_comp_whole2.xtc"
+ramd_trj = "traj_comp.xtc"  # name of the RAMD trajectory
+ramd_trj_fixed = "traj_comp_whole.xtc"  # name of the transformed final part of the RAMD trajectory
+ramd_tpr = "gromacs_ramd.tpr"  # 
+ramd_trj_fixed1 = "traj_comp_whole1.xtc"  #  intermediate file 
+ramd_trj_fixed2 = "traj_comp_whole2.xtc"  #  intermediate file 
 
 
 for dir_trj in glob.glob(DIR_all+DIR_ramd):
