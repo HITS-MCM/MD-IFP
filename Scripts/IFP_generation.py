@@ -97,7 +97,7 @@ r_sal = 4.5 # salt bridge
 r_hal = 3.5 # halogen interactions
 r_wat = 3.5 # water shell
 r_dis = 5.0 # all protein-ligand contacts  
-r_lip = 5.0 # specific residues
+r_lip = 5.0 # specific residues (in particular, lipids)
 r_ion = 3.4  # salt bridges with ions
 
 at_aromatic = "((resname PHE TRP TYR HIS HIE HID HE2) and (name CZ* CD* CE* CG* CH* NE* ND*))"
