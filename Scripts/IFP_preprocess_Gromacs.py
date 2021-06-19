@@ -33,8 +33,9 @@ import sys
 import subprocess
 import numpy as np
 
-DIR_all = "./"
-DIR_ramd = "RAMD-2020.2/TRJ1-*"   # a set of dirrectories with RAMD trajectories  traj_comp.xtc
+DIR_all = os. getcwd()
+DIR_ramd = "/RAMD-2020.2/TRJ1-*"   # a set of dirrectories with RAMD trajectories  traj_comp.xtc
+# Important! this directory must containe the *out file with log information, containing the line " GROMACS will be stopped after xxx steps"
 
 frame2save = 2001    #  the last 2001 frames will be analyzed and saved as  traj_comp_whole.xtc
 
