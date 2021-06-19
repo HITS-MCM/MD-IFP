@@ -105,6 +105,6 @@ JN designed for validation of the IFP sctipt on 40 PDB complexes (used in paper 
 ![HSP90](/images/IFP_validation.png)
 
 *Validation of PL IFP on 40 PDB structures:
-   false positives (FP) if no other method (FLIP, PLIP, LPC, MOE) was able to find them 
-   false negative (FN) if all four (three for water bridges and halogen bonds) found the missing interaction.
-   true positives (TP) if at least one method (FLIP, PLIP, LPC, MOE) was able to find it*
+   1. false positives (FP) if no other method (FLIP, PLIP, LPC, MOE) was able to find them 
+   2. false negative (FN) if all four (three for water bridges and halogen bonds) found the missing interaction.
+   3. true positives (TP) if at least one method (FLIP, PLIP, LPC, MOE) was able to find it*
