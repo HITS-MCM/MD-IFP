@@ -117,7 +117,7 @@ def remove_dissociated_parts(df_tot,max_rmsd=15,max_dcom=3,max_drmsd=3):
             df_tot_Repl = df_tot_lig[df_tot_lig.Repl == j]
             for i in np.unique(df_tot_Repl.Traj.values.astype(int)):
                 df_tot_Repl_Traj = df_tot_Repl[df_tot_Repl.Traj == str(i)]
-                s = np.sum(df_tot_Repl_Traj.values,axis=1)
+                s = np.sum(df_tot_Repl_Traj.values.astype(int),axis=1)
                 rmsd = df_tot_Repl_Traj.RMSDl.values
                 comx = df_tot_Repl_Traj.COM_x.values
                 comy = df_tot_Repl_Traj.COM_y.values
@@ -127,7 +127,7 @@ def remove_dissociated_parts(df_tot,max_rmsd=15,max_dcom=3,max_drmsd=3):
                     dcom = np.linalg.norm(np.asarray([float(comx[r-1]),float(comy[r-1]),float(comz[r-1])])-np.asarray([float(comx[r]),float(comy[r]),float(comz[r])]))
                     drmsd = (rmsd[r]-rmsd[r-1]) 
                     if  rmsd[r] < max_rmsd and (dcom > max_dcom or drmsd > max_drmsd):
-                        plt.plot(df_tot_Repl_Traj.time,df_tot_Repl_Traj.RMSDl)
+                        plt.plot(df_tot_Repl_Traj.time.values,df_tot_Repl_Traj.RMSDl.values)
                         skip = r
                         continue
                 if (np.argwhere(s == 0 ).flatten().shape[0] > 0) :
