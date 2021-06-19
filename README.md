@@ -61,7 +61,7 @@ __Process_pdb.py__   - preprocessing PDB files (splitting into ligand and protei
 
 __chimera_hydrogen_mol2.py__  - generation of ligand mol2 file 
 
-__IFP_preprocess_Gromacs.py__  - enables wrapping system back into the box using trjconv Gromacs tool. Script is designed for a specific file structure - please adjust accordingly. The script helps to transform system back into the box in the most  but not in 100% of cases. For example it does not prevent splitting two proteins in the casefor protein-protein complexes 
+__IFP_preprocess_Gromacs.py__  - enables wrapping a system back into the original box using trjconv Gromacs tool. Script is designed for a specific file structure - please adjust accordingly. The script helps to transform system back into the box in the most  but not in 100% of cases. For example it does not prevent splitting two proteins in the case of protein-protein complexes 
 
        
 ## Application examples (folder Examples):
