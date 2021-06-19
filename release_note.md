@@ -2,6 +2,7 @@
 
 
 __version 1.0__   (Kokh et al. JCP 2020) 
+
 __version 1.1__
    patches:
    1. procedure for detection of aromatic interactions revised (several bugs fixed):
