@@ -1,7 +1,7 @@
 # MD-IFP: MD trajectory analysis using protein-ligand Interaction Fingerprints
 ## A Python Workflow for the Generation and Analysis of Protein-Ligand Interaction Fingerprints from Molecular Dynamics trajectories
 ### v.1.1
-### 19.09.2020
+### 19.06.2021
 
 ## Associated publications: 
 1. IFP analysis of dissociation trajectories for 3 compounds of HSP90  reported in the paper 
