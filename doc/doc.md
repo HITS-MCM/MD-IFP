@@ -188,7 +188,7 @@ All steps are also included in IFP.py, that can be adjusted for a particular tas
       _________________________________
      
    (b) _for RAMD trajectories_
-      - first relative residence times must be computed using the scan_ramd() function
+      - first relative residence times will be computed (if the number of RAMD trajectories is more than 8)  using the scan_ramd() function
       - then IFPs computed using the function , similar to that described above for equilibration trajectory
         parameters are the same as for the IFP generation for equilibration trajectories
      __________________________________   
