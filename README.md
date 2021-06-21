@@ -2,14 +2,17 @@
 ## A Python Workflow for the Generation and Analysis of Protein-Ligand Interaction Fingerprints from Molecular Dynamics trajectories
 ### v.1.1
 ### 19.06.2021
+   
+## Associated data: 
+https://zenodo.org/record/3981155#.XzQEUCgzaUk
 
 ## Publications describing the IFP analysis. Please cited the following paper : 
-   D. B. Kokh, B. Doser, S. Richter, F. Ormersbach, X. Cheng , R.C. Wade  "A Workflow for Exploring Ligand Dissociation    from a Macromolecule: Efficient Random Acceleration Molecular Dynamics Simulation and Interaction Fingerprints Analysis of Ligand         Trajectories" J. Chem Phys.(2020) 158  125102  doi: 10.1063/5.0019088; 
+   D. B. Kokh, B. Doser, S. Richter, F. Ormersbach, X. Cheng , R.C. Wade  "A Workflow for Exploring Ligand Dissociation    from a Macromolecule: Efficient Random Acceleration Molecular Dynamics Simulation and Interaction Fingerprints Analysis of Ligand Trajectories" J. Chem Phys.(2020) 158  125102  doi: 10.1063/5.0019088; 
    
-## Publicationsof application examples: 
+## Publications of application examples: 
 1. IFP analysis of dissociation trajectories for 3 compounds of HSP90  reported in the paper 
   
-   D. B. Kokh, B. Doser, S. Richter, F. Ormersbach, X. Cheng , R.C. Wade  "A Workflow for Exploring Ligand Dissociation    from a Macromolecule: Efficient Random Acceleration Molecular Dynamics Simulation and Interaction Fingerprints Analysis of Ligand         Trajectories" J. Chem Phys.(2020) 158  125102  doi: 10.1063/5.0019088; https://arxiv.org/abs/2006.11066
+   D. B. Kokh, B. Doser, S. Richter, F. Ormersbach, X. Cheng , R.C. Wade  "A Workflow for Exploring Ligand Dissociation    from a Macromolecule: Efficient Random Acceleration Molecular Dynamics Simulation and Interaction Fingerprints Analysis of Ligand         Trajectories" J. Chem Phys.(2020) 153  125102  doi: 10.1063/5.0019088; https://arxiv.org/abs/2006.11066
    
    was implemented in  __IFP_generation_examples_Analysis.ipynb__ 
   
@@ -21,14 +24,10 @@
 
    D. B. Kokh, R.C. Wade "G-Protein Coupled Receptor-Ligand Dissociation Rates and Mechanisms from τRAMD Simulations",    doi: https://doi.org/10.1101/2021.06.20.449151
 
-   Associated scripts and data can be found at https://zenodo.org/record/5001884#.YM-rRmgzYuU
+   Associated scripts and data can be downloaded here: https://zenodo.org/record/5001884#.YM-rRmgzYuU
    
-   
-   
-## Associated data: 
-https://zenodo.org/record/3981155#.XzQEUCgzaUk
 
-## Related publications and tutorials: 
+## Tutorials: 
 1. Youtube lecture/tutorial for 2020 MolSSI School on Open Source Software in Rare Event Path Sampling Strategies: "tauRAMD workflow: fast estimation of protein-ligand residence times with insights into dissociation mechanisms" : https://www.youtube.com/watch?v=kCUyQtoo4cE&feature=youtu.be
 
 
