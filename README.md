@@ -14,13 +14,14 @@ https://zenodo.org/record/3981155#.XzQEUCgzaUk
   
    D. B. Kokh, B. Doser, S. Richter, F. Ormersbach, X. Cheng , R.C. Wade  "A Workflow for Exploring Ligand Dissociation    from a Macromolecule: Efficient Random Acceleration Molecular Dynamics Simulation and Interaction Fingerprints Analysis of Ligand         Trajectories" J. Chem Phys.(2020) 153  125102  doi: 10.1063/5.0019088; https://arxiv.org/abs/2006.11066
    
-   was implemented in  __IFP_generation_examples_Analysis.ipynb__ 
+   Results are implemented in  __IFP_generation_examples_Analysis.ipynb__ 
   
-2. 
+2.  Small compound unbinding from T4 lysozyme mutants
+
     A Nunes-Alves, DB Kokh, RC Wade  "Ligand unbinding mechanisms and kinetics for T4 lysozyme mutants from τRAMD simulations", Current Research in Structural Biology 3, 106-111
     https://doi.org/10.1016/j.crstbi.2021.04.001
 
-3. Application for GPCR targets (embedded in a membrane):
+3. Application to two GPCR targets (embedded in a membrane):
 
    D. B. Kokh, R.C. Wade "G-Protein Coupled Receptor-Ligand Dissociation Rates and Mechanisms from τRAMD Simulations",    doi: https://doi.org/10.1101/2021.06.20.449151
 
