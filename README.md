@@ -3,12 +3,27 @@
 ### v.1.1
 ### 19.06.2021
 
-## Associated publications: 
-1. IFP analysis of dissociation trajectories for 3 compounds of HSP90  reported in the paper 
+## Publications describing the IFP analysis. Please cited the following paper : 
+   D. B. Kokh, B. Doser, S. Richter, F. Ormersbach, X. Cheng , R.C. Wade  "A Workflow for Exploring Ligand Dissociation    from a Macromolecule: Efficient Random Acceleration Molecular Dynamics Simulation and Interaction Fingerprints Analysis of Ligand         Trajectories" J. Chem Phys.(2020) 158  125102  doi: 10.1063/5.0019088; 
    
+## Publicationsof application examples: 
+1. IFP analysis of dissociation trajectories for 3 compounds of HSP90  reported in the paper 
+  
    D. B. Kokh, B. Doser, S. Richter, F. Ormersbach, X. Cheng , R.C. Wade  "A Workflow for Exploring Ligand Dissociation    from a Macromolecule: Efficient Random Acceleration Molecular Dynamics Simulation and Interaction Fingerprints Analysis of Ligand         Trajectories" J. Chem Phys.(2020) 158  125102  doi: 10.1063/5.0019088; https://arxiv.org/abs/2006.11066
    
    was implemented in  __IFP_generation_examples_Analysis.ipynb__ 
+  
+2. 
+    A Nunes-Alves, DB Kokh, RC Wade  "Ligand unbinding mechanisms and kinetics for T4 lysozyme mutants from τRAMD simulations", Current Research in Structural Biology 3, 106-111
+    https://doi.org/10.1016/j.crstbi.2021.04.001
+
+3. Application for GPCR targets (embedded in a membrane):
+
+   D. B. Kokh, R.C. Wade "G-Protein Coupled Receptor-Ligand Dissociation Rates and Mechanisms from τRAMD Simulations",    doi: https://doi.org/10.1101/2021.06.20.449151
+
+   Associated scripts and data can be found at https://zenodo.org/record/5001884#.YM-rRmgzYuU
+   
+   
    
 ## Associated data: 
 https://zenodo.org/record/3981155#.XzQEUCgzaUk
