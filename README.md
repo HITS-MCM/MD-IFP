@@ -37,7 +37,6 @@ https://zenodo.org/record/3981155#.XzQEUCgzaUk
 * Daria Kokh
 * Fabian Ormersbach - preprocessing PDB files using Chimera (Process_pdb.py, chimera_hydrogen_mol2.py; test examples revised) 
 
-Daria.Kokh@h-its.org
 
 Heidelberg Institute of Theoretical Studies (HITS, www.h-its.org)
 
