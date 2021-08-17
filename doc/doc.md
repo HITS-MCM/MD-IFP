@@ -203,8 +203,7 @@ Unfortunately, this info is not stored in the IFP dataframe and to answer this q
  ## 1. Finding the order of RAMD trajectories loaded . 
  First, one has to look at the output of the first step "1. Reading IFP data set for one selected HSP90 compound":  it shows an order of the input pkl files (IFP dataframes) that are loaded in the df_tot_org dataframe. For example, for HSP90 we get 
  
-     __________________________________
-     
+    
         DATA\DATA\HSP90_Gromacs\SAD_3\SAD_3-WB_-RAMD0-300.pkl SAD_3-WB
         DATA\DATA\HSP90_Gromacs\SAD_3\SAD_3-WB_-RAMD1-300.pkl SAD_3-WB
         DATA\DATA\HSP90_Gromacs\SAD_3\SAD_3-WB_-RAMD3-300.pkl SAD_3-WB
@@ -212,7 +211,7 @@ Unfortunately, this info is not stored in the IFP dataframe and to answer this q
         DATA\DATA\HSP90_Gromacs\SAD_3\SAD_3-WB_-RAMD5-300.pkl SAD_3-WB
         DATA\DATA\HSP90_Gromacs\SAD_3\SAD_3-WB_-RAMD6-300.pkl SAD_3-WB
         DATA\DATA\HSP90_Gromacs\SAD_3\SAD_3-WB_-RAMD7-300.pkl SAD_3-WB
-      _________________________________
+    
      
    The dataframe df_tot_org contains all trajectories sequentially loaded from this list. Each pkl file may contain IFPs from several replicas and each replica may include several trajectories.
    Thus, each trajectory is associated in the dataframe df_tot_org  with a (replica, trajectory) pair stored in the columns "Repl" and "Traj" .
@@ -220,12 +219,12 @@ Unfortunately, this info is not stored in the IFP dataframe and to answer this q
    To check what values of "Repl" and "Traj" in the final df_tot_org dataframe  correspond each trajectory in the pkl files, one can run the following script in the JN:
 
 
-     
-    i = 0
-    for Repl in df_tot_org.Repl.unique():
-        for Traj in df_tot_org[df_tot_org.Repl == Repl].Traj.unique():
-            print (i,Repl,Traj)
-            i+=1
+      
+        i = 0
+        for Repl in df_tot_org.Repl.unique():
+            for Traj in df_tot_org[df_tot_org.Repl == Repl].Traj.unique():
+             print (i,Repl,Traj)
+                i+=1
 
       
    The combination (Repl, Traj) is unique for each trajectory and the total number of trajectories must be the same as loaded from all pkl files. For example, for HSP90 we have altogether 52 trajectories.
@@ -235,13 +234,17 @@ Unfortunately, this info is not stored in the IFP dataframe and to answer this q
     For example, for HSP90, the first dataframe 
 
 
+    
+     
      
          DATA\DATA\HSP90_Gromacs\SAD_3\SAD_3-WB_-RAMD0-300.pkl
-
+    
+ 
   contains IFPs for the following trajectories:
 
 
-
+    
+ 
         >>>>>>>>>= 0 RAMD-Gromacs/HSP90/SAD_3//RAMD-NH/TRJ14-0/ETRJ0-2/traj_comp_whole.xtc
         >>>>>>>>>= 1 RAMD-Gromacs/HSP90/SAD_3//RAMD-NH/TRJ14-0/ETRJ0-3/traj_comp_whole.xtc
         >>>>>>>>>= 2 RAMD-Gromacs/HSP90/SAD_3//RAMD-NH/TRJ14-0/ETRJ0-4/traj_comp_whole.xtc
@@ -250,13 +253,12 @@ Unfortunately, this info is not stored in the IFP dataframe and to answer this q
         >>>>>>>>>= 5 RAMD-Gromacs/HSP90/SAD_3//RAMD-NH/TRJ14-0/ETRJ0-7/traj_comp_whole.xtc
         >>>>>>>>>= 6 RAMD-Gromacs/HSP90/SAD_3//RAMD-NH/TRJ14-0/ETRJ0-8/traj_comp_whole.xtc
         >>>>>>>>>= 7RAMD-Gromacs/HSP90/SAD_3//RAMD-NH/TRJ14-0/ETRJ0-9/traj_comp_whole.xtc
-
+    
       
    Note, that the order of trajectories is important as it is exactly the same in the corresponding pkl file and the total number of trajectories (summed up over all IFP dataframes, see point 1) should be the same as the number of different trajectories (i.e. (Repl, Traj) , see above)
 Thus, one can identify the trajectory from "Repl" and "Traj" value of a particular snapshot that you are interested in.
 
 For example, if the first IFP dataframe file  
-
 
 
      
@@ -265,7 +267,6 @@ For example, if the first IFP dataframe file
   
   Contains, according to the log file, 8 trajectories shown above,
 and the df_tot_org has the first 7 elements in columns "Repl" and "Traj" :
-
 
 
      
