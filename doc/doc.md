@@ -7,8 +7,6 @@ __Authors:__
 * Fabian Ormersbach - preprocessing PDB files using Chimera (Process_pdb.py, chimera_hydrogen_mol2.py; test examples revised) 
 
 
-Daria.Kokh@h-its.org
-
 Heidelberg Institute of Theoretical Studies (HITS, www.h-its.org)
 
 Schloss-Wolfsbrunnenweg 35
@@ -197,4 +195,10 @@ All steps are also included in IFP.py, that can be adjusted for a particular tas
         tr.analysis_all_ramd(WB_analysis = False, Lipids = [],auxi_selection = [],step_analysis=step, start_analysis=start)
         IFP_table = tr.namd.IFP_save(file_name)
         
+
+ # __IV. A possible way to obtain representative structures of each cluster from RAMD dissociation trajectories__
+ 
+The final dataframe df_ext (step 6 in the ) contains information which trajectory/frame belong to which cluster: cluster number is stored in the column "label"; trajectory frame is in the column "time" (note, that it is not a frame number of the complete original trajectory, but a frame number in the last N frames used to generate IFPs), replica name and the trajectory number are in columns "Repl" and "Traj", respectively.
+The main problem is to figure out how the values "Repl", "Traj", and "time" are associated with a real frame and a real RMAD trajectory.
+Unfortunately, this info is not stored in the IFP dataframe and to answer this question one has to do some additional analysis.
 
