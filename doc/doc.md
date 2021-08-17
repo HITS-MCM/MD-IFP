@@ -196,9 +196,117 @@ All steps are also included in IFP.py, that can be adjusted for a particular tas
         IFP_table = tr.namd.IFP_save(file_name)
         
 
- # __IV. A possible way to obtain representative structures of each cluster from RAMD dissociation trajectories__
- 
-The final dataframe df_ext (step 6 in the ) contains information which trajectory/frame belong to which cluster: cluster number is stored in the column "label"; trajectory frame is in the column "time" (note, that it is not a frame number of the complete original trajectory, but a frame number in the last N frames used to generate IFPs), replica name and the trajectory number are in columns "Repl" and "Traj", respectively.
-The main problem is to figure out how the values "Repl", "Traj", and "time" are associated with a real frame and a real RMAD trajectory.
+ # __IV. A possible way to obtain representative structures of each cluster (generated in IFP_generation_examples_Analysis.ipynb) from RAMD dissociation trajectories__
+The final dataframe df_ext (step 6 in the IFP_generation_examples_Analysis.ipynb script) contains information which trajectory/frame belong to which cluster: cluster number is stored in the column "label"; trajectory frame is in the column "time" (note, that it is not a frame number of the complete original trajectory, but a frame number in the last N frames used to generate IFPs), replica name and the trajectory number are in columns "Repl" and "Traj", respectively. The main problem is to figure out how the values "Repl", "Traj", and "time" are associated with a real frame and a real RMAD trajectory.
 Unfortunately, this info is not stored in the IFP dataframe and to answer this question one has to do some additional analysis.
+
+ ## 1. Finding the order of RAMD trajectories loaded . 
+ First, one has to look at the output of the first step "1. Reading IFP data set for one selected HSP90 compound":  it shows an order of the input pkl files (IFP dataframes) that are loaded in the df_tot_org dataframe. For example, for HSP90 we get 
+ 
+     __________________________________
+     
+        DATA\DATA\HSP90_Gromacs\SAD_3\SAD_3-WB_-RAMD0-300.pkl SAD_3-WB
+        DATA\DATA\HSP90_Gromacs\SAD_3\SAD_3-WB_-RAMD1-300.pkl SAD_3-WB
+        DATA\DATA\HSP90_Gromacs\SAD_3\SAD_3-WB_-RAMD3-300.pkl SAD_3-WB
+        DATA\DATA\HSP90_Gromacs\SAD_3\SAD_3-WB_-RAMD4-300.pkl SAD_3-WB
+        DATA\DATA\HSP90_Gromacs\SAD_3\SAD_3-WB_-RAMD5-300.pkl SAD_3-WB
+        DATA\DATA\HSP90_Gromacs\SAD_3\SAD_3-WB_-RAMD6-300.pkl SAD_3-WB
+        DATA\DATA\HSP90_Gromacs\SAD_3\SAD_3-WB_-RAMD7-300.pkl SAD_3-WB
+      _________________________________
+     
+   The dataframe df_tot_org contains all trajectories sequentially loaded from this list. Each pkl file may contain IFPs from several replicas and each replica may include several trajectories.
+   Thus, each trajectory is associated in the dataframe df_tot_org  with a (replica, trajectory) pair stored in the columns "Repl" and "Traj" .
+   If columns "Repl" and "Traj" in the original IFP dataframe of the pkl files  are empty, they will be filled out in the dataframe df_tot_org with new values (as it is done in the case of HSP90).
+   To check what values of "Repl" and "Traj" in the final df_tot_org dataframe  correspond each trajectory in the pkl files, one can run the following script in the JN:
+
+
+     
+    i = 0
+    for Repl in df_tot_org.Repl.unique():
+        for Traj in df_tot_org[df_tot_org.Repl == Repl].Traj.unique():
+            print (i,Repl,Traj)
+            i+=1
+
+      
+   The combination (Repl, Traj) is unique for each trajectory and the total number of trajectories must be the same as loaded from all pkl files. For example, for HSP90 we have altogether 52 trajectories.
+   The same (Repl, Traj) values can be found in the final dataframe df_ext that also contains cluster labels. 
+   
+   The list of trajectories that are included in each pkl file can be stored in the log file of the program used to generate IFPs.
+    For example, for HSP90, the first dataframe 
+
+
+     
+         DATA\DATA\HSP90_Gromacs\SAD_3\SAD_3-WB_-RAMD0-300.pkl
+
+  contains IFPs for the following trajectories:
+
+
+
+        >>>>>>>>>= 0 RAMD-Gromacs/HSP90/SAD_3//RAMD-NH/TRJ14-0/ETRJ0-2/traj_comp_whole.xtc
+        >>>>>>>>>= 1 RAMD-Gromacs/HSP90/SAD_3//RAMD-NH/TRJ14-0/ETRJ0-3/traj_comp_whole.xtc
+        >>>>>>>>>= 2 RAMD-Gromacs/HSP90/SAD_3//RAMD-NH/TRJ14-0/ETRJ0-4/traj_comp_whole.xtc
+        >>>>>>>>>= 3 RAMD-Gromacs/HSP90/SAD_3//RAMD-NH/TRJ14-0/ETRJ0-5/traj_comp_whole.xtc
+        >>>>>>>>>= 4 RAMD-Gromacs/HSP90/SAD_3//RAMD-NH/TRJ14-0/ETRJ0-6/traj_comp_whole.xtc
+        >>>>>>>>>= 5 RAMD-Gromacs/HSP90/SAD_3//RAMD-NH/TRJ14-0/ETRJ0-7/traj_comp_whole.xtc
+        >>>>>>>>>= 6 RAMD-Gromacs/HSP90/SAD_3//RAMD-NH/TRJ14-0/ETRJ0-8/traj_comp_whole.xtc
+        >>>>>>>>>= 7RAMD-Gromacs/HSP90/SAD_3//RAMD-NH/TRJ14-0/ETRJ0-9/traj_comp_whole.xtc
+
+      
+   Note, that the order of trajectories is important as it is exactly the same in the corresponding pkl file and the total number of trajectories (summed up over all IFP dataframes, see point 1) should be the same as the number of different trajectories (i.e. (Repl, Traj) , see above)
+Thus, one can identify the trajectory from "Repl" and "Traj" value of a particular snapshot that you are interested in.
+
+For example, if the first IFP dataframe file  
+
+
+
+     
+        DATA\DATA\HSP90_Gromacs\SAD_3\SAD_3-WB_-RAMD0-300.pkl 
+
+  
+  Contains, according to the log file, 8 trajectories shown above,
+and the df_tot_org has the first 7 elements in columns "Repl" and "Traj" :
+
+
+
+     
+    0 Repl_1 0
+    1 Repl_2 0
+    2 Repl_3 0
+    3 Repl_4 0
+    4 Repl_5 0
+    5 Repl_6 0
+    6 Repl_7 0
+    7 Repl_8 1
+
+
+Thus,  frames with the values Repl_3 and 0 in columns "Repl" and "Traj"", respectively, were generated from the trajectory  
+
+
+     
+       /hits/fast/mcm/kokhda/RAMD-Gromacs/HSP90/SAD_3//RAMD-NH/TRJ14-0/ETRJ0-5/traj_comp_whole.xtc
+
+  
+
+ ## 2. Finding a frame of the RAMD trajectory and generation of a PDB file 
+ 
+ To identify the snapshot of interest, one has to remember that in the IFP analysis only the last N snapshots of a RAMD trajectory are used (usually N=300 or 500 , or a complete trajectory if it’s length is shorter than N). The frame numbering (column time in the  df_tot_org or df_ext  dataframe  ) starts from the first frame used to generate IFPs. 
+To extract snapshot for a particular frame, you can use different tools. 
+For example, MDAnalysis python library:  to extract the frame with time = M from the RAMD tarjectory "traj.xtc" of the length N, one can use the following script:
+
+
+
+    import numpy as np
+    import MDAnalysis as mda
+
+    u = mda.Universe(refernce.pdb)
+    u.load_new("traj.xtc")
+    u_length = len(u.trajectory)
+    u.trajectory[np.max(0,u_length-N)+M]
+    system_reduced = u.select_atoms(" protein or resname INH")
+    system_reduced.write("output.pdb")
+
+      
+
+where refernce.pdb - the same reference file that was used to generate IFP, N- the number  of the frames used to generate IFPs, "INH" - residue name of the ligand.
+ 
 
