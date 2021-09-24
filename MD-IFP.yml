@@ -91,5 +91,6 @@ dependencies:
     - six==1.13.0
     - wget==3.2
     - sklearn
+    - nglview
 prefix: /exports/scratch/kokhda/anaconda/envs/JN
 
