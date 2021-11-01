@@ -117,7 +117,8 @@ def remove_dissociated_parts(df_tot,max_rmsd=15,max_dcom=3,max_drmsd=3):
             df_tot_Repl = df_tot_lig[df_tot_lig.Repl == j]
             for i in np.unique(df_tot_Repl.Traj.values.astype(int)):
                 df_tot_Repl_Traj = df_tot_Repl[df_tot_Repl.Traj == str(i)]
-                s = np.sum(df_tot_Repl_Traj.values.astype(int),axis=1)
+                #s = np.sum(df_tot_Repl_Traj.values.astype(int),axis=1)
+                s = df_tot_Repl_Traj.sum(axis =1).values
                 rmsd = df_tot_Repl_Traj.RMSDl.values
                 comx = df_tot_Repl_Traj.COM_x.values
                 comy = df_tot_Repl_Traj.COM_y.values
