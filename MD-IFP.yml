@@ -1,4 +1,4 @@
-name: md
+name: MD-IFP
 channels:
   - rdkit
   - conda-forge
