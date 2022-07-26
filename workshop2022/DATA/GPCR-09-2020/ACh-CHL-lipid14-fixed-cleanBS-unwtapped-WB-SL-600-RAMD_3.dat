@@ -1,0 +1,34 @@
+//hits/basement/mcm/kokhda/MuscM2/4MQT/ACh-CHL-lipid14-fixed-cleanBS
+======================= ACh-CHL-lipid14-fixed-cleanBS ===============================
+Atoms found in the MOL2 file:  ['C01', 'N02', 'C03', 'C04', 'C05', 'C06', 'O062', 'C063', 'C063', 'O063', 'H011', 'H012', 'H013', 'H031', 'H032', 'H033', 'H041', 'H042', 'H043', 'H051', 'H052', 'H061', 'H061', 'H062', 'H062', 'H063']
+...............Ligand properties:................
+Acceptor ['O063']
+PosIonizable ['N02']
+Hydrophobe ['C063']
+............Important! ........
+The following residue names will be used to identify ligand in the PDB file:  ['IXO']
+Ligand atoms found in the trajectory  IXO
+ligand name:       IXO
+Equilibration trajectories will be searched using the template:  //hits/basement/mcm/kokhda/MuscM2/4MQT/ACh-CHL-lipid14-fixed-cleanBS//Gromacs/Replica*/*xtc
+4  Equilibration trajectories found
+Dissociation trajectories will be searched using the template:  //hits/basement/mcm/kokhda/MuscM2/4MQT/ACh-CHL-lipid14-fixed-cleanBS//RAMD//TRJSL3*/*whole.xtc
+15  RAMD traj. found in  //hits/basement/mcm/kokhda/MuscM2/4MQT/ACh-CHL-lipid14-fixed-cleanBS//RAMD/
+
+ 10 None NAMD generated 4; RAMD generated 1  
+ tau= 0.455 +- 0.042 [0.08600000000000001, 0.502, 0.147, 0.101, 0.502, 0.502, 0.502, 0.452, 0.289, 0.502, 0.246, 0.502, 0.445, 0.502, 0.20400000000000001]
+==================   ACh-CHL-lipid14-fixed-cleanBS   =======================
+Complete TRJ  //hits/basement/mcm/kokhda/MuscM2/4MQT/ACh-CHL-lipid14-fixed-cleanBS//RAMD/TRJSL3-1/traj_comp_whole.xtc 591
+Complete TRJ  //hits/basement/mcm/kokhda/MuscM2/4MQT/ACh-CHL-lipid14-fixed-cleanBS//RAMD/TRJSL3-10/traj_comp_whole.xtc 246
+Complete TRJ  //hits/basement/mcm/kokhda/MuscM2/4MQT/ACh-CHL-lipid14-fixed-cleanBS//RAMD/TRJSL3-11/traj_comp_whole.xtc 204
+Complete TRJ  //hits/basement/mcm/kokhda/MuscM2/4MQT/ACh-CHL-lipid14-fixed-cleanBS//RAMD/TRJSL3-12/traj_comp_whole.xtc 289
+Complete TRJ  //hits/basement/mcm/kokhda/MuscM2/4MQT/ACh-CHL-lipid14-fixed-cleanBS//RAMD/TRJSL3-13/traj_comp_whole.xtc 452
+Complete TRJ  //hits/basement/mcm/kokhda/MuscM2/4MQT/ACh-CHL-lipid14-fixed-cleanBS//RAMD/TRJSL3-14/traj_comp_whole.xtc 673
+Complete TRJ  //hits/basement/mcm/kokhda/MuscM2/4MQT/ACh-CHL-lipid14-fixed-cleanBS//RAMD/TRJSL3-15/traj_comp_whole.xtc 86
+Complete TRJ  //hits/basement/mcm/kokhda/MuscM2/4MQT/ACh-CHL-lipid14-fixed-cleanBS//RAMD/TRJSL3-2/traj_comp_whole.xtc 961
+Complete TRJ  //hits/basement/mcm/kokhda/MuscM2/4MQT/ACh-CHL-lipid14-fixed-cleanBS//RAMD/TRJSL3-3/traj_comp_whole.xtc 925
+Complete TRJ  //hits/basement/mcm/kokhda/MuscM2/4MQT/ACh-CHL-lipid14-fixed-cleanBS//RAMD/TRJSL3-4/traj_comp_whole.xtc 633
+Complete TRJ  //hits/basement/mcm/kokhda/MuscM2/4MQT/ACh-CHL-lipid14-fixed-cleanBS//RAMD/TRJSL3-5/traj_comp_whole.xtc 853
+Complete TRJ  //hits/basement/mcm/kokhda/MuscM2/4MQT/ACh-CHL-lipid14-fixed-cleanBS//RAMD/TRJSL3-6/traj_comp_whole.xtc 147
+Complete TRJ  //hits/basement/mcm/kokhda/MuscM2/4MQT/ACh-CHL-lipid14-fixed-cleanBS//RAMD/TRJSL3-7/traj_comp_whole.xtc 101
+Complete TRJ  //hits/basement/mcm/kokhda/MuscM2/4MQT/ACh-CHL-lipid14-fixed-cleanBS//RAMD/TRJSL3-8/traj_comp_whole.xtc 445
+Complete TRJ  //hits/basement/mcm/kokhda/MuscM2/4MQT/ACh-CHL-lipid14-fixed-cleanBS//RAMD/TRJSL3-9/traj_comp_whole.xtc 526

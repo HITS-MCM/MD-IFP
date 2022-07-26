@@ -1,0 +1,682 @@
+//hits/basement/mcm/kokhda/b2AR/
+=======================  ===============================
+Atoms found in the MOL2 file:  ['C1', 'N1', 'O1', 'C2', 'O2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9', 'C10', 'C11', 'C12', 'C13', 'C14', 'C15', 'H04', 'H26', 'H01', 'H02', 'H03', 'H05', 'H06', 'H07', 'H08', 'H09', 'H10', 'H11', 'H12', 'H13', 'H14', 'H15', 'H16', 'H17', 'H18', 'H19', 'H20', 'H21', 'H22', 'H23', 'H24', 'H25']
+...............Ligand properties:................
+Donor ['N1', 'O1']
+Acceptor ['O1', 'O2']
+PosIonizable ['N1']
+Aromatic ['C7', 'C8', 'C9', 'C10', 'C11', 'C12']
+Hydrophobe ['C1', 'C3', 'C8', 'C9', 'C10', 'C11', 'C12', 'C13', 'C14', 'C15']
+LumpedHydrophobe ['C7', 'C8', 'C9', 'C10', 'C11', 'C12', 'C2', 'C1', 'C3']
+............Important! ........
+The following residue names will be used to identify ligand in the PDB file:  ['JTZ']
+Ligand atoms found in the trajectory  JTZ
+ligand name:       JTZ
+Equilibration trajectories will be searched using the template:  //hits/basement/mcm/kokhda/b2AR//GROMACS-2020.2/Replica*/*xtc
+4  Equilibration trajectories found
+Dissociation trajectories will be searched using the template:  //hits/basement/mcm/kokhda/b2AR//RAMD-2020.2//TRSL51-*/*whole.xtc
+7  RAMD traj. found in  //hits/basement/mcm/kokhda/b2AR//RAMD-2020.2/
+
+ 0 None NAMD generated 4; RAMD generated 1  
+!!!! RAMD trajectory set for  is too small (7 traj.), tau will not be computed for this replica 
+==================      =======================
+
+
+>>>>>>>>>>>>>>>>> Replica  0 :   
+
+>>>>>>>>>= 0 //hits/basement/mcm/kokhda/b2AR//RAMD-2020.2/TRSL51-10/traj_comp_whole.xtc
+total number of frames= 702; file size 333 M
+>>>sub-system selected  (resname JTZ) or  protein or (resname MG MN CA Mg Mn) or (resname WAT HOH SOL TIP3) or ( resname  CHL OL PC PE PA PH- )  or ((resid 88:100) and (not type H)) or ((resid 122:126) and (not type H))
+will be analyzed  700 frames
+traj# 0 RMSD protein:  2.395398082421302 RMSD ligand:  1.9280396949502845 ligand residue name JTZ
+for the frame 681 ligand RMSD is very large: 10.495592530530526
+for the frame 682 ligand RMSD is very large: 11.439550145167889
+for the frame 683 ligand RMSD is very large: 12.982601427018773
+for the frame 684 ligand RMSD is very large: 13.72969311748502
+for the frame 685 ligand RMSD is very large: 14.11949385586101
+for the frame 686 ligand RMSD is very large: 13.989276542624806
+for the frame 687 ligand RMSD is very large: 16.772643510758755
+for the frame 688 ligand RMSD is very large: 18.283186553411642
+for the frame 689 ligand RMSD is very large: 18.69324692024975
+for the frame 690 ligand RMSD is very large: 20.95996364715468
+for the frame 691 ligand RMSD is very large: 23.794531131937656
+for the frame 692 ligand RMSD is very large: 29.886996464680074
+for the frame 693 ligand RMSD is very large: 34.42139206481693
+for the frame 694 ligand RMSD is very large: 39.314016327328964
+for the frame 695 ligand RMSD is very large: 42.33276254652078
+for the frame 696 ligand RMSD is very large: 46.20147947526566
+for the frame 697 ligand RMSD is very large: 48.669053653556816
+for the frame 698 ligand RMSD is very large: 49.359786775820076
+for the frame 699 ligand RMSD is very large: 50.27505842096779
+Start HB analysis 12:08:19.593478
+Start WB analysis 12:09:31.546193
+Start collecting IFPs:  12:16:27.046744
+Start building IFP table:  14:25:10.165031
+IFP database is ready  14:25:10.732920
+>>>>>>>>>= 1 //hits/basement/mcm/kokhda/b2AR//RAMD-2020.2/TRSL51-11/traj_comp_whole.xtc
+total number of frames= 702; file size 333 M
+>>>sub-system selected  (resname JTZ) or  protein or (resname MG MN CA Mg Mn) or (resname WAT HOH SOL TIP3) or ( resname  CHL OL PC PE PA PH- )  or ((resid 88:100) and (not type H)) or ((resid 122:126) and (not type H))
+will be analyzed  700 frames
+for the frame 0 ligand RMSD is very large: 11.440868684011052
+traj# 0 RMSD protein:  3.0765564127895146 RMSD ligand:  11.440868684011052 ligand residue name JTZ
+for the frame 1 ligand RMSD is very large: 11.562760740704444
+for the frame 2 ligand RMSD is very large: 11.525269209216894
+for the frame 3 ligand RMSD is very large: 11.847154146978658
+for the frame 4 ligand RMSD is very large: 11.958077402858223
+for the frame 5 ligand RMSD is very large: 11.709519646095714
+for the frame 6 ligand RMSD is very large: 11.984010914099608
+for the frame 7 ligand RMSD is very large: 11.689059101730944
+for the frame 8 ligand RMSD is very large: 11.82237493462708
+for the frame 9 ligand RMSD is very large: 11.458645739455946
+for the frame 10 ligand RMSD is very large: 11.978329548682796
+for the frame 11 ligand RMSD is very large: 11.9003123501048
+for the frame 12 ligand RMSD is very large: 12.107014824251724
+for the frame 13 ligand RMSD is very large: 12.337663205713042
+for the frame 14 ligand RMSD is very large: 12.759849655186821
+for the frame 15 ligand RMSD is very large: 12.666664851506047
+for the frame 16 ligand RMSD is very large: 12.351838637145468
+for the frame 17 ligand RMSD is very large: 12.570023439455243
+for the frame 18 ligand RMSD is very large: 12.46909457724051
+for the frame 19 ligand RMSD is very large: 12.375927450026703
+for the frame 20 ligand RMSD is very large: 12.548852298280718
+for the frame 21 ligand RMSD is very large: 12.804606670662968
+for the frame 22 ligand RMSD is very large: 12.776812868909575
+for the frame 23 ligand RMSD is very large: 12.693678182159234
+for the frame 24 ligand RMSD is very large: 12.415282397987792
+for the frame 25 ligand RMSD is very large: 11.953226020259713
+for the frame 26 ligand RMSD is very large: 11.401807947202535
+for the frame 27 ligand RMSD is very large: 11.502657885365323
+for the frame 28 ligand RMSD is very large: 11.460847742063493
+for the frame 29 ligand RMSD is very large: 12.002808235623094
+for the frame 30 ligand RMSD is very large: 11.40598075136251
+for the frame 31 ligand RMSD is very large: 10.979075151787313
+for the frame 32 ligand RMSD is very large: 10.754423371842085
+for the frame 33 ligand RMSD is very large: 10.415849802394648
+for the frame 34 ligand RMSD is very large: 10.626121793714963
+for the frame 35 ligand RMSD is very large: 10.738386960913292
+for the frame 36 ligand RMSD is very large: 10.403793167608297
+for the frame 37 ligand RMSD is very large: 10.070765446698571
+for the frame 55 ligand RMSD is very large: 10.083125893989129
+for the frame 75 ligand RMSD is very large: 10.46616571270948
+for the frame 76 ligand RMSD is very large: 10.494068095075963
+for the frame 77 ligand RMSD is very large: 10.999962881411498
+for the frame 78 ligand RMSD is very large: 11.23561030580432
+for the frame 79 ligand RMSD is very large: 11.215129092234926
+for the frame 80 ligand RMSD is very large: 11.243745027464367
+for the frame 357 ligand RMSD is very large: 10.526933910402656
+for the frame 358 ligand RMSD is very large: 10.565217999392297
+for the frame 359 ligand RMSD is very large: 10.55637728511677
+for the frame 360 ligand RMSD is very large: 11.08494484806622
+for the frame 361 ligand RMSD is very large: 10.69014368826126
+for the frame 362 ligand RMSD is very large: 10.18796624691086
+for the frame 363 ligand RMSD is very large: 10.796825392754341
+for the frame 364 ligand RMSD is very large: 10.185330930459568
+for the frame 365 ligand RMSD is very large: 10.192682027797508
+for the frame 366 ligand RMSD is very large: 10.856076276477678
+for the frame 367 ligand RMSD is very large: 10.583545938440414
+for the frame 368 ligand RMSD is very large: 10.64757700820965
+for the frame 369 ligand RMSD is very large: 10.654487622970006
+for the frame 370 ligand RMSD is very large: 10.830949236822365
+for the frame 371 ligand RMSD is very large: 10.881523134459782
+for the frame 372 ligand RMSD is very large: 11.3855824817052
+for the frame 373 ligand RMSD is very large: 10.5677398557624
+for the frame 374 ligand RMSD is very large: 10.781835179487913
+for the frame 375 ligand RMSD is very large: 11.170675586388375
+for the frame 376 ligand RMSD is very large: 10.506805258381236
+for the frame 377 ligand RMSD is very large: 11.576526663843312
+for the frame 378 ligand RMSD is very large: 11.234256676101296
+for the frame 379 ligand RMSD is very large: 11.20122765544343
+for the frame 380 ligand RMSD is very large: 10.926704012675955
+for the frame 381 ligand RMSD is very large: 11.171436262516167
+for the frame 382 ligand RMSD is very large: 10.973778113149583
+for the frame 383 ligand RMSD is very large: 11.075147061929767
+for the frame 384 ligand RMSD is very large: 11.329145268995395
+for the frame 385 ligand RMSD is very large: 11.309345068808284
+for the frame 386 ligand RMSD is very large: 11.317937253311797
+for the frame 387 ligand RMSD is very large: 11.07979602451614
+for the frame 388 ligand RMSD is very large: 11.226470739854323
+for the frame 389 ligand RMSD is very large: 11.760957460100542
+for the frame 390 ligand RMSD is very large: 11.786272397892738
+for the frame 391 ligand RMSD is very large: 11.894689122885717
+for the frame 392 ligand RMSD is very large: 11.573028907821055
+for the frame 393 ligand RMSD is very large: 11.290520704891648
+for the frame 394 ligand RMSD is very large: 11.96256826210888
+for the frame 395 ligand RMSD is very large: 12.227053091897329
+for the frame 396 ligand RMSD is very large: 12.683831405414574
+for the frame 397 ligand RMSD is very large: 12.771933915066109
+for the frame 398 ligand RMSD is very large: 11.737471069102007
+for the frame 632 ligand RMSD is very large: 10.75147004261687
+for the frame 633 ligand RMSD is very large: 10.842922291834732
+for the frame 634 ligand RMSD is very large: 10.958110621226922
+for the frame 635 ligand RMSD is very large: 10.594970897137651
+for the frame 636 ligand RMSD is very large: 10.762828986812902
+for the frame 637 ligand RMSD is very large: 11.459470209321164
+for the frame 638 ligand RMSD is very large: 11.374438135474483
+for the frame 639 ligand RMSD is very large: 11.787193021405196
+for the frame 640 ligand RMSD is very large: 12.32316310045829
+for the frame 641 ligand RMSD is very large: 13.195537535127416
+for the frame 642 ligand RMSD is very large: 13.623455402610752
+for the frame 643 ligand RMSD is very large: 13.351411412554825
+for the frame 644 ligand RMSD is very large: 13.046050389711528
+for the frame 645 ligand RMSD is very large: 13.8527653501517
+for the frame 646 ligand RMSD is very large: 13.816722974932672
+for the frame 647 ligand RMSD is very large: 13.705455405866804
+for the frame 648 ligand RMSD is very large: 13.922546745383958
+for the frame 649 ligand RMSD is very large: 13.46912611963714
+for the frame 650 ligand RMSD is very large: 13.697199725160623
+for the frame 651 ligand RMSD is very large: 13.57425381431757
+for the frame 652 ligand RMSD is very large: 13.84974706844845
+for the frame 653 ligand RMSD is very large: 13.76103432312958
+for the frame 654 ligand RMSD is very large: 13.4608006995728
+for the frame 655 ligand RMSD is very large: 13.622774767203655
+for the frame 656 ligand RMSD is very large: 13.18931220369602
+for the frame 657 ligand RMSD is very large: 13.624696236230701
+for the frame 658 ligand RMSD is very large: 14.00489617003089
+for the frame 659 ligand RMSD is very large: 13.762759430928309
+for the frame 660 ligand RMSD is very large: 13.650224718067692
+for the frame 661 ligand RMSD is very large: 13.532053916906882
+for the frame 662 ligand RMSD is very large: 13.369244498942358
+for the frame 663 ligand RMSD is very large: 13.513416240748988
+for the frame 664 ligand RMSD is very large: 14.034974999548668
+for the frame 665 ligand RMSD is very large: 14.077718568952157
+for the frame 666 ligand RMSD is very large: 14.101925742890497
+for the frame 667 ligand RMSD is very large: 13.812423312501107
+for the frame 668 ligand RMSD is very large: 13.609302117728623
+for the frame 669 ligand RMSD is very large: 13.568748828931797
+for the frame 670 ligand RMSD is very large: 13.232022447602558
+for the frame 671 ligand RMSD is very large: 12.098539767679865
+for the frame 672 ligand RMSD is very large: 12.010781109127278
+for the frame 673 ligand RMSD is very large: 12.087848859701138
+for the frame 674 ligand RMSD is very large: 11.8283409407006
+for the frame 675 ligand RMSD is very large: 10.934990882508124
+for the frame 676 ligand RMSD is very large: 10.206908797482555
+for the frame 677 ligand RMSD is very large: 10.196802437914215
+for the frame 678 ligand RMSD is very large: 10.631383388888658
+for the frame 679 ligand RMSD is very large: 10.540648117580337
+for the frame 680 ligand RMSD is very large: 11.125849382137847
+for the frame 681 ligand RMSD is very large: 11.801299799242718
+for the frame 682 ligand RMSD is very large: 12.202587397388042
+for the frame 683 ligand RMSD is very large: 11.86416960857618
+for the frame 684 ligand RMSD is very large: 12.139651748774694
+for the frame 685 ligand RMSD is very large: 11.915937528339397
+for the frame 686 ligand RMSD is very large: 11.603540271867958
+for the frame 687 ligand RMSD is very large: 11.907497058809868
+for the frame 688 ligand RMSD is very large: 12.421023156064363
+for the frame 689 ligand RMSD is very large: 12.942766948585563
+for the frame 690 ligand RMSD is very large: 13.67771575533909
+for the frame 691 ligand RMSD is very large: 15.302976151230084
+for the frame 692 ligand RMSD is very large: 16.11160299445649
+for the frame 693 ligand RMSD is very large: 16.402122146763094
+for the frame 694 ligand RMSD is very large: 18.29101314810491
+for the frame 695 ligand RMSD is very large: 20.993920571279528
+for the frame 696 ligand RMSD is very large: 24.004255811442047
+for the frame 697 ligand RMSD is very large: 26.01300452762592
+for the frame 698 ligand RMSD is very large: 29.831686290040825
+for the frame 699 ligand RMSD is very large: 34.74701924114305
+Start HB analysis 14:43:55.279654
+Start WB analysis 14:45:10.248414
+Start collecting IFPs:  14:52:56.985995
+Start building IFP table:  17:02:55.911284
+IFP database is ready  17:02:56.474688
+>>>>>>>>>= 2 //hits/basement/mcm/kokhda/b2AR//RAMD-2020.2/TRSL51-12/traj_comp_whole.xtc
+total number of frames= 701; file size 332 M
+>>>sub-system selected  (resname JTZ) or  protein or (resname MG MN CA Mg Mn) or (resname WAT HOH SOL TIP3) or ( resname  CHL OL PC PE PA PH- )  or ((resid 88:100) and (not type H)) or ((resid 122:126) and (not type H))
+will be analyzed  700 frames
+traj# 0 RMSD protein:  3.7165202126852535 RMSD ligand:  1.700576546085627 ligand residue name JTZ
+for the frame 679 ligand RMSD is very large: 10.003849939394033
+for the frame 680 ligand RMSD is very large: 10.140920320968526
+for the frame 681 ligand RMSD is very large: 11.25140820739216
+for the frame 682 ligand RMSD is very large: 12.475666136454876
+for the frame 683 ligand RMSD is very large: 13.401390304610208
+for the frame 684 ligand RMSD is very large: 14.491960552923164
+for the frame 685 ligand RMSD is very large: 15.713746200449952
+for the frame 686 ligand RMSD is very large: 15.768299490600493
+for the frame 687 ligand RMSD is very large: 15.960328036207272
+for the frame 688 ligand RMSD is very large: 14.248540805854454
+for the frame 689 ligand RMSD is very large: 14.417497643501886
+for the frame 690 ligand RMSD is very large: 15.181194767897827
+for the frame 691 ligand RMSD is very large: 15.509003927832525
+for the frame 692 ligand RMSD is very large: 16.260273231414917
+for the frame 693 ligand RMSD is very large: 16.900703816776655
+for the frame 694 ligand RMSD is very large: 18.463962260910616
+for the frame 695 ligand RMSD is very large: 20.873000020139433
+for the frame 696 ligand RMSD is very large: 22.826901836120136
+for the frame 697 ligand RMSD is very large: 23.04514726498707
+for the frame 698 ligand RMSD is very large: 26.000687553926763
+for the frame 699 ligand RMSD is very large: 31.54678880775048
+Start HB analysis 17:17:35.398428
+Start WB analysis 17:18:44.569922
+Start collecting IFPs:  17:25:16.757546
+Start building IFP table:  19:34:20.635062
+IFP database is ready  19:34:21.191314
+>>>>>>>>>= 3 //hits/basement/mcm/kokhda/b2AR//RAMD-2020.2/TRSL51-13/traj_comp_whole.xtc
+total number of frames= 701; file size 332 M
+>>>sub-system selected  (resname JTZ) or  protein or (resname MG MN CA Mg Mn) or (resname WAT HOH SOL TIP3) or ( resname  CHL OL PC PE PA PH- )  or ((resid 88:100) and (not type H)) or ((resid 122:126) and (not type H))
+will be analyzed  700 frames
+traj# 0 RMSD protein:  2.024260844235324 RMSD ligand:  5.4338782166538575 ligand residue name JTZ
+for the frame 690 ligand RMSD is very large: 11.740300704560058
+for the frame 691 ligand RMSD is very large: 13.64249049078004
+for the frame 692 ligand RMSD is very large: 14.569574273535672
+for the frame 693 ligand RMSD is very large: 16.39058229191188
+for the frame 694 ligand RMSD is very large: 18.169874859617018
+for the frame 695 ligand RMSD is very large: 20.121431520905915
+for the frame 696 ligand RMSD is very large: 21.449505002071813
+for the frame 697 ligand RMSD is very large: 23.44584905664576
+for the frame 698 ligand RMSD is very large: 26.866890086929484
+for the frame 699 ligand RMSD is very large: 30.879197953433685
+Start HB analysis 19:50:25.913677
+Start WB analysis 19:51:32.551026
+Start collecting IFPs:  19:59:12.356557
+Start building IFP table:  21:54:43.054327
+IFP database is ready  21:54:43.612360
+>>>>>>>>>= 4 //hits/basement/mcm/kokhda/b2AR//RAMD-2020.2/TRSL51-14/traj_comp_whole.xtc
+total number of frames= 702; file size 333 M
+>>>sub-system selected  (resname JTZ) or  protein or (resname MG MN CA Mg Mn) or (resname WAT HOH SOL TIP3) or ( resname  CHL OL PC PE PA PH- )  or ((resid 88:100) and (not type H)) or ((resid 122:126) and (not type H))
+will be analyzed  700 frames
+traj# 0 RMSD protein:  3.1391506030231677 RMSD ligand:  1.7919892206652974 ligand residue name JTZ
+for the frame 687 ligand RMSD is very large: 10.00081307543761
+for the frame 688 ligand RMSD is very large: 11.939547713252997
+for the frame 689 ligand RMSD is very large: 12.811617482260026
+for the frame 690 ligand RMSD is very large: 14.472612457821695
+for the frame 691 ligand RMSD is very large: 16.19150858320911
+for the frame 692 ligand RMSD is very large: 16.254491753786226
+for the frame 693 ligand RMSD is very large: 16.499771860418225
+for the frame 694 ligand RMSD is very large: 17.872007275881632
+for the frame 695 ligand RMSD is very large: 19.889501789348476
+for the frame 696 ligand RMSD is very large: 22.59250217268152
+for the frame 697 ligand RMSD is very large: 25.672252456345646
+for the frame 698 ligand RMSD is very large: 30.233777316928382
+for the frame 699 ligand RMSD is very large: 36.1431888384719
+Start HB analysis 22:12:43.158686
+Start WB analysis 22:13:55.412895
+Start collecting IFPs:  22:20:09.430947
+Start building IFP table:  00:29:24.585927
+IFP database is ready  00:29:25.144449
+>>>>>>>>>= 5 //hits/basement/mcm/kokhda/b2AR//RAMD-2020.2/TRSL51-15/traj_comp_whole.xtc
+total number of frames= 702; file size 333 M
+>>>sub-system selected  (resname JTZ) or  protein or (resname MG MN CA Mg Mn) or (resname WAT HOH SOL TIP3) or ( resname  CHL OL PC PE PA PH- )  or ((resid 88:100) and (not type H)) or ((resid 122:126) and (not type H))
+will be analyzed  700 frames
+traj# 0 RMSD protein:  2.208513159130631 RMSD ligand:  1.7595401337279368 ligand residue name JTZ
+for the frame 341 ligand RMSD is very large: 10.388381520538603
+for the frame 342 ligand RMSD is very large: 10.341596628026908
+for the frame 343 ligand RMSD is very large: 10.394156820155613
+for the frame 344 ligand RMSD is very large: 10.422043128725498
+for the frame 345 ligand RMSD is very large: 10.239733057649369
+for the frame 346 ligand RMSD is very large: 10.458002486760067
+for the frame 347 ligand RMSD is very large: 10.662745930194134
+for the frame 519 ligand RMSD is very large: 10.09402569013638
+for the frame 528 ligand RMSD is very large: 10.0382654178334
+for the frame 548 ligand RMSD is very large: 10.546141771784905
+for the frame 683 ligand RMSD is very large: 10.619737143096323
+for the frame 684 ligand RMSD is very large: 11.269351978004389
+for the frame 685 ligand RMSD is very large: 11.56987693612491
+for the frame 686 ligand RMSD is very large: 12.157566449249178
+for the frame 687 ligand RMSD is very large: 12.33568962112144
+for the frame 688 ligand RMSD is very large: 12.353025359906612
+for the frame 689 ligand RMSD is very large: 13.174725378502478
+for the frame 690 ligand RMSD is very large: 14.36761384208087
+for the frame 691 ligand RMSD is very large: 14.796373395313015
+for the frame 692 ligand RMSD is very large: 16.17743749436121
+for the frame 693 ligand RMSD is very large: 17.147062963024165
+for the frame 694 ligand RMSD is very large: 18.99620391028402
+for the frame 695 ligand RMSD is very large: 22.63558876399328
+for the frame 696 ligand RMSD is very large: 26.03618983230918
+for the frame 697 ligand RMSD is very large: 29.751902798765382
+for the frame 698 ligand RMSD is very large: 32.80841089221466
+for the frame 699 ligand RMSD is very large: 35.901950585611566
+Start HB analysis 00:44:07.852792
+Start WB analysis 00:45:16.264946
+Start collecting IFPs:  00:53:48.121670
+Start building IFP table:  02:55:00.800189
+IFP database is ready  02:55:01.372271
+>>>>>>>>>= 6 //hits/basement/mcm/kokhda/b2AR//RAMD-2020.2/TRSL51-9/traj_comp_whole.xtc
+total number of frames= 702; file size 333 M
+>>>sub-system selected  (resname JTZ) or  protein or (resname MG MN CA Mg Mn) or (resname WAT HOH SOL TIP3) or ( resname  CHL OL PC PE PA PH- )  or ((resid 88:100) and (not type H)) or ((resid 122:126) and (not type H))
+will be analyzed  700 frames
+for the frame 0 ligand RMSD is very large: 11.056327043781833
+traj# 0 RMSD protein:  3.7975198716422223 RMSD ligand:  11.056327043781833 ligand residue name JTZ
+for the frame 1 ligand RMSD is very large: 10.90196391544221
+for the frame 2 ligand RMSD is very large: 11.141354181598652
+for the frame 3 ligand RMSD is very large: 11.051773664173798
+for the frame 4 ligand RMSD is very large: 11.038487465011212
+for the frame 5 ligand RMSD is very large: 11.338091615275498
+for the frame 6 ligand RMSD is very large: 10.95721615980122
+for the frame 7 ligand RMSD is very large: 10.969217275362485
+for the frame 8 ligand RMSD is very large: 10.782938817735179
+for the frame 9 ligand RMSD is very large: 11.51002591513795
+for the frame 10 ligand RMSD is very large: 11.198746474334898
+for the frame 11 ligand RMSD is very large: 11.051655111019217
+for the frame 12 ligand RMSD is very large: 11.655070094663834
+for the frame 13 ligand RMSD is very large: 11.723777399783154
+for the frame 14 ligand RMSD is very large: 11.888509391900772
+for the frame 15 ligand RMSD is very large: 12.793643844346919
+for the frame 16 ligand RMSD is very large: 12.162722269244728
+for the frame 17 ligand RMSD is very large: 11.586908994783647
+for the frame 18 ligand RMSD is very large: 11.195105291054166
+for the frame 19 ligand RMSD is very large: 11.049326041027951
+for the frame 20 ligand RMSD is very large: 11.474218564468904
+for the frame 21 ligand RMSD is very large: 11.385040366514936
+for the frame 22 ligand RMSD is very large: 11.439540794089547
+for the frame 23 ligand RMSD is very large: 11.454970095966466
+for the frame 24 ligand RMSD is very large: 11.744852265814586
+for the frame 25 ligand RMSD is very large: 11.62003494034451
+for the frame 26 ligand RMSD is very large: 12.042154263796663
+for the frame 27 ligand RMSD is very large: 11.55294168017345
+for the frame 28 ligand RMSD is very large: 11.478386123114698
+for the frame 29 ligand RMSD is very large: 11.337174058750323
+for the frame 30 ligand RMSD is very large: 11.519027693228583
+for the frame 31 ligand RMSD is very large: 11.559230501981075
+for the frame 32 ligand RMSD is very large: 11.126491638768766
+for the frame 33 ligand RMSD is very large: 12.183670503137527
+for the frame 34 ligand RMSD is very large: 12.442935822400411
+for the frame 35 ligand RMSD is very large: 12.47356757938177
+for the frame 36 ligand RMSD is very large: 12.337068256765585
+for the frame 37 ligand RMSD is very large: 12.768344776776479
+for the frame 38 ligand RMSD is very large: 12.731516867842693
+for the frame 39 ligand RMSD is very large: 12.331090306605265
+for the frame 40 ligand RMSD is very large: 12.904469532919862
+for the frame 41 ligand RMSD is very large: 12.991612117138624
+for the frame 42 ligand RMSD is very large: 12.614039923490166
+for the frame 43 ligand RMSD is very large: 12.77411086657704
+for the frame 44 ligand RMSD is very large: 12.690785428252488
+for the frame 45 ligand RMSD is very large: 12.728636518254055
+for the frame 46 ligand RMSD is very large: 12.281192400172063
+for the frame 47 ligand RMSD is very large: 12.45113299486156
+for the frame 48 ligand RMSD is very large: 12.57958698379372
+for the frame 49 ligand RMSD is very large: 12.891599473195578
+for the frame 50 ligand RMSD is very large: 12.747042182474386
+for the frame 51 ligand RMSD is very large: 12.921952735809121
+for the frame 52 ligand RMSD is very large: 13.136392277760548
+for the frame 53 ligand RMSD is very large: 13.268692217737142
+for the frame 54 ligand RMSD is very large: 13.442101648385535
+for the frame 55 ligand RMSD is very large: 13.265359365331783
+for the frame 56 ligand RMSD is very large: 13.146571726525906
+for the frame 57 ligand RMSD is very large: 13.205899277057593
+for the frame 58 ligand RMSD is very large: 13.375655439186135
+for the frame 59 ligand RMSD is very large: 13.111641546198268
+for the frame 60 ligand RMSD is very large: 13.257468116625668
+for the frame 61 ligand RMSD is very large: 13.139529698396528
+for the frame 62 ligand RMSD is very large: 13.10846245279104
+for the frame 63 ligand RMSD is very large: 13.168023661769693
+for the frame 64 ligand RMSD is very large: 12.852769690614608
+for the frame 65 ligand RMSD is very large: 12.637147041322745
+for the frame 66 ligand RMSD is very large: 12.608766552954426
+for the frame 67 ligand RMSD is very large: 12.82779414924505
+for the frame 68 ligand RMSD is very large: 13.514715709727959
+for the frame 69 ligand RMSD is very large: 13.05998246907526
+for the frame 70 ligand RMSD is very large: 12.960494616330013
+for the frame 71 ligand RMSD is very large: 13.240988292422916
+for the frame 72 ligand RMSD is very large: 13.354557273661026
+for the frame 73 ligand RMSD is very large: 13.365406659816957
+for the frame 74 ligand RMSD is very large: 13.581749767056397
+for the frame 75 ligand RMSD is very large: 13.89486133437855
+for the frame 76 ligand RMSD is very large: 13.369417225172977
+for the frame 77 ligand RMSD is very large: 13.445072762320718
+for the frame 78 ligand RMSD is very large: 13.309422592834276
+for the frame 79 ligand RMSD is very large: 12.971483579186359
+for the frame 80 ligand RMSD is very large: 13.13197685030638
+for the frame 81 ligand RMSD is very large: 13.268341516964627
+for the frame 82 ligand RMSD is very large: 13.789102635748828
+for the frame 83 ligand RMSD is very large: 13.676754956502517
+for the frame 84 ligand RMSD is very large: 13.444157081158524
+for the frame 85 ligand RMSD is very large: 13.418872855703443
+for the frame 86 ligand RMSD is very large: 13.481499925704993
+for the frame 87 ligand RMSD is very large: 13.294495846114945
+for the frame 88 ligand RMSD is very large: 13.34916543136439
+for the frame 89 ligand RMSD is very large: 13.299572048211239
+for the frame 90 ligand RMSD is very large: 13.570960177118405
+for the frame 91 ligand RMSD is very large: 13.569560545420211
+for the frame 92 ligand RMSD is very large: 13.380757092528698
+for the frame 93 ligand RMSD is very large: 13.402039733231222
+for the frame 94 ligand RMSD is very large: 13.382617348191266
+for the frame 95 ligand RMSD is very large: 13.14861128914628
+for the frame 96 ligand RMSD is very large: 13.7447413954634
+for the frame 97 ligand RMSD is very large: 14.040972108180146
+for the frame 98 ligand RMSD is very large: 12.617823957120292
+for the frame 99 ligand RMSD is very large: 12.624355017945895
+for the frame 100 ligand RMSD is very large: 12.781129067772145
+for the frame 101 ligand RMSD is very large: 12.632647109172936
+for the frame 102 ligand RMSD is very large: 12.591182833623595
+for the frame 103 ligand RMSD is very large: 12.318056928428147
+for the frame 104 ligand RMSD is very large: 12.072227877545586
+for the frame 105 ligand RMSD is very large: 12.296472952486141
+for the frame 106 ligand RMSD is very large: 12.333687850939738
+for the frame 107 ligand RMSD is very large: 12.209898638355641
+for the frame 108 ligand RMSD is very large: 12.443326579025017
+for the frame 109 ligand RMSD is very large: 11.888321885716586
+for the frame 110 ligand RMSD is very large: 11.984496419417782
+for the frame 111 ligand RMSD is very large: 12.745632483710883
+for the frame 112 ligand RMSD is very large: 12.006900324439863
+for the frame 113 ligand RMSD is very large: 12.270658718616525
+for the frame 114 ligand RMSD is very large: 12.479758940204666
+for the frame 115 ligand RMSD is very large: 12.978238979174138
+for the frame 116 ligand RMSD is very large: 12.242263833868233
+for the frame 117 ligand RMSD is very large: 11.934534577561795
+for the frame 118 ligand RMSD is very large: 12.032417624427447
+for the frame 119 ligand RMSD is very large: 12.075870059252836
+for the frame 120 ligand RMSD is very large: 12.171030173666422
+for the frame 121 ligand RMSD is very large: 11.902050570095064
+for the frame 122 ligand RMSD is very large: 12.12377446164531
+for the frame 123 ligand RMSD is very large: 12.018746704644562
+for the frame 124 ligand RMSD is very large: 12.471288312861539
+for the frame 125 ligand RMSD is very large: 11.718116968008456
+for the frame 126 ligand RMSD is very large: 11.808420096310863
+for the frame 127 ligand RMSD is very large: 11.663979935074597
+for the frame 128 ligand RMSD is very large: 12.044716055305864
+for the frame 129 ligand RMSD is very large: 11.81694790185001
+for the frame 130 ligand RMSD is very large: 12.0929652675813
+for the frame 131 ligand RMSD is very large: 11.7329659328696
+for the frame 132 ligand RMSD is very large: 11.99072533336457
+for the frame 133 ligand RMSD is very large: 11.721912854296816
+for the frame 134 ligand RMSD is very large: 11.947835779495536
+for the frame 135 ligand RMSD is very large: 12.38210206036343
+for the frame 136 ligand RMSD is very large: 11.941714709115553
+for the frame 137 ligand RMSD is very large: 12.424645505799013
+for the frame 138 ligand RMSD is very large: 12.651610864403244
+for the frame 139 ligand RMSD is very large: 12.544096391052918
+for the frame 140 ligand RMSD is very large: 12.758721505312066
+for the frame 141 ligand RMSD is very large: 12.719697623209067
+for the frame 142 ligand RMSD is very large: 12.550844674649891
+for the frame 143 ligand RMSD is very large: 13.06780499498164
+for the frame 144 ligand RMSD is very large: 12.694000585845227
+for the frame 145 ligand RMSD is very large: 13.226144571772089
+for the frame 146 ligand RMSD is very large: 13.01321247542241
+for the frame 147 ligand RMSD is very large: 12.922789623860854
+for the frame 148 ligand RMSD is very large: 12.972688604906036
+for the frame 149 ligand RMSD is very large: 13.126446493554466
+for the frame 150 ligand RMSD is very large: 12.940066866766673
+for the frame 151 ligand RMSD is very large: 12.813855326443427
+for the frame 152 ligand RMSD is very large: 12.897424005812299
+for the frame 153 ligand RMSD is very large: 12.603704658691614
+for the frame 154 ligand RMSD is very large: 12.875300574938656
+for the frame 155 ligand RMSD is very large: 12.82304523350082
+for the frame 156 ligand RMSD is very large: 12.899716728195619
+for the frame 157 ligand RMSD is very large: 12.874405047953047
+for the frame 158 ligand RMSD is very large: 12.514883890782386
+for the frame 159 ligand RMSD is very large: 12.784106370876412
+for the frame 160 ligand RMSD is very large: 12.461524575366958
+for the frame 161 ligand RMSD is very large: 12.141961367799063
+for the frame 162 ligand RMSD is very large: 12.379826722286216
+for the frame 163 ligand RMSD is very large: 11.737036680973302
+for the frame 164 ligand RMSD is very large: 11.575923741274085
+for the frame 165 ligand RMSD is very large: 11.168770527400607
+for the frame 166 ligand RMSD is very large: 10.729699742623362
+for the frame 167 ligand RMSD is very large: 11.157679883672142
+for the frame 168 ligand RMSD is very large: 10.647050626769005
+for the frame 169 ligand RMSD is very large: 10.666198396741532
+for the frame 201 ligand RMSD is very large: 10.425165265780223
+for the frame 202 ligand RMSD is very large: 10.235186296744757
+for the frame 252 ligand RMSD is very large: 10.361023156882403
+for the frame 253 ligand RMSD is very large: 10.37169398592919
+for the frame 254 ligand RMSD is very large: 10.996433343432445
+for the frame 255 ligand RMSD is very large: 11.395229692681053
+for the frame 256 ligand RMSD is very large: 11.631536842287767
+for the frame 257 ligand RMSD is very large: 11.607505069258657
+for the frame 258 ligand RMSD is very large: 12.869122308575182
+for the frame 259 ligand RMSD is very large: 12.254167193537965
+for the frame 260 ligand RMSD is very large: 13.035162539384512
+for the frame 261 ligand RMSD is very large: 12.951349859207289
+for the frame 262 ligand RMSD is very large: 11.53841469135276
+for the frame 564 ligand RMSD is very large: 10.328418429980307
+for the frame 565 ligand RMSD is very large: 10.7166539514293
+for the frame 566 ligand RMSD is very large: 11.3163742462259
+for the frame 567 ligand RMSD is very large: 11.041464294300289
+for the frame 568 ligand RMSD is very large: 11.047691124889036
+for the frame 569 ligand RMSD is very large: 10.913051727496429
+for the frame 570 ligand RMSD is very large: 11.048983878555743
+for the frame 571 ligand RMSD is very large: 10.976499636718044
+for the frame 572 ligand RMSD is very large: 11.297537424971377
+for the frame 573 ligand RMSD is very large: 11.051570998167643
+for the frame 574 ligand RMSD is very large: 11.232520216436706
+for the frame 575 ligand RMSD is very large: 11.329081175682543
+for the frame 576 ligand RMSD is very large: 11.280731163669582
+for the frame 577 ligand RMSD is very large: 11.676663721831218
+for the frame 578 ligand RMSD is very large: 12.007122100069477
+for the frame 579 ligand RMSD is very large: 11.932567662077355
+for the frame 580 ligand RMSD is very large: 11.97233259596129
+for the frame 581 ligand RMSD is very large: 12.377763843085642
+for the frame 582 ligand RMSD is very large: 12.126679725275537
+for the frame 583 ligand RMSD is very large: 12.6136707959842
+for the frame 584 ligand RMSD is very large: 12.69979814976566
+for the frame 585 ligand RMSD is very large: 12.634073687957565
+for the frame 586 ligand RMSD is very large: 13.558960156681213
+for the frame 587 ligand RMSD is very large: 11.20644968696003
+for the frame 588 ligand RMSD is very large: 11.62378555867228
+for the frame 589 ligand RMSD is very large: 12.718668760149692
+for the frame 590 ligand RMSD is very large: 13.144763412364465
+for the frame 591 ligand RMSD is very large: 13.566450000463313
+for the frame 592 ligand RMSD is very large: 13.54775342776548
+for the frame 593 ligand RMSD is very large: 13.691025569933721
+for the frame 594 ligand RMSD is very large: 13.527397701587478
+for the frame 595 ligand RMSD is very large: 14.043262870797488
+for the frame 596 ligand RMSD is very large: 13.851374333463788
+for the frame 597 ligand RMSD is very large: 13.41019052680435
+for the frame 598 ligand RMSD is very large: 13.777621338666442
+for the frame 599 ligand RMSD is very large: 13.600733826941655
+for the frame 600 ligand RMSD is very large: 13.862242575456815
+for the frame 601 ligand RMSD is very large: 13.80683713281752
+for the frame 602 ligand RMSD is very large: 13.738647369924932
+for the frame 603 ligand RMSD is very large: 13.763514208214081
+for the frame 604 ligand RMSD is very large: 13.711613118485573
+for the frame 605 ligand RMSD is very large: 14.092163790017553
+for the frame 606 ligand RMSD is very large: 13.40647638281064
+for the frame 607 ligand RMSD is very large: 14.164233361008177
+for the frame 608 ligand RMSD is very large: 14.29880317451372
+for the frame 609 ligand RMSD is very large: 14.013259392402915
+for the frame 610 ligand RMSD is very large: 13.922715196595723
+for the frame 611 ligand RMSD is very large: 14.017318623870178
+for the frame 612 ligand RMSD is very large: 13.95305005858347
+for the frame 613 ligand RMSD is very large: 13.979028159031966
+for the frame 614 ligand RMSD is very large: 14.043166973320806
+for the frame 615 ligand RMSD is very large: 14.676605084526347
+for the frame 616 ligand RMSD is very large: 14.075170639465744
+for the frame 617 ligand RMSD is very large: 14.223153219616275
+for the frame 618 ligand RMSD is very large: 14.093144599218283
+for the frame 619 ligand RMSD is very large: 14.053504108926779
+for the frame 620 ligand RMSD is very large: 13.77027686604702
+for the frame 621 ligand RMSD is very large: 13.146192043501038
+for the frame 622 ligand RMSD is very large: 12.762766668882307
+for the frame 623 ligand RMSD is very large: 12.783107063854885
+for the frame 624 ligand RMSD is very large: 12.594508800806558
+for the frame 625 ligand RMSD is very large: 12.703708128865845
+for the frame 626 ligand RMSD is very large: 12.842819475955386
+for the frame 627 ligand RMSD is very large: 12.516529662737488
+for the frame 628 ligand RMSD is very large: 13.042554964105644
+for the frame 629 ligand RMSD is very large: 12.784467669161348
+for the frame 630 ligand RMSD is very large: 12.227598283466246
+for the frame 631 ligand RMSD is very large: 13.104107097266095
+for the frame 632 ligand RMSD is very large: 12.845737352636718
+for the frame 633 ligand RMSD is very large: 13.616042422345554
+for the frame 634 ligand RMSD is very large: 13.567933818610925
+for the frame 635 ligand RMSD is very large: 13.547353915946648
+for the frame 636 ligand RMSD is very large: 13.662734569370048
+for the frame 637 ligand RMSD is very large: 12.601519861006953
+for the frame 638 ligand RMSD is very large: 12.420156418176404
+for the frame 639 ligand RMSD is very large: 12.651021938052272
+for the frame 640 ligand RMSD is very large: 12.355653482272048
+for the frame 641 ligand RMSD is very large: 12.299227958684428
+for the frame 642 ligand RMSD is very large: 12.194470791659013
+for the frame 643 ligand RMSD is very large: 12.711480231103582
+for the frame 644 ligand RMSD is very large: 12.824925074054711
+for the frame 645 ligand RMSD is very large: 13.00953247025818
+for the frame 646 ligand RMSD is very large: 12.765120312053725
+for the frame 647 ligand RMSD is very large: 12.667640104640226
+for the frame 648 ligand RMSD is very large: 12.974176297940733
+for the frame 649 ligand RMSD is very large: 12.265060358588126
+for the frame 650 ligand RMSD is very large: 12.090914569399766
+for the frame 651 ligand RMSD is very large: 12.247113956426306
+for the frame 652 ligand RMSD is very large: 12.918263539608795
+for the frame 653 ligand RMSD is very large: 13.425007658866607
+for the frame 654 ligand RMSD is very large: 13.731458244687145
+for the frame 655 ligand RMSD is very large: 13.546708385642365
+for the frame 656 ligand RMSD is very large: 14.000712445853784
+for the frame 657 ligand RMSD is very large: 13.632051295455897
+for the frame 658 ligand RMSD is very large: 13.679395711624732
+for the frame 659 ligand RMSD is very large: 13.878254420072226
+for the frame 660 ligand RMSD is very large: 13.559999688904472
+for the frame 661 ligand RMSD is very large: 13.816185621547948
+for the frame 662 ligand RMSD is very large: 14.023651339772172
+for the frame 663 ligand RMSD is very large: 13.797361644358066
+for the frame 664 ligand RMSD is very large: 13.90424083786104
+for the frame 665 ligand RMSD is very large: 14.10458534923345
+for the frame 666 ligand RMSD is very large: 13.910813063432279
+for the frame 667 ligand RMSD is very large: 14.03776729231664
+for the frame 668 ligand RMSD is very large: 13.793727383370241
+for the frame 669 ligand RMSD is very large: 13.849355674584324
+for the frame 670 ligand RMSD is very large: 14.150666970671514
+for the frame 671 ligand RMSD is very large: 13.995039280620295
+for the frame 672 ligand RMSD is very large: 14.37647273281018
+for the frame 673 ligand RMSD is very large: 14.256397569406678
+for the frame 674 ligand RMSD is very large: 14.063548865999339
+for the frame 675 ligand RMSD is very large: 14.210027385037417
+for the frame 676 ligand RMSD is very large: 14.64945345060775
+for the frame 677 ligand RMSD is very large: 15.669960805895593
+for the frame 678 ligand RMSD is very large: 16.51673759480904
+for the frame 679 ligand RMSD is very large: 16.91980163838309
+for the frame 680 ligand RMSD is very large: 17.269680598088687
+for the frame 681 ligand RMSD is very large: 16.955236122995704
+for the frame 682 ligand RMSD is very large: 16.581728248837234
+for the frame 683 ligand RMSD is very large: 16.608328641802675
+for the frame 684 ligand RMSD is very large: 16.573304142817637
+for the frame 685 ligand RMSD is very large: 16.97979748712591
+for the frame 686 ligand RMSD is very large: 17.88880824598362
+for the frame 687 ligand RMSD is very large: 18.302367710681775
+for the frame 688 ligand RMSD is very large: 18.147955625117046
+for the frame 689 ligand RMSD is very large: 18.712236047470597
+for the frame 690 ligand RMSD is very large: 20.072311231781644
+for the frame 691 ligand RMSD is very large: 21.39285474018039
+for the frame 692 ligand RMSD is very large: 23.590849280676995
+for the frame 693 ligand RMSD is very large: 26.239246436961473
+for the frame 694 ligand RMSD is very large: 29.238021894475384
+for the frame 695 ligand RMSD is very large: 30.95665530704977
+for the frame 696 ligand RMSD is very large: 32.681260433668704
+for the frame 697 ligand RMSD is very large: 35.112306305017064
+for the frame 698 ligand RMSD is very large: 38.374112447701656
+for the frame 699 ligand RMSD is very large: 42.28406851598062
+Start HB analysis 03:09:47.460078
+Start WB analysis 03:10:51.115514
+Start collecting IFPs:  03:21:30.113729
+Start building IFP table:  05:16:25.559147
+IFP database is ready  05:16:26.114101
+++++Will be saved +++++ ['']
+0 700 700
+0 700 700
+0 700 700
+0 700 700
+0 700 700
+0 700 700
+0 700 700
+0 700 700
+0 700 700
+0 700 700
+0 700 700
+0 700 700
+0 700 700
+0 700 700
+Complete TRJ  //hits/basement/mcm/kokhda/b2AR//RAMD-2020.2/TRSL51-10/traj_comp_whole.xtc 4668
+Complete TRJ  //hits/basement/mcm/kokhda/b2AR//RAMD-2020.2/TRSL51-11/traj_comp_whole.xtc 1621
+Complete TRJ  //hits/basement/mcm/kokhda/b2AR//RAMD-2020.2/TRSL51-12/traj_comp_whole.xtc 3704
+Complete TRJ  //hits/basement/mcm/kokhda/b2AR//RAMD-2020.2/TRSL51-13/traj_comp_whole.xtc 5124
+Complete TRJ  //hits/basement/mcm/kokhda/b2AR//RAMD-2020.2/TRSL51-14/traj_comp_whole.xtc 936
+Complete TRJ  //hits/basement/mcm/kokhda/b2AR//RAMD-2020.2/TRSL51-15/traj_comp_whole.xtc 6522
+Complete TRJ  //hits/basement/mcm/kokhda/b2AR//RAMD-2020.2/TRSL51-9/traj_comp_whole.xtc 4221

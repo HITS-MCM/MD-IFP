@@ -1,0 +1,512 @@
+//hits/basement/mcm/kokhda/MuscM2/4MQT/ACh-CHL-lipid14-fixed-cleanBS
+======================= ACh-CHL-lipid14-fixed-cleanBS ===============================
+Atoms found in the MOL2 file:  ['C01', 'N02', 'C03', 'C04', 'C05', 'C06', 'O062', 'C063', 'C063', 'O063', 'H011', 'H012', 'H013', 'H031', 'H032', 'H033', 'H041', 'H042', 'H043', 'H051', 'H052', 'H061', 'H061', 'H062', 'H062', 'H063']
+...............Ligand properties:................
+Acceptor ['O063']
+PosIonizable ['N02']
+Hydrophobe ['C063']
+............Important! ........
+The following residue names will be used to identify ligand in the PDB file:  ['IXO']
+Ligand atoms found in the trajectory  IXO
+ligand name:       IXO
+Equilibration trajectories will be searched using the template:  //hits/basement/mcm/kokhda/MuscM2/4MQT/ACh-CHL-lipid14-fixed-cleanBS//Gromacs/Replica*/*xtc
+5  Equilibration trajectories found
+Dissociation trajectories will be searched using the template:  //hits/basement/mcm/kokhda/MuscM2/4MQT/ACh-CHL-lipid14-fixed-cleanBS//RAMD//TRJFA3*/*whole.xtc
+14  RAMD traj. found in  //hits/basement/mcm/kokhda/MuscM2/4MQT/ACh-CHL-lipid14-fixed-cleanBS//RAMD/
+
+ 8 None NAMD generated 5; RAMD generated 1  
+ tau= 0.199 +- 0.019 [0.044, 0.153, 0.383, 0.212, 0.14100000000000001, 0.108, 0.275, 0.47600000000000003, 0.043000000000000003, 0.52, 0.21, 0.201, 0.536, 0.035]
+==================   ACh-CHL-lipid14-fixed-cleanBS   =======================
+
+
+>>>>>>>>>>>>>>>>> Replica  0 :   
+
+>>>>>>>>>= 0 //hits/basement/mcm/kokhda/MuscM2/4MQT/ACh-CHL-lipid14-fixed-cleanBS//RAMD/TRJFA3-1/traj_comp_whole.xtc
+total number of frames= 212; file size 89 M
+>>>sub-system selected  (resname IXO) or  protein or (resname MG MN CA Mg Mn) or (resname WAT HOH SOL TIP3) or ( resname  CHL OL PC PE PA )  or ((resid 88:100) and (not type H)) or ((resid 122:126) and (not type H))
+will be analyzed  211 frames
+traj# 0 RMSD protein:  2.646037836500248 RMSD ligand:  1.756883304025768 ligand residue name IXO
+for the frame 206 ligand RMSD is very large: 11.221984507087951
+for the frame 207 ligand RMSD is very large: 17.933250301587762
+for the frame 208 ligand RMSD is very large: 26.31773478209699
+for the frame 209 ligand RMSD is very large: 33.48258558826533
+for the frame 210 ligand RMSD is very large: 40.38753888081402
+Start HB analysis 13:01:53.391216
+Start WB analysis 13:02:09.499809
+Start collecting IFPs:  13:02:45.917122
+Start building IFP table:  13:13:08.089361
+IFP database is ready  13:13:08.218672
+>>>>>>>>>= 1 //hits/basement/mcm/kokhda/MuscM2/4MQT/ACh-CHL-lipid14-fixed-cleanBS//RAMD/TRJFA3-10/traj_comp_whole.xtc
+total number of frames= 275; file size 115 M
+>>>sub-system selected  (resname IXO) or  protein or (resname MG MN CA Mg Mn) or (resname WAT HOH SOL TIP3) or ( resname  CHL OL PC PE PA )  or ((resid 88:100) and (not type H)) or ((resid 122:126) and (not type H))
+will be analyzed  274 frames
+traj# 0 RMSD protein:  2.641113456775456 RMSD ligand:  2.615369043998964 ligand residue name IXO
+for the frame 263 ligand RMSD is very large: 10.759847354279152
+for the frame 264 ligand RMSD is very large: 12.38963911585148
+for the frame 265 ligand RMSD is very large: 15.811478463328879
+for the frame 266 ligand RMSD is very large: 17.466068243585706
+for the frame 267 ligand RMSD is very large: 18.929688590806055
+for the frame 268 ligand RMSD is very large: 24.438952711094068
+for the frame 269 ligand RMSD is very large: 29.723035654288413
+for the frame 270 ligand RMSD is very large: 31.742196525124243
+for the frame 271 ligand RMSD is very large: 33.56545205520179
+for the frame 272 ligand RMSD is very large: 37.98577840854196
+for the frame 273 ligand RMSD is very large: 43.59075505964128
+Start HB analysis 13:18:45.673035
+Start WB analysis 13:19:07.007249
+Start collecting IFPs:  13:19:58.183315
+Start building IFP table:  13:33:44.522909
+IFP database is ready  13:33:44.685203
+>>>>>>>>>= 2 //hits/basement/mcm/kokhda/MuscM2/4MQT/ACh-CHL-lipid14-fixed-cleanBS//RAMD/TRJFA3-11/traj_comp_whole.xtc
+total number of frames= 43; file size 18 M
+>>>sub-system selected  (resname IXO) or  protein or (resname MG MN CA Mg Mn) or (resname WAT HOH SOL TIP3) or ( resname  CHL OL PC PE PA )  or ((resid 88:100) and (not type H)) or ((resid 122:126) and (not type H))
+will be analyzed  42 frames
+traj# 0 RMSD protein:  2.6484021494491694 RMSD ligand:  2.2155969803410294 ligand residue name IXO
+for the frame 37 ligand RMSD is very large: 11.783179117014885
+for the frame 38 ligand RMSD is very large: 15.227343657336895
+for the frame 39 ligand RMSD is very large: 21.196127599108088
+for the frame 40 ligand RMSD is very large: 29.770466542448315
+for the frame 41 ligand RMSD is very large: 36.99056192899253
+Start HB analysis 13:34:35.593324
+Start WB analysis 13:34:38.655385
+Start collecting IFPs:  13:34:45.466182
+Start building IFP table:  13:36:59.102903
+IFP database is ready  13:36:59.129209
+>>>>>>>>>= 3 //hits/basement/mcm/kokhda/MuscM2/4MQT/ACh-CHL-lipid14-fixed-cleanBS//RAMD/TRJFA3-12/traj_comp_whole.xtc
+total number of frames= 153; file size 64 M
+>>>sub-system selected  (resname IXO) or  protein or (resname MG MN CA Mg Mn) or (resname WAT HOH SOL TIP3) or ( resname  CHL OL PC PE PA )  or ((resid 88:100) and (not type H)) or ((resid 122:126) and (not type H))
+will be analyzed  152 frames
+traj# 0 RMSD protein:  2.6412273278381244 RMSD ligand:  1.466043021681588 ligand residue name IXO
+for the frame 143 ligand RMSD is very large: 11.460477899269899
+for the frame 144 ligand RMSD is very large: 11.969001708677606
+for the frame 145 ligand RMSD is very large: 13.67953509263404
+for the frame 146 ligand RMSD is very large: 14.78839011477017
+for the frame 147 ligand RMSD is very large: 18.133521052564866
+for the frame 148 ligand RMSD is very large: 21.899304678697444
+for the frame 149 ligand RMSD is very large: 26.4254600120412
+for the frame 150 ligand RMSD is very large: 34.41486751045269
+for the frame 151 ligand RMSD is very large: 40.915433912552025
+Start HB analysis 13:40:08.865567
+Start WB analysis 13:40:20.902828
+Start collecting IFPs:  13:40:52.329926
+Start building IFP table:  13:48:38.363923
+IFP database is ready  13:48:38.459662
+>>>>>>>>>= 4 //hits/basement/mcm/kokhda/MuscM2/4MQT/ACh-CHL-lipid14-fixed-cleanBS//RAMD/TRJFA3-13/traj_comp_whole.xtc
+total number of frames= 141; file size 59 M
+>>>sub-system selected  (resname IXO) or  protein or (resname MG MN CA Mg Mn) or (resname WAT HOH SOL TIP3) or ( resname  CHL OL PC PE PA )  or ((resid 88:100) and (not type H)) or ((resid 122:126) and (not type H))
+will be analyzed  140 frames
+traj# 0 RMSD protein:  2.64059079299975 RMSD ligand:  1.4794764464305405 ligand residue name IXO
+for the frame 109 ligand RMSD is very large: 10.65796144200352
+for the frame 110 ligand RMSD is very large: 11.169277716204878
+for the frame 111 ligand RMSD is very large: 10.874633818343076
+for the frame 112 ligand RMSD is very large: 11.894358967619187
+for the frame 113 ligand RMSD is very large: 14.813455150649464
+for the frame 114 ligand RMSD is very large: 15.546196551250596
+for the frame 115 ligand RMSD is very large: 16.172086544091684
+for the frame 116 ligand RMSD is very large: 15.78443506359857
+for the frame 117 ligand RMSD is very large: 16.294744619606515
+for the frame 118 ligand RMSD is very large: 19.38556497873706
+for the frame 119 ligand RMSD is very large: 19.38199396494907
+for the frame 120 ligand RMSD is very large: 18.986247626803074
+for the frame 121 ligand RMSD is very large: 20.129423532914544
+for the frame 122 ligand RMSD is very large: 19.82952245576143
+for the frame 123 ligand RMSD is very large: 20.93746703279473
+for the frame 124 ligand RMSD is very large: 20.494703757030965
+for the frame 125 ligand RMSD is very large: 20.324692520482127
+for the frame 126 ligand RMSD is very large: 20.98592552214127
+for the frame 127 ligand RMSD is very large: 21.439358650065834
+for the frame 128 ligand RMSD is very large: 21.013398846047107
+for the frame 129 ligand RMSD is very large: 21.438789840127157
+for the frame 130 ligand RMSD is very large: 22.37436433710033
+for the frame 131 ligand RMSD is very large: 22.683750024342146
+for the frame 132 ligand RMSD is very large: 23.60134475944628
+for the frame 133 ligand RMSD is very large: 28.04813183770782
+for the frame 134 ligand RMSD is very large: 34.85433665808567
+for the frame 135 ligand RMSD is very large: 42.69083629810024
+for the frame 136 ligand RMSD is very large: 51.33359999986027
+for the frame 137 ligand RMSD is very large: 59.84602643097878
+for the frame 138 ligand RMSD is very large: 69.15437716738131
+for the frame 139 ligand RMSD is very large: 75.36989645457469
+Start HB analysis 13:51:21.230604
+Start WB analysis 13:51:32.195218
+Start collecting IFPs:  13:51:50.894695
+Start building IFP table:  13:58:50.828746
+IFP database is ready  13:58:50.909341
+>>>>>>>>>= 5 //hits/basement/mcm/kokhda/MuscM2/4MQT/ACh-CHL-lipid14-fixed-cleanBS//RAMD/TRJFA3-14/traj_comp_whole.xtc
+total number of frames= 536; file size 225 M
+>>>sub-system selected  (resname IXO) or  protein or (resname MG MN CA Mg Mn) or (resname WAT HOH SOL TIP3) or ( resname  CHL OL PC PE PA )  or ((resid 88:100) and (not type H)) or ((resid 122:126) and (not type H))
+will be analyzed  535 frames
+traj# 0 RMSD protein:  2.6437380198826332 RMSD ligand:  1.9452068567270622 ligand residue name IXO
+for the frame 532 ligand RMSD is very large: 14.900764427836112
+for the frame 533 ligand RMSD is very large: 24.790635018105696
+for the frame 534 ligand RMSD is very large: 33.32202825903593
+Start HB analysis 14:09:31.681962
+Start WB analysis 14:10:13.063033
+Start collecting IFPs:  14:11:21.984132
+Start building IFP table:  14:38:26.933629
+IFP database is ready  14:38:27.327066
+>>>>>>>>>= 6 //hits/basement/mcm/kokhda/MuscM2/4MQT/ACh-CHL-lipid14-fixed-cleanBS//RAMD/TRJFA3-15/traj_comp_whole.xtc
+total number of frames= 35; file size 14 M
+>>>sub-system selected  (resname IXO) or  protein or (resname MG MN CA Mg Mn) or (resname WAT HOH SOL TIP3) or ( resname  CHL OL PC PE PA )  or ((resid 88:100) and (not type H)) or ((resid 122:126) and (not type H))
+will be analyzed  34 frames
+traj# 0 RMSD protein:  2.652557169077195 RMSD ligand:  3.68769721660735 ligand residue name IXO
+for the frame 6 ligand RMSD is very large: 10.864755192233755
+for the frame 7 ligand RMSD is very large: 12.61198859048622
+for the frame 8 ligand RMSD is very large: 12.942937766704581
+for the frame 9 ligand RMSD is very large: 14.967674527668112
+for the frame 10 ligand RMSD is very large: 14.603556475568896
+for the frame 11 ligand RMSD is very large: 14.739088782261055
+for the frame 12 ligand RMSD is very large: 14.761770912492521
+for the frame 13 ligand RMSD is very large: 16.073625673849392
+for the frame 14 ligand RMSD is very large: 18.586963845090644
+for the frame 15 ligand RMSD is very large: 19.90707627527315
+for the frame 16 ligand RMSD is very large: 21.539764116665832
+for the frame 17 ligand RMSD is very large: 24.763728216167383
+for the frame 18 ligand RMSD is very large: 26.306321647252684
+for the frame 19 ligand RMSD is very large: 25.954317452120076
+for the frame 20 ligand RMSD is very large: 27.289160456150455
+for the frame 21 ligand RMSD is very large: 29.056122938534802
+for the frame 22 ligand RMSD is very large: 30.210803511464192
+for the frame 23 ligand RMSD is very large: 31.328325874215082
+for the frame 24 ligand RMSD is very large: 31.394908315146797
+for the frame 25 ligand RMSD is very large: 32.391743838819096
+for the frame 26 ligand RMSD is very large: 33.346580468248625
+for the frame 27 ligand RMSD is very large: 36.01708088139477
+for the frame 28 ligand RMSD is very large: 38.42211554357835
+for the frame 29 ligand RMSD is very large: 42.98687208022567
+for the frame 30 ligand RMSD is very large: 47.78120317779579
+for the frame 31 ligand RMSD is very large: 55.61549331423599
+for the frame 32 ligand RMSD is very large: 62.77784457802763
+for the frame 33 ligand RMSD is very large: 72.23826298214682
+Start HB analysis 14:39:19.324065
+Start WB analysis 14:39:21.761198
+Start collecting IFPs:  14:39:27.922137
+Start building IFP table:  14:41:19.167758
+IFP database is ready  14:41:19.182197
+>>>>>>>>>= 7 //hits/basement/mcm/kokhda/MuscM2/4MQT/ACh-CHL-lipid14-fixed-cleanBS//RAMD/TRJFA3-2/traj_comp_whole.xtc
+total number of frames= 201; file size 84 M
+>>>sub-system selected  (resname IXO) or  protein or (resname MG MN CA Mg Mn) or (resname WAT HOH SOL TIP3) or ( resname  CHL OL PC PE PA )  or ((resid 88:100) and (not type H)) or ((resid 122:126) and (not type H))
+will be analyzed  200 frames
+traj# 0 RMSD protein:  2.647816309984124 RMSD ligand:  4.696681686082329 ligand residue name IXO
+for the frame 164 ligand RMSD is very large: 11.287431267633169
+for the frame 165 ligand RMSD is very large: 13.393890311164322
+for the frame 166 ligand RMSD is very large: 13.668482357183251
+for the frame 167 ligand RMSD is very large: 13.427628789976023
+for the frame 168 ligand RMSD is very large: 13.395377437583482
+for the frame 169 ligand RMSD is very large: 13.080013389502005
+for the frame 170 ligand RMSD is very large: 13.452738227652262
+for the frame 171 ligand RMSD is very large: 13.482715128621694
+for the frame 172 ligand RMSD is very large: 13.930320523968042
+for the frame 173 ligand RMSD is very large: 14.38095425389424
+for the frame 174 ligand RMSD is very large: 15.866992710874623
+for the frame 175 ligand RMSD is very large: 15.764376845351787
+for the frame 176 ligand RMSD is very large: 15.550355048682897
+for the frame 177 ligand RMSD is very large: 15.449484104772559
+for the frame 178 ligand RMSD is very large: 15.881847787807983
+for the frame 179 ligand RMSD is very large: 16.193952860925226
+for the frame 180 ligand RMSD is very large: 17.399999303038364
+for the frame 181 ligand RMSD is very large: 19.32052735791197
+for the frame 182 ligand RMSD is very large: 19.737097885852734
+for the frame 183 ligand RMSD is very large: 19.901369943674197
+for the frame 184 ligand RMSD is very large: 20.420995310396226
+for the frame 185 ligand RMSD is very large: 20.98991241292893
+for the frame 186 ligand RMSD is very large: 23.213023245326053
+for the frame 187 ligand RMSD is very large: 25.10578893388724
+for the frame 188 ligand RMSD is very large: 24.943733955091247
+for the frame 189 ligand RMSD is very large: 28.304011994694303
+for the frame 190 ligand RMSD is very large: 30.213777324591373
+for the frame 191 ligand RMSD is very large: 30.295216392575053
+for the frame 192 ligand RMSD is very large: 30.606246972060166
+for the frame 193 ligand RMSD is very large: 31.517473675307862
+for the frame 194 ligand RMSD is very large: 34.09564929105869
+for the frame 195 ligand RMSD is very large: 38.57199892963868
+for the frame 196 ligand RMSD is very large: 46.76214341165896
+for the frame 197 ligand RMSD is very large: 54.287857006103096
+for the frame 198 ligand RMSD is very large: 59.75003614645212
+for the frame 199 ligand RMSD is very large: 67.73235663611509
+Start HB analysis 14:45:06.990665
+Start WB analysis 14:45:21.890473
+Start collecting IFPs:  14:45:58.737814
+Start building IFP table:  14:56:01.758602
+IFP database is ready  14:56:01.856337
+>>>>>>>>>= 8 //hits/basement/mcm/kokhda/MuscM2/4MQT/ACh-CHL-lipid14-fixed-cleanBS//RAMD/TRJFA3-3/traj_comp_whole.xtc
+total number of frames= 520; file size 218 M
+>>>sub-system selected  (resname IXO) or  protein or (resname MG MN CA Mg Mn) or (resname WAT HOH SOL TIP3) or ( resname  CHL OL PC PE PA )  or ((resid 88:100) and (not type H)) or ((resid 122:126) and (not type H))
+will be analyzed  519 frames
+traj# 0 RMSD protein:  2.6462440807431817 RMSD ligand:  1.9840895410427979 ligand residue name IXO
+for the frame 482 ligand RMSD is very large: 10.373113095816425
+for the frame 483 ligand RMSD is very large: 13.428180168959024
+for the frame 484 ligand RMSD is very large: 12.917449039138358
+for the frame 485 ligand RMSD is very large: 12.838555195638268
+for the frame 486 ligand RMSD is very large: 13.147298055022365
+for the frame 487 ligand RMSD is very large: 13.82736149893431
+for the frame 488 ligand RMSD is very large: 13.764723293175422
+for the frame 489 ligand RMSD is very large: 13.694130621102428
+for the frame 490 ligand RMSD is very large: 15.669299006813993
+for the frame 491 ligand RMSD is very large: 16.425716460088147
+for the frame 492 ligand RMSD is very large: 16.9310727100133
+for the frame 493 ligand RMSD is very large: 17.517625977168034
+for the frame 494 ligand RMSD is very large: 18.059104492857095
+for the frame 495 ligand RMSD is very large: 18.549958733315403
+for the frame 496 ligand RMSD is very large: 19.69467410978543
+for the frame 497 ligand RMSD is very large: 20.59925493654194
+for the frame 498 ligand RMSD is very large: 24.426986850394783
+for the frame 499 ligand RMSD is very large: 27.284434760805425
+for the frame 500 ligand RMSD is very large: 31.280508248847315
+for the frame 501 ligand RMSD is very large: 35.12467008026431
+for the frame 502 ligand RMSD is very large: 37.73034892781484
+for the frame 503 ligand RMSD is very large: 42.23704739317576
+for the frame 504 ligand RMSD is very large: 46.295500606479905
+for the frame 505 ligand RMSD is very large: 50.53199679728525
+for the frame 506 ligand RMSD is very large: 52.27981717779635
+for the frame 507 ligand RMSD is very large: 53.38530341442966
+for the frame 508 ligand RMSD is very large: 54.05160767723368
+for the frame 509 ligand RMSD is very large: 54.72003259773223
+for the frame 510 ligand RMSD is very large: 55.720400734085125
+for the frame 511 ligand RMSD is very large: 55.67115920546386
+for the frame 512 ligand RMSD is very large: 55.67464399638217
+for the frame 513 ligand RMSD is very large: 56.796648880437395
+for the frame 514 ligand RMSD is very large: 57.24583042668984
+for the frame 515 ligand RMSD is very large: 59.281941034859884
+for the frame 516 ligand RMSD is very large: 62.010310409212565
+for the frame 517 ligand RMSD is very large: 65.37794039798995
+for the frame 518 ligand RMSD is very large: 69.11046298674555
+Start HB analysis 15:07:44.820483
+Start WB analysis 15:08:28.627486
+Start collecting IFPs:  15:10:00.311719
+Start building IFP table:  15:37:27.958873
+IFP database is ready  15:37:28.319519
+>>>>>>>>>= 9 //hits/basement/mcm/kokhda/MuscM2/4MQT/ACh-CHL-lipid14-fixed-cleanBS//RAMD/TRJFA3-4/traj_comp_whole.xtc
+total number of frames= 476; file size 200 M
+>>>sub-system selected  (resname IXO) or  protein or (resname MG MN CA Mg Mn) or (resname WAT HOH SOL TIP3) or ( resname  CHL OL PC PE PA )  or ((resid 88:100) and (not type H)) or ((resid 122:126) and (not type H))
+will be analyzed  475 frames
+traj# 0 RMSD protein:  2.6421937759782 RMSD ligand:  2.620868456472754 ligand residue name IXO
+for the frame 460 ligand RMSD is very large: 10.573581935950052
+for the frame 461 ligand RMSD is very large: 14.320849379447171
+for the frame 462 ligand RMSD is very large: 15.388175283266325
+for the frame 463 ligand RMSD is very large: 16.352520184702676
+for the frame 464 ligand RMSD is very large: 18.723363747746596
+for the frame 465 ligand RMSD is very large: 23.751634376334042
+for the frame 466 ligand RMSD is very large: 26.686123344637554
+for the frame 467 ligand RMSD is very large: 27.95870863824648
+for the frame 468 ligand RMSD is very large: 30.39967572727502
+for the frame 469 ligand RMSD is very large: 34.91026373785498
+for the frame 470 ligand RMSD is very large: 40.70472303331884
+for the frame 471 ligand RMSD is very large: 46.8392452726887
+for the frame 472 ligand RMSD is very large: 54.62894015613396
+for the frame 473 ligand RMSD is very large: 63.681084662427125
+for the frame 474 ligand RMSD is very large: 71.10660416595223
+Start HB analysis 15:46:34.343983
+Start WB analysis 15:47:13.041525
+Start collecting IFPs:  15:48:46.774374
+Start building IFP table:  16:12:58.695911
+IFP database is ready  16:12:58.986362
+>>>>>>>>>= 10 //hits/basement/mcm/kokhda/MuscM2/4MQT/ACh-CHL-lipid14-fixed-cleanBS//RAMD/TRJFA3-5/traj_comp_whole.xtc
+total number of frames= 108; file size 45 M
+>>>sub-system selected  (resname IXO) or  protein or (resname MG MN CA Mg Mn) or (resname WAT HOH SOL TIP3) or ( resname  CHL OL PC PE PA )  or ((resid 88:100) and (not type H)) or ((resid 122:126) and (not type H))
+will be analyzed  107 frames
+traj# 0 RMSD protein:  2.643488474734404 RMSD ligand:  2.1804238121220707 ligand residue name IXO
+for the frame 98 ligand RMSD is very large: 10.438653290983073
+for the frame 99 ligand RMSD is very large: 12.142683681707913
+for the frame 100 ligand RMSD is very large: 13.986757200984915
+for the frame 101 ligand RMSD is very large: 15.514750454311452
+for the frame 102 ligand RMSD is very large: 17.693146066640857
+for the frame 103 ligand RMSD is very large: 21.682442733654494
+for the frame 104 ligand RMSD is very large: 29.70823180491899
+for the frame 105 ligand RMSD is very large: 34.43500400522035
+for the frame 106 ligand RMSD is very large: 39.145013257203026
+Start HB analysis 16:14:58.283460
+Start WB analysis 16:15:06.401749
+Start collecting IFPs:  16:15:20.679345
+Start building IFP table:  16:20:44.216752
+IFP database is ready  16:20:44.281310
+>>>>>>>>>= 11 //hits/basement/mcm/kokhda/MuscM2/4MQT/ACh-CHL-lipid14-fixed-cleanBS//RAMD/TRJFA3-6/traj_comp_whole.xtc
+total number of frames= 383; file size 161 M
+>>>sub-system selected  (resname IXO) or  protein or (resname MG MN CA Mg Mn) or (resname WAT HOH SOL TIP3) or ( resname  CHL OL PC PE PA )  or ((resid 88:100) and (not type H)) or ((resid 122:126) and (not type H))
+will be analyzed  382 frames
+traj# 0 RMSD protein:  2.640968670408349 RMSD ligand:  1.486503143821579 ligand residue name IXO
+for the frame 328 ligand RMSD is very large: 10.168466254359645
+for the frame 330 ligand RMSD is very large: 10.673968824923636
+for the frame 331 ligand RMSD is very large: 12.270080148567224
+for the frame 332 ligand RMSD is very large: 12.317473663352407
+for the frame 333 ligand RMSD is very large: 12.45982509612915
+for the frame 334 ligand RMSD is very large: 12.609589125790277
+for the frame 335 ligand RMSD is very large: 12.865266968362304
+for the frame 336 ligand RMSD is very large: 12.940317258541667
+for the frame 337 ligand RMSD is very large: 13.929439039360785
+for the frame 338 ligand RMSD is very large: 13.711264089994042
+for the frame 339 ligand RMSD is very large: 13.735412180708774
+for the frame 340 ligand RMSD is very large: 13.815462240995
+for the frame 341 ligand RMSD is very large: 13.997786017829467
+for the frame 342 ligand RMSD is very large: 13.935314688460078
+for the frame 343 ligand RMSD is very large: 14.461429495133693
+for the frame 344 ligand RMSD is very large: 14.046352838328206
+for the frame 345 ligand RMSD is very large: 14.364439682920654
+for the frame 346 ligand RMSD is very large: 14.273240342860069
+for the frame 347 ligand RMSD is very large: 14.28732538261925
+for the frame 348 ligand RMSD is very large: 14.11587416383493
+for the frame 349 ligand RMSD is very large: 14.754135739042068
+for the frame 350 ligand RMSD is very large: 14.730419293221699
+for the frame 351 ligand RMSD is very large: 14.494067692157406
+for the frame 352 ligand RMSD is very large: 14.858479457575216
+for the frame 353 ligand RMSD is very large: 14.701440154689157
+for the frame 354 ligand RMSD is very large: 14.512203617790652
+for the frame 355 ligand RMSD is very large: 14.432884659613055
+for the frame 356 ligand RMSD is very large: 15.876605575224183
+for the frame 357 ligand RMSD is very large: 17.651898139139846
+for the frame 358 ligand RMSD is very large: 18.34829045229919
+for the frame 359 ligand RMSD is very large: 18.674461120990586
+for the frame 360 ligand RMSD is very large: 19.09631940118284
+for the frame 361 ligand RMSD is very large: 19.88417902538843
+for the frame 362 ligand RMSD is very large: 21.950678015868807
+for the frame 363 ligand RMSD is very large: 22.508811823243786
+for the frame 364 ligand RMSD is very large: 22.221775744875057
+for the frame 365 ligand RMSD is very large: 22.010065705833515
+for the frame 366 ligand RMSD is very large: 22.203595563719542
+for the frame 367 ligand RMSD is very large: 22.17496818254778
+for the frame 368 ligand RMSD is very large: 22.73722564644478
+for the frame 369 ligand RMSD is very large: 23.24180480508909
+for the frame 370 ligand RMSD is very large: 22.523702513750703
+for the frame 371 ligand RMSD is very large: 23.137985080353513
+for the frame 372 ligand RMSD is very large: 23.8594530742073
+for the frame 373 ligand RMSD is very large: 27.37021322770837
+for the frame 374 ligand RMSD is very large: 29.57534587704927
+for the frame 375 ligand RMSD is very large: 30.336158946951972
+for the frame 376 ligand RMSD is very large: 31.45078914152193
+for the frame 377 ligand RMSD is very large: 33.00999768300859
+for the frame 378 ligand RMSD is very large: 40.166770285804866
+for the frame 379 ligand RMSD is very large: 48.913147389196496
+for the frame 380 ligand RMSD is very large: 59.0700287626052
+for the frame 381 ligand RMSD is very large: 67.79325898648791
+Start HB analysis 16:28:02.384168
+Start WB analysis 16:28:31.530011
+Start collecting IFPs:  16:29:25.028948
+Start building IFP table:  16:49:03.543440
+IFP database is ready  16:49:03.816883
+>>>>>>>>>= 12 //hits/basement/mcm/kokhda/MuscM2/4MQT/ACh-CHL-lipid14-fixed-cleanBS//RAMD/TRJFA3-7/traj_comp_whole.xtc
+total number of frames= 210; file size 88 M
+>>>sub-system selected  (resname IXO) or  protein or (resname MG MN CA Mg Mn) or (resname WAT HOH SOL TIP3) or ( resname  CHL OL PC PE PA )  or ((resid 88:100) and (not type H)) or ((resid 122:126) and (not type H))
+will be analyzed  209 frames
+traj# 0 RMSD protein:  2.6377764073390977 RMSD ligand:  1.8062429270811893 ligand residue name IXO
+for the frame 28 ligand RMSD is very large: 10.59035191046562
+for the frame 29 ligand RMSD is very large: 10.899923176870333
+for the frame 30 ligand RMSD is very large: 10.473853751123047
+for the frame 31 ligand RMSD is very large: 12.260190499893863
+for the frame 32 ligand RMSD is very large: 12.245749258404983
+for the frame 33 ligand RMSD is very large: 12.189208520111134
+for the frame 34 ligand RMSD is very large: 11.948243944504982
+for the frame 35 ligand RMSD is very large: 10.536627843906876
+for the frame 173 ligand RMSD is very large: 10.294829489009263
+for the frame 174 ligand RMSD is very large: 14.03039798758113
+for the frame 175 ligand RMSD is very large: 13.924621495490669
+for the frame 176 ligand RMSD is very large: 14.389898628695015
+for the frame 177 ligand RMSD is very large: 14.145170659132614
+for the frame 178 ligand RMSD is very large: 14.789761933628668
+for the frame 179 ligand RMSD is very large: 13.99848831347726
+for the frame 180 ligand RMSD is very large: 14.511974675635017
+for the frame 181 ligand RMSD is very large: 14.427421819201221
+for the frame 182 ligand RMSD is very large: 14.643795745006429
+for the frame 183 ligand RMSD is very large: 14.576501326521871
+for the frame 184 ligand RMSD is very large: 14.500832135703146
+for the frame 185 ligand RMSD is very large: 14.007665877759113
+for the frame 186 ligand RMSD is very large: 14.47987411739841
+for the frame 187 ligand RMSD is very large: 14.598372298148474
+for the frame 188 ligand RMSD is very large: 14.994574142600428
+for the frame 189 ligand RMSD is very large: 15.847187701822989
+for the frame 190 ligand RMSD is very large: 17.981111515797114
+for the frame 191 ligand RMSD is very large: 19.515844819514097
+for the frame 192 ligand RMSD is very large: 19.454976803191993
+for the frame 193 ligand RMSD is very large: 21.579171403647702
+for the frame 194 ligand RMSD is very large: 26.28706405924429
+for the frame 195 ligand RMSD is very large: 30.458799244171068
+for the frame 196 ligand RMSD is very large: 33.85380962175939
+for the frame 197 ligand RMSD is very large: 38.87412965931859
+for the frame 198 ligand RMSD is very large: 46.9898134872301
+for the frame 199 ligand RMSD is very large: 57.624668442957734
+for the frame 200 ligand RMSD is very large: 62.912266276569156
+for the frame 201 ligand RMSD is very large: 62.85742555674402
+for the frame 202 ligand RMSD is very large: 63.114457648546626
+for the frame 203 ligand RMSD is very large: 64.68899570860917
+for the frame 204 ligand RMSD is very large: 67.91969059562564
+for the frame 205 ligand RMSD is very large: 72.54983105151959
+for the frame 206 ligand RMSD is very large: 71.60670332687805
+for the frame 207 ligand RMSD is very large: 71.72459132427718
+for the frame 208 ligand RMSD is very large: 73.65922209568771
+Start HB analysis 16:53:10.127677
+Start WB analysis 16:53:25.790845
+Start collecting IFPs:  16:53:55.810972
+Start building IFP table:  17:04:04.958266
+IFP database is ready  17:04:05.079753
+>>>>>>>>>= 13 //hits/basement/mcm/kokhda/MuscM2/4MQT/ACh-CHL-lipid14-fixed-cleanBS//RAMD/TRJFA3-9/traj_comp_whole.xtc
+total number of frames= 44; file size 18 M
+>>>sub-system selected  (resname IXO) or  protein or (resname MG MN CA Mg Mn) or (resname WAT HOH SOL TIP3) or ( resname  CHL OL PC PE PA )  or ((resid 88:100) and (not type H)) or ((resid 122:126) and (not type H))
+will be analyzed  43 frames
+traj# 0 RMSD protein:  2.651916516644742 RMSD ligand:  2.2108067527879096 ligand residue name IXO
+for the frame 23 ligand RMSD is very large: 10.040952902904953
+for the frame 24 ligand RMSD is very large: 10.584651262915358
+for the frame 25 ligand RMSD is very large: 10.46603649581531
+for the frame 26 ligand RMSD is very large: 11.506433185512805
+for the frame 27 ligand RMSD is very large: 12.813778128845177
+for the frame 28 ligand RMSD is very large: 14.284782220611719
+for the frame 29 ligand RMSD is very large: 15.136606941287136
+for the frame 30 ligand RMSD is very large: 15.44985146207469
+for the frame 31 ligand RMSD is very large: 16.288523863640155
+for the frame 32 ligand RMSD is very large: 17.41458564584662
+for the frame 33 ligand RMSD is very large: 17.080376439253804
+for the frame 34 ligand RMSD is very large: 17.2581764588447
+for the frame 35 ligand RMSD is very large: 17.641815761280263
+for the frame 36 ligand RMSD is very large: 17.12483407048593
+for the frame 37 ligand RMSD is very large: 17.38718890783915
+for the frame 38 ligand RMSD is very large: 18.052574872933143
+for the frame 39 ligand RMSD is very large: 19.814673268305103
+for the frame 40 ligand RMSD is very large: 24.8653359507914
+for the frame 41 ligand RMSD is very large: 32.11038218459462
+for the frame 42 ligand RMSD is very large: 40.7603355336947
+Start HB analysis 17:04:57.989687
+Start WB analysis 17:05:01.049855
+Start collecting IFPs:  17:05:07.619876
+Start building IFP table:  17:07:21.077988
+IFP database is ready  17:07:21.101570
+++++Will be saved +++++ ['']
+0 211 211
+0 211 211
+0 274 274
+0 274 274
+0 42 42
+0 42 42
+0 152 152
+0 152 152
+0 140 140
+0 140 140
+0 535 535
+0 535 535
+0 34 34
+0 34 34
+0 200 200
+0 200 200
+0 519 519
+0 519 519
+0 475 475
+0 475 475
+0 107 107
+0 107 107
+0 382 382
+0 382 382
+0 209 209
+0 209 209
+0 43 43
+0 43 43
+Complete TRJ  //hits/basement/mcm/kokhda/MuscM2/4MQT/ACh-CHL-lipid14-fixed-cleanBS//RAMD/TRJFA3-1/traj_comp_whole.xtc 212
+Complete TRJ  //hits/basement/mcm/kokhda/MuscM2/4MQT/ACh-CHL-lipid14-fixed-cleanBS//RAMD/TRJFA3-10/traj_comp_whole.xtc 275
+Complete TRJ  //hits/basement/mcm/kokhda/MuscM2/4MQT/ACh-CHL-lipid14-fixed-cleanBS//RAMD/TRJFA3-11/traj_comp_whole.xtc 43
+Complete TRJ  //hits/basement/mcm/kokhda/MuscM2/4MQT/ACh-CHL-lipid14-fixed-cleanBS//RAMD/TRJFA3-12/traj_comp_whole.xtc 153
+Complete TRJ  //hits/basement/mcm/kokhda/MuscM2/4MQT/ACh-CHL-lipid14-fixed-cleanBS//RAMD/TRJFA3-13/traj_comp_whole.xtc 141
+Complete TRJ  //hits/basement/mcm/kokhda/MuscM2/4MQT/ACh-CHL-lipid14-fixed-cleanBS//RAMD/TRJFA3-14/traj_comp_whole.xtc 536
+Complete TRJ  //hits/basement/mcm/kokhda/MuscM2/4MQT/ACh-CHL-lipid14-fixed-cleanBS//RAMD/TRJFA3-15/traj_comp_whole.xtc 35
+Complete TRJ  //hits/basement/mcm/kokhda/MuscM2/4MQT/ACh-CHL-lipid14-fixed-cleanBS//RAMD/TRJFA3-2/traj_comp_whole.xtc 201
+Complete TRJ  //hits/basement/mcm/kokhda/MuscM2/4MQT/ACh-CHL-lipid14-fixed-cleanBS//RAMD/TRJFA3-3/traj_comp_whole.xtc 520
+Complete TRJ  //hits/basement/mcm/kokhda/MuscM2/4MQT/ACh-CHL-lipid14-fixed-cleanBS//RAMD/TRJFA3-4/traj_comp_whole.xtc 476
+Complete TRJ  //hits/basement/mcm/kokhda/MuscM2/4MQT/ACh-CHL-lipid14-fixed-cleanBS//RAMD/TRJFA3-5/traj_comp_whole.xtc 108
+Complete TRJ  //hits/basement/mcm/kokhda/MuscM2/4MQT/ACh-CHL-lipid14-fixed-cleanBS//RAMD/TRJFA3-6/traj_comp_whole.xtc 383
+Complete TRJ  //hits/basement/mcm/kokhda/MuscM2/4MQT/ACh-CHL-lipid14-fixed-cleanBS//RAMD/TRJFA3-7/traj_comp_whole.xtc 210
+Complete TRJ  //hits/basement/mcm/kokhda/MuscM2/4MQT/ACh-CHL-lipid14-fixed-cleanBS//RAMD/TRJFA3-9/traj_comp_whole.xtc 44
