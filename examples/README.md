@@ -7,4 +7,4 @@
     IFP_contacts_quickView.py
 ### 3. Analysis of tauRAMD interaction fingerprints:
 ####    For running on a google account: 2nd_tutorial_tauRAMD_dissociationmechanism.ipynb
-####    Fpr rimmomg on an [ebrains](https://wiki.ebrains.eu/bin/view/Main/) account: 
+####    For running on an [ebrains](https://wiki.ebrains.eu/bin/view/Main/) account: 
