@@ -7,6 +7,7 @@ The MD-IFP is a python workflow for the generation and analysis of protein-ligan
 
 ## Cite us
 If you use or adapt MD-IFP for your own research projects please cite us.
+
 *D. B. Kokh, B. Doser, S. Richter, F. Ormersbach, X. Cheng , R.C. Wade  "A Workflow for Exploring Ligand Dissociation from a Macromolecule: Efficient Random Acceleration Molecular Dynamics Simulation and Interaction Fingerprints Analysis of Ligand Trajectories" J. Chem Phys.(2020) 158  125102  doi: 10.1063/5.0019088.*
 <br><br>  
 
@@ -32,7 +33,7 @@ If you use or adapt MD-IFP for your own research projects please cite us.
 
 4. Application to Protein-Protein complexes:
    
-   Results are implemented in [Dissociation mechanisms of protein-protein complexes](./Protein-Protein/Examplex-JN/IFP_analysis_RAMD_PP.ipynb)
+   Results are implemented in [Dissociation mechanisms of protein-protein complexes](./Protein-Protein/Examples-JN/IFP_analysis_RAMD_PP.ipynb)
 <br><br>
 
 ## Packages requirements:
@@ -54,7 +55,7 @@ If you don't need visualization, you can skip this, but JN must be edited accord
 
    4. __MDAnalysis__ Version 1.1.1 - (Important: an old module for H-bond analysis is currently used, it will be removed in version 2.0 ). Best is to use the __MD-IFP.yml__ file to generate a python environment in anaconda (as shown below).
 
-__Chimera__ - only for the scripts used for preprocessing pdb files (structure protonation and generation of the ligand mol2 file; not required if protonation and mol2 file are already prepared by a user)
+   5. __Chimera__ - only for the scripts used for preprocessing pdb files (structure protonation and generation of the ligand mol2 file; not required if protonation and mol2 file are already prepared by a user)
     
 __Codes were written on Python 3.x and tested on Python 3.8__
 
@@ -64,7 +65,6 @@ __To configure environment in anaconda use:__
 conda env create -f MD-IFP.yml
 ```
 <br><br>
-
 ## Acknowledgments
 
 This open source software code was developed in part in the __Human Brain Project__, funded from the European Union’s Horizon 2020 Framework Programme for Research and Innovation under Specific Grant Agreements  No. 785907 (Human Brain Project  SGA2).

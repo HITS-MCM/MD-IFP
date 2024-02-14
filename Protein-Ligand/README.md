@@ -56,13 +56,13 @@ Protein-Ligand Interaction Fingerprint (IFP) computations (only functions of IFP
 Generation and analysis of IFPs for conventional MD simulations and for RAMD trajectories for Muscarinic Receptor M2 in a membrane. In this example, __Trajectories.py__ is used for pre-processing trajectories and __IFP_generation.py__ is used for computing IFPs:
    1. Computing IFPs for a single equilibration trajectory (dcd format)
    2. Computing IFPs for a set of trajectories: system equilibration and ligand dissociation (RAMD) trajectories (dcd format)
-![HSP90](/images/ifp_RAMD_4MQT.png)
+![HSP90](./images/ifp_RAMD_4MQT.png)
 *Illustration of PL IFP variation in one of the dissociation trajectories of iperoxo bound to muscarinic receptor M2.*
 
 ### III. __IFP_analysis_RAMD_HSP90.ipynb:__ 
 
 This example shows how RAMD dissociation trajectories can be analyzed using pre-generated IFP databases.
-![HSP90](/images/cluster-traj.png)
+![HSP90](./images/cluster-traj.png)
 
 *This plot illustrates ligand dissociation pathways in a graph representation derived from clustering RAMD PL trajectories in IFP space and plotting them with respect to the ligand COM from the initial bound position.*
    
@@ -70,7 +70,7 @@ This example shows how RAMD dissociation trajectories can be analyzed using pre-
 
 JN designed for validation of the IFP sctipt on 40 PDB complexes (used in paper J. Chem. Phys. 2020, doi: 10.1063/5.0019088)
 
-![HSP90](/images/IFP_validation.png)
+![HSP90](./images/IFP_validation.png)
 
 *Validation of PL IFP on 40 PDB structures:*
    - false positives (FP) if no other method (FLIP, PLIP, LPC, MOE) was able to find them 
