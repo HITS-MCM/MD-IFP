@@ -51,8 +51,9 @@ for dir_trj in glob.glob(DIR_all+DIR_ramd):
         start_time = -2
         print("----------------------",dir_trj, glob.glob("*out"))
         os.chdir(dir_trj)
-        for out_file in glob.glob("*out"):
-            os.system(" grep \" GROMACS will be stopped\"  " +out_file+" > tmp")
+        
+        os.system(" grep 'GROMACS will be stopped' *out > ./tmp")
+        
         try:
             with open(dir_trj+"/tmp", 'r') as f:
                 r = f.readline()
