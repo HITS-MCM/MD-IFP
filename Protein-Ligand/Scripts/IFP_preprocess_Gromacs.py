@@ -61,6 +61,11 @@ for dir_trj in glob.glob(DIR_all+DIR_ramd):
                     frames = int(r[r.find("after")+6:r.find("steps")-1])/500 # saved frames
                     start_time = int((frames - frame2save))   # start from in ps
                     print(dir_trj,">>>>>>>>>>>>>>>>>>>>>>>>>>>>>",frames,start_time)
+
+                    # this is because no frame with a number lower than 0 can be selected
+                    # as the start frame
+                    if start_time < 0:
+                        start_time = 0
                 else:
                     start_time = -1
         except:
@@ -69,8 +74,7 @@ for dir_trj in glob.glob(DIR_all+DIR_ramd):
         if start_time == -1:
             print(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Skip ",dir_trj)
             continue
-        elif start_time < 0:
-            start_time = 0
+
     with open(dir_trj+"/preprocess.sh", 'w') as f_bash:
        f_bash.write("#!/bin/bash\n")
        f_bash.write("cd "+dir_trj+" ;  gmx trjconv -f "+ramd_trj+"  -s "+ramd_tpr +"  -pbc nojump -o "+ramd_trj_fixed1 +" -b "+str(start_time)+" <<< 0\n")
