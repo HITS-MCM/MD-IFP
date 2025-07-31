@@ -534,7 +534,6 @@ def Map_3D_grid(df_tot_to_save,filename):
 ##################################
 ################################
 
-
 def plot_graph_New(df_ext,file_save = "",ligand = "",draw_round = False,water = False):
     """
     Graph-based  representation of ligand dissociation trajectories
@@ -741,9 +740,315 @@ def plot_graph_New(df_ext,file_save = "",ligand = "",draw_round = False,water = 
     return(np.argsort(label_rmsd))
 
 
+#############################################
+#
+# Currently working version of the COM graph plotting function
+#
+###############################################
+
+def plot_graph_COM_v1(df_ext, file_save = "", ligand= "", draw_round= False, water= False, edges_show=True, diss_show= True):
+
+    """
+    Graph-based representation of ligand dissociation trajectories
+    
+    Parameters:
+    
+    df_ext - IFP database
+    
+    file_save - file name to save an image
+    
+    ligand - generate dissociation pathways for a selected ligand only (note, that clusters properties still include data for all ligands)
+    
+    draw_round - type of representation (plain/round)
+    
+    water - visualize number of water molecules in the ligand solvation shell for each clutser
+    
+    
+    Returns:
+    
+    cluster label sorted by increase of the average ligand RMSD in each cluster
+    
+    """
+
+    from matplotlib.patches
+    import ArrowStyle
+    
+    from matplotlib.patches
+    import Ellipse
+    
+    from scipy.spatial
+    import distance
+    
+    df_ext_ligand = df_ext
+
+    if len(ligand) > 0:
+
+    try:
+        df_ext_ligand = df_ext[df_ext.ligand.isin(ligand)]
+        print("Edges will be shown for one ligand:",ligand)
+    except:
+        print("ligand "+ligand+" was not found in the database. Whole database will be analyzed")
+
+    #-------- collect data ------------------------
+
+    label_rmsd = []
+    # rmsd
+
+    label_com = []
+    # COM
+
+    label_size = []
+
+    label_water = []
+
+
+
+    labels_list,nodes = np.unique(df_ext.label.values, return_counts=True)
+    edges = np.zeros((labels_list.shape[0],labels_list.shape[0]),dtype = float)
+    coms = np.zeros((labels_list.shape[0],labels_list.shape[0]),dtype = float)
+    label_egress = np.zeros((labels_list.shape[0]),dtype = float)
+
+    df_min_rmsd = df_ext[df_ext.RMSDl == df_ext.RMSDl.min()]
+    min_rmsd = df_min_rmsd.RMSDl.values[0]
+    min_COM = np.array([df_min_rmsd.COM_x.values[0],df_min_rmsd.COM_y.values[0],df_min_rmsd.COM_z.values[0]])
+
+    # cluster properies: firxt loop over clusters
+
+    for i,l in enumerate(labels_list):
+        t = df_ext[df_ext.label == l]
+        # t_lig = df_ext[df_ext.label == l]
+
+        label_rmsd.append(t.RMSDl.mean())
+
+        com_av = []
+
+        for com in zip(t.COM_x.values,t.COM_y.values,t.COM_z.values):
+            com_av.append(np.linalg.norm(np.asarray([float(com[0]),float(com[1]),float(com[2])])-min_COM))
+            
+        label_com.append(np.mean(com_av))
+        label_size.append(100*t.shape[0]/df_ext.shape[0])
+
+        if water:
+            label_water.append(int(t.WAT.mean()))
+
+        for j in range(0,i):
+            coms[i,j] = distance.euclidean([label_com[i]],[label_com[j]])
+            
+        print("cluster ",l,"STD of COM: ", t.COM_x.std(),t.COM_y.std(),t.COM_z.std(),"STD of RMSD: ",t.RMSDl.std(),"Water:",label_water)
+
+
+    # transitions between clusters:
+
+    for l,(df_label,df_time) in enumerate(zip(df_ext_ligand.label.values,df_ext_ligand.time.values)):
+        if df_time != 0 and l != 0: 
+            if(df_ext_ligand.label.values[l-1] != df_label):
+                edges[df_ext_ligand.label.values[l-1],df_label] += labels_list.shape[0]/df_ext_ligand.label.values.shape[0]
+            
+    # find last frames in trajectories
+    for j in np.unique(df_ext.Repl.values):
+        df_ext_Repl = df_ext[df_ext.Repl== j]
+        for i in np.unique(df_ext_Repl.Traj.values.astype(int)):
+            df_ext_Repl_Traj = df_ext_Repl[df_ext_Repl.Traj == str(i)]
+            label_egress[df_ext_Repl_Traj.label.values[-1]] += 100./df_ext_ligand.label.values.shape[0]
+
+    #-----------------------------------------------------
+
+    #-------- Coloring of nodes by the average RMSD in the clusters-----------
+    #indx_first_com = np.argwhere((np.asarray(label_rmsd) == min(label_rmsd)))[0][0]
+    dist_rmsd = []
+
+    for i,l in enumerate(labels_list):
+        dist_rmsd.append(np.round(np.abs(label_rmsd[i]-min_rmsd),2))
+    dist_com = (10*np.asarray(label_com)/np.max(label_com)).astype(int)
+    dist_rmsd = (10*np.asarray(dist_rmsd)/np.max(dist_rmsd)).astype(int)
+
+    print("COM displacement in each cluster to be used for plotting:",dist_com)
+    print("RMSDs displacement in each cluster to be used for plotting:",dist_rmsd)
+    print("COM min:",min_COM)
+    print("RMSD min:",min_rmsd)
+
+    #------------------------------------------------
+
+    print( min(label_rmsd),dist_com)
+    
+    fig = plt.figure(figsize = (8,3),facecolor='w',dpi=150)
+    gs = GS.GridSpec(1,2, width_ratios=[1,1],wspace=0.2)
+    ax = plt.subplot(gs[0])
+    plt.title("Transition density")
+    
+    ec = plt.imshow(edges,cmap='Oranges')
+    cbar = plt.colorbar(ec)
+    cbar.set_label('density')
+    ax = plt.subplot(gs[1])
+    plt.title("Flow")
+    
+    flow = edges-edges.T
+    ec1 = plt.imshow(flow,cmap='Greys')
+    cbar = plt.colorbar(ec1)
+    cbar.set_label('density')
+
+    # plt.show()
+    
+    print("Flow:\n",(flow*10000.).astype(int))
+    
+    
+    #------------------------------------------------------------
+    
+    starting_labels = df_ext[df_ext.time == 0].label.values # list of clusters of all first frames in all trajectories
+    
+    starting_list, starting_count = np.unique(starting_labels, return_counts=True) # list of clusters that appear as first frame
+
+    #------------ older cluster position-------------
+    
+    label2scale = label_com #label_rmsd # what value will be on x
+    label2order = labels_list #nodes #np.roll(labels_list,1) #nodes # what value will be on y
+    index_x_t = np.argsort(label2scale)
+    
+    # x and y positions of each cluster in the plot
+    label_x = np.zeros((len(labels_list)),dtype = float) 
+    label_y = np.zeros((len(labels_list)),dtype = float) 
+    color_com = np.zeros((len(labels_list)),dtype = float) 
+    
+    # order label_x: 
+    max_x = max(label2scale)
+    
+    step_x = 1.0*max_x/max(label2scale)
+    
+    # first clusters that contains first frames of trajectories
+
+    for i,s in enumerate(starting_list):
+        label_x[s] = label2scale[s]*step_x
+        label_y[s] = label2order[s]
+        color_com[s] = 10*dist_rmsd[s] #dist_com[s]
+    
+    # then the rest 
+    j = 0
+    for l in index_x_t:
+        if (labels_list[l] not in starting_list):
+            while (label_x[j] != 0):
+                j += 1
+                if(j == len(labels_list)): break
+            if(j == len(labels_list)):break
+            label_x[labels_list[l]] = label2scale[l]*step_x
+            label_y[labels_list[l]] = label2order[l]
+            color_com[labels_list[l]] = 10*dist_rmsd[l] #dist_com[l]
+    
+    # since the last node is usually very far from all others we will damp it's color
+    color_com[color_com == np.max(color_com)] = max(int(np.sort(color_com)[-2]+0.25*(np.sort(color_com)[-1]-np.sort(color_com)[-2])),np.sort(color_com)[-1]-45)
+    print("COLORS (i.e. averade RMSD) to be used in each cluster for plotting: ",color_com)
+    
+    # set logarythmic scale
+    label_x = np.log10(label_x)
+    x_tick_lable = []
+    x_tick_pos = []
+    
+    for k in range(0,2):
+        for ii,i in enumerate(range(pow(10,k),pow(10,k+1),pow(10,k))):
+            x_tick_lable.append(str(i))
+            x_tick_pos.append(np.log10(i))
+            
+            if(i > 25): break
+
+    if draw_round:
+        alpha = 0.9*2*3.14*label_x/np.max(label_x)
+        alpha_regular = 0.9*2*3.14*np.asarray(x_tick_pos)/max(x_tick_pos)
+        label_y = np.sin(alpha)
+        label_x = np.cos(alpha)
+        fig = plt.figure(figsize=(8, 8),dpi=150)
+        gs = GS.GridSpec(1, 1) #, width_ratios=[1, 1])
+        ax = plt.subplot(gs[0])
+        plt.scatter(x=np.cos(alpha_regular),y=np.sin(alpha_regular),c='k',s=10)
+        for l,p in zip(x_tick_lable,x_tick_pos):
+            ax.annotate(str(l)+"A", (1.2*np.cos(0.9*2*3.14*p/max(x_tick_pos)),np.sin(0.9*2*3.14*p/max(x_tick_pos))),fontsize=14,color="gray")
+        plt.xlim(-1.3,1.3)
+        plt.ylim(-1.3,1.3)
+    else:
+        fig = plt.figure(figsize=(10, 7),dpi=150)
+        gs = GS.GridSpec(1, 1) #, width_ratios=[1, 1])
+        
+        ax = plt.subplot(gs[0])
+        ax.set_ylabel('Cluster', fontsize=18)
+        ax.set_xlabel(r'< $\Delta{COM} > [Angstrom]$', fontsize=16)
+        plt.xticks(x_tick_pos,x_tick_lable, fontsize=16)
+        ax.tick_params(labelsize=16)
+        plt.ylim(-0.8,len(label_y)+0.8)
+        for i,x in enumerate(np.sort(label_x)):
+            plt.text(x,max(label_y)+2,str(i+1), fontsize=16)
+        # plt.grid()
+
+
+    el = Ellipse((2, -1), 0.4, 0.4) 
+    for l in range(0,label_x.shape[0]):
+        for n in range(l+1,label_x.shape[0]):
+            # total number of transitions in both directions
+            if (label_rmsd[l] > label_rmsd[n]):
+                a = n
+                b = l
+            else:
+                a = l
+                b = n
+            xy=(label_x[b],label_y[b])
+            xytext=(label_x[a],label_y[a])
+            if edges_show :
+                if (edges[l,n]> 0) :
+                    if (np.abs((label_rmsd[l] - label_rmsd[n])) > 0.5 * min(label_rmsd)) or (draw_round == False):
+                        ax.annotate("", xy=xy, xycoords='data', 
+                                    xytext=xytext, textcoords='data', size=edges[l,n]*500,
+                                    arrowprops=dict(arrowstyle="Fancy,head_length=0.2, head_width=0.4, tail_width=0.2", 
+                                                    fc="orange", ec="none", alpha=0.4, connectionstyle="arc3,rad=-0.5"),)
+        
+                    if (np.abs((label_rmsd[l] - label_rmsd[n])) > 0.5 * min(label_rmsd)) or (draw_round == False):
+                        ax.annotate("", xy=xytext, xycoords='data', 
+                                    xytext=xy, textcoords='data',
+                                    size=edges[l,n]*600,
+                                    arrowprops=dict(arrowstyle="Fancy,head_length=0.2, head_width=0.4, tail_width=0.2", 
+                                                    fc="orange", ec="none", alpha=0.4, connectionstyle="arc3,rad=-0.5"),)
+        
+             # the flow
+            flow = edges[l,n] - edges[n,l] # flow l ----> n
+            if (flow > 0) :
+                a = l
+                b = n
+            else:
+                a = n
+                b = l 
+            xy=(label_x[b],label_y[b])
+            xytext=(label_x[a],label_y[a])
+    
+            ax.annotate("", xy=xy, 
+                        xycoords='data', xytext=xytext, 
+                        textcoords='data', size=np.abs(flow)*16000, 
+                        arrowprops=dict(arrowstyle="Fancy,head_length=0.2, head_width=0.4, tail_width=0.2", 
+                                        fc="0.6", ec="none", alpha=0.8,
+                                        connectionstyle="arc3,rad=-0.5"),
+                       )
+
+    # -----------------------plot nodes 
+    if diss_show:
+        for x,y,egress in zip(label_x,label_y,label_egress/np.sum(label_egress)):
+            if egress > 0:
+                ax.scatter(x,y,facecolors='none',s=500*np.asarray(max(label_size)+egress/np.sum(label_egress)),color='r',lw=2)
+                
+    if water:
+        ax.scatter(label_x,label_y,facecolors='none',c=color_com,edgecolors="lightskyblue",s=500*np.asarray(label_size),cmap='Oranges',\
+                   linewidths=np.asarray(label_water))
+        print("WATERS:",np.asarray(label_water))
+    
+    else:
+        ax.scatter(label_x,label_y,facecolors='none',c=color_com,edgecolors="k",s=500*np.asarray(label_size),cmap='Oranges')
+    
+    #---------------------------------------------
+
+    if file_save != "": 
+        plt.savefig(file_save,dpi=300)
+    # else: plt.show()
+
+    return(np.argsort(label_com))
+
 
 ##############################################
 #
+# Deprecated
 #
 ##################################################
 
@@ -997,7 +1302,7 @@ def plot_graph_COM(df_ext,file_save = "",ligand = "",draw_round = False,water = 
     if file_save != "": plt.savefig(file_save,dpi=300)  
     else:    plt.show()
         
-    return(np.argsort(label_com))
+    return(np.argsort(label_com))                            
 
 
 ##############################################
