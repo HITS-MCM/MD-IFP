@@ -30,6 +30,9 @@ from pandas import ExcelFile
 from matplotlib import *
 from matplotlib import cm
 import matplotlib.ticker
+from matplotlib.patches import ArrowStyle
+from matplotlib.patches import Ellipse
+
 import  pylab as plt
 import seaborn
 import seaborn as sns
@@ -38,11 +41,9 @@ import matplotlib.gridspec as GS
 #import ipywidgets as widgets
 
 from scipy import stats
-
-
+from scipy.spatial import distance
 
 from Scripts.IFP_generation import *
-
 
 from sklearn import linear_model
 from sklearn import preprocessing
@@ -769,15 +770,6 @@ def plot_graph_COM_v1(df_ext, file_save = "", ligand= "", draw_round= False, wat
     cluster label sorted by increase of the average ligand RMSD in each cluster
     
     """
-
-    from matplotlib.patches
-    import ArrowStyle
-    
-    from matplotlib.patches
-    import Ellipse
-    
-    from scipy.spatial
-    import distance
     
     df_ext_ligand = df_ext
 
@@ -1066,9 +1058,7 @@ def plot_graph_COM(df_ext,file_save = "",ligand = "",draw_round = False,water = 
     Returns:
     cluster label sorted by increase of the average ligand RMSD in each cluster
     """
-    from matplotlib.patches import ArrowStyle
-    from matplotlib.patches import Ellipse
-    from scipy.spatial import distance
+
     df_ext_ligand = df_ext
     if len(ligand)> 0:
         try:
@@ -1325,9 +1315,7 @@ def plot_graph_COM_old(df_ext,file_save = "",ligand = "",draw_round = False,wate
     Returns:
     cluster label sorted by increase of the average ligand RMSD in each cluster
     """
-    from matplotlib.patches import ArrowStyle
-    from matplotlib.patches import Ellipse
-    from scipy.spatial import distance
+
     df_ext_ligand = df_ext
     if len(ligand)> 0:
         try:
