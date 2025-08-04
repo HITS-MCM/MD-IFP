@@ -549,9 +549,7 @@ def plot_graph_New(df_ext,file_save = "",ligand = "",draw_round = False,water = 
     Returns:
     cluster label sorted by increase of the average ligand RMSD in each cluster
     """
-    from matplotlib.patches import ArrowStyle
-    from matplotlib.patches import Ellipse
-    from scipy.spatial import distance
+
     df_ext_ligand = df_ext
     if len(ligand)> 0:
         try:
@@ -775,11 +773,11 @@ def plot_graph_COM_v1(df_ext, file_save = "", ligand= "", draw_round= False, wat
 
     if len(ligand) > 0:
 
-    try:
-        df_ext_ligand = df_ext[df_ext.ligand.isin(ligand)]
-        print("Edges will be shown for one ligand:",ligand)
-    except:
-        print("ligand "+ligand+" was not found in the database. Whole database will be analyzed")
+        try:
+            df_ext_ligand = df_ext[df_ext.ligand.isin(ligand)]
+            print("Edges will be shown for one ligand:",ligand)
+        except:
+            print("ligand "+ligand+" was not found in the database. Whole database will be analyzed")
 
     #-------- collect data ------------------------
 
