@@ -102,24 +102,17 @@
 #     table_combine(df_HB,df_prop,ligand_name) -> table with IFP with hydrogen bonds
 #     PLOT_tauRAMD_dataset(tr,tr_name = None,types_list = [""])
 #        
-#     
-
-
+#
 
 import warnings
 warnings.filterwarnings("ignore")
 
-#%load_ext autoreload
-#%autoreload 2
-
-
-
-
 import glob, os
 import sys
 import subprocess
-import numpy as np
+import builtins
 
+import numpy as np
 import pandas as pd
 from pandas import ExcelFile 
 
@@ -376,7 +369,10 @@ class trajectories:
                 for key in a.index: all_namd_prop.loc[nmd][key] = a.loc[key] 
             fig = plt.figure(figsize=(6, 4))
             sns.heatmap(all_namd_prop, cmap="Greys", linewidths=.5)
-            plt.show()
+            
+            if builtins.SHOULD_SHOW_PLOTS:
+                plt.show()
+                
             return(all_namd_prop)
 
 
@@ -728,7 +724,10 @@ class trajectories:
                 ax2.set_ylim(0,1.2*np.max(np.asarray(replicas_distr).flatten()))
             except:
                 pass
-            plt.show()
+            
+            if builtins.SHOULD_SHOW_PLOTS:
+                plt.show()
+                
             return
 
        
@@ -771,8 +770,6 @@ class trajectories:
         Rgr0 = ref.select_atoms("protein").radius_of_gyration() 
         all_atoms = ref.select_atoms("not type H")
         zmin = 100
-
-                                       
 
         return
 
@@ -1626,7 +1623,10 @@ def Plot_traj(rmsd_prot,rmsd_lig,auxi_rmsd,Rgr_prot,Rgr_lig,name):
     ax1.set_title('Radius of gyration',fontsize=14)
     ax1.set_xlabel('frame',fontsize=12)
     ax1.set_ylabel('Rgr_ligand /0.1 x RGR_protein',fontsize=12)
-    plt.show()       
+    
+    if builtins.SHOULD_SHOW_PLOTS:
+        plt.show()
+    
     return()
 
 
@@ -1720,7 +1720,10 @@ def PLOT_tauRAMD_dataset(tr,tr_name = None,types_list = [""],xlims=[0,4]):
     plt.grid(True)
     plt.xticks(x_tick_pos,x_tick_lable, fontsize=16)
     plt.yticks(y_tick_pos,y_tick_lable, fontsize=16)
-    plt.show()
+    
+    if builtins.SHOULD_SHOW_PLOTS:
+        plt.show()
+    
     print("Without Outliers: R2 =",r_value)
     return
 

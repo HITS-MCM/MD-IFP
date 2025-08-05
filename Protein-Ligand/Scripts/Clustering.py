@@ -49,10 +49,6 @@ from sklearn import linear_model
 from sklearn import preprocessing
 from sklearn.cluster import KMeans
 
-
-
-
-
 ########################################################################
 # Sorting of residue by number
 ########################################################################
@@ -733,9 +729,12 @@ def plot_graph_New(df_ext,file_save = "",ligand = "",draw_round = False,water = 
         print("WATERS:",np.asarray(label_water))
     else:
         ax.scatter(label_x,label_y,facecolors='none',c=color_com,edgecolors="k",s=500*np.asarray(label_size),cmap='Oranges')
-    if file_save != "": plt.savefig(file_save,dpi=300)  
-    else:    plt.show()
         
+    if file_save != "":
+        plt.savefig(file_save,dpi=300)
+    elif builtins.SHOULD_SHOW_PLOTS:
+        plt.show()
+
     return(np.argsort(label_rmsd))
 
 
@@ -877,8 +876,9 @@ def plot_graph_COM_v1(df_ext, file_save = "", ligand= "", draw_round= False, wat
     cbar = plt.colorbar(ec1)
     cbar.set_label('density')
 
-    # plt.show()
-    
+    if builtins.SHOULD_SHOW_PLOTS:
+        plt.show()
+
     print("Flow:\n",(flow*10000.).astype(int))
     
     
@@ -1031,7 +1031,8 @@ def plot_graph_COM_v1(df_ext, file_save = "", ligand= "", draw_round= False, wat
 
     if file_save != "": 
         plt.savefig(file_save,dpi=300)
-    # else: plt.show()
+    elif builtins.SHOULD_SHOW_PLOTS:
+        plt.show()
 
     return(np.argsort(label_com))
 
@@ -1138,7 +1139,8 @@ def plot_graph_COM(df_ext,file_save = "",ligand = "",draw_round = False,water = 
     ec1 = plt.imshow(flow,cmap='Greys')
     cbar = plt.colorbar(ec1)
     cbar.set_label('density')
-    plt.show()
+    if builtins.SHOULD_SHOW_PLOTS:
+        plt.show()
     print("Flow:\n",(flow*10000.).astype(int))
     
     #------------------------------------------------------------
@@ -1288,7 +1290,9 @@ def plot_graph_COM(df_ext,file_save = "",ligand = "",draw_round = False,water = 
     
     
     if file_save != "": plt.savefig(file_save,dpi=300)  
-    else:    plt.show()
+    elif builtins.SHOULD_SHOW_PLOTS:
+        plt.show()
+
         
     return(np.argsort(label_com))                            
 
@@ -1395,8 +1399,9 @@ def plot_graph_COM_old(df_ext,file_save = "",ligand = "",draw_round = False,wate
     ec1 = plt.imshow(flow,cmap='Greys')
     cbar = plt.colorbar(ec1)
     cbar.set_label('density')
-    plt.show()
-
+    
+    if builtins.SHOULD_SHOW_PLOTS:
+        plt.show()
 
     starting_labels = df_ext[df_ext.time == 0].label.values # list of clusters of all first frames in all trajectories
     starting_list, starting_count = np.unique(starting_labels, return_counts=True) # list of clusters that appear as first frame
@@ -1535,8 +1540,10 @@ def plot_graph_COM_old(df_ext,file_save = "",ligand = "",draw_round = False,wate
     #---------------------------------------------
     
     
-    if file_save != "": plt.savefig(file_save,dpi=300)  
-    else:    plt.show()
+    if file_save != "":
+        plt.savefig(file_save,dpi=300)
+    elif builtins.SHOULD_SHOW_PLOTS:
+        plt.show()
         
     return(np.argsort(label_com))
 
@@ -1587,7 +1594,10 @@ def Plot_COM(df_ext):
         if i == 0:     ax1.set_ylabel('COM [arb. u.]', fontsize=18)  
         else:  ax1.set_ylabel('', fontsize=18)  
         ax1.grid(color='gray', linestyle='-', linewidth=0.2)
-    plt.show()
+        
+    if builtins.SHOULD_SHOW_PLOTS:
+        plt.show()
+        
     return
 
 
@@ -1658,7 +1668,10 @@ def Print_IFP_averaged(df_tot,resi_list_sorted,ligandsi,resi_name_list_sorted,pr
         ax.grid(which="both")
         plt.xlim((-0.6,len(ind_part_resi)+2))
     plt.legend(fontsize=10,loc='upper right', bbox_to_anchor=(1.05, 1.))
-    plt.show()
+    
+    if builtins.SHOULD_SHOW_PLOTS:
+        plt.show()
+    
     return(ind_part_resi)
 
 

@@ -25,9 +25,10 @@
 #     
 
 import glob, os, sys
+import builtins
+
 from Scripts.IFP_generation import *
 from Scripts.Trajectories import *
-
 
 ####
 # Location of your data:
@@ -37,7 +38,14 @@ from Scripts.Trajectories import *
 #  your_path/ligand_name/md/out/*.nc    - trajectories to be analyzed
 ###
 
+# Set this variable to true if you want the plots to open during the IFP generation in separate windows.
+# Note that these plot-windows are blocking.
+# if you want to prototype or use functions from inside a Jupyter-Notebook set:
+# builtins.SHOULD_SHOW_PLOTS = True
+# if you want to run MD-IFP on a cluster or in a looped manner set:
+# builtins.SHOULD_SHOW_PLOTS = False
 
+builtins.SHOULD_SHOW_PLOTS = False
 
 ligand_name = name
 DIR_all = "your_path"+name+"/"

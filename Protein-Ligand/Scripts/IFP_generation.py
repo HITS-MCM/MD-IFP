@@ -54,8 +54,9 @@
 
 import glob, os
 import sys
-import numpy as np
+import builtins
 
+import numpy as np
 import pandas as pd
 from pandas import ExcelFile 
 
@@ -754,8 +755,12 @@ def Plot_IFP(df,contact_collection=None,out_name="",ifp_list = ["HY","AR","HD","
         ax.set_title('Water shell')
         ax.set_xlabel('frame')
         ax.set_ylabel('# of water molecules')
-    if out_name == "":   plt.show()
-    else: plt.savefig(out_name,dpi=300)
+
+    if out_name == "" and builtins.SHOULD_SHOW_PLOTS:
+        plt.show()
+    else:
+        plt.savefig(out_name,dpi=300)
+
     return
 
 
@@ -825,8 +830,13 @@ def Plot_IF_trajectory(df_tot,ifp_type = np.asarray(['AR','HA','HD','HY','IP','I
     plt.bar(np.asarray(range(0,len(columns_sel))),df[columns_sel].mean(),color="",label="all frames",edgecolor ='k',hatch="/")
     plt.xticks(range(0,len(columns_sel)), columns_sel, rotation='vertical',fontsize=10)
     plt.legend(fontsize=10, loc = 'upper left')
-    if save_file != "": plt.savefig(file_save,format='png', dpi=300, bbox_inches='tight',transparent=True) 
-    plt.show()
+    
+    if save_file != "":
+        plt.savefig(file_save,format='png', dpi=300, bbox_inches='tight',transparent=True)
+
+    if builtins.SHOULD_SHOW_PLOTS:
+        plt.show()
+
     return
 
 #############################################
