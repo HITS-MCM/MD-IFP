@@ -27,6 +27,7 @@
 import glob, os, sys
 import builtins
 
+sys.path.append(os.path.abspath(os.path.join(os.getcwd(), '..')))
 from Scripts.IFP_generation import *
 from Scripts.Trajectories import *
 
