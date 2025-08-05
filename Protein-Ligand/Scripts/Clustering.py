@@ -43,6 +43,7 @@ import matplotlib.gridspec as GS
 from scipy import stats
 from scipy.spatial import distance
 
+sys.path.append(os.path.abspath(os.path.join(os.getcwd(), '..')))
 from Scripts.IFP_generation import *
 
 from sklearn import linear_model
