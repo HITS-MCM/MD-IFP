@@ -147,6 +147,7 @@ from MDAnalysis.coordinates.memory import MemoryReader
 #from sklearn import linear_model
 #from sklearn import preprocessing
 
+sys.path.append(os.path.abspath(os.path.join(os.getcwd(), '..')))
 from Scripts.IFP_generation import *
 
  
