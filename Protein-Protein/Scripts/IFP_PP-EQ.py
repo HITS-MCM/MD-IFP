@@ -96,12 +96,12 @@ trj_list_n  = sys.argv[2]
 replica_dir = f"Replica-{trj_list_n}/"
 
 ####modify accordingly####
-PRJ_DIR =  "/hits/fast/mcm/szablods/MD-IFP/RAMD-700-WT-BN-BS"      #insert the directory path containing all the mutants, "mut_name" will be specified in the bash file for running this script
-pdb = "/hits/fast/mcm/szablods/MD-IFP/BN-BS/mutants/WT/ref_with_segids.pdb"                 #insert the directory path containing the ref.pdb structure (prepared with tleap),
-top = "/hits/fast/mcm/szablods/MD-IFP/RAMD-700-WT-BN-BS/Gromacs-large/gromacs.top"             #insert the directory path containing the gromacs topology
+PRJ_DIR =  "xxx"      #insert the directory path containing all the mutants, "mut_name" will be specified in the bash file for running this script
+pdb = "xxx/ref.pdb"                 #insert the directory path containing the ref.pdb structure (prepared with tleap),
+top = "xxx/gromacs.top"             #insert the directory path containing the gromacs topology
 
 #create a folder for EQ outputs
-OUTPUT_DIR = "/hits/fast/mcm/szablods/MD-IFP/"
+OUTPUT_DIR = "xxx/MD-IFP/"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 #resi_lig = [1,109]                   #insert the residue index range for protein 1 (the one where the force is applied, named as lig)
