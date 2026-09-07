@@ -23,7 +23,7 @@
 # Ouputs generated:
 #  - COM_distance-"+Trj+".dat; for every equilibration trajectory a file with protein-protein COM-COM for every frame
 #  - RMSD-"+Trj+".dat; for every equilibration trajectory a file with RMSD
-#  - Water-"+Trj+".dat; for every equilibration trajectory, a file listing number of interfacial and buried waters
+#  - Water Analysis was removed in this version, in order to increase Performance
 #
 # For usage, please adjust directory/file structure accordingly where indicated.
 #
@@ -92,23 +92,29 @@ at_BB_positive = " backbone and name N "
 at_BB_negative = " backbone and name O "
 
 mut_name  = sys.argv[1]
+trj_list_n  = sys.argv[2]
+replica_dir = f"Replica-{trj_list_n}/"
 
-PRJ_DIR =  "xxxx/"+mut_name+"/"      #insert the directory path containing all the mutants, "mut_name" will be specified in the bash file for running this script
-pdb = "xxxx/ref.pdb"                 #insert the directory path containing the ref.pdb structure (prepared with tleap),
-top = "xxxx/gromacs.top"             #insert the directory path containing the gromacs topology
+####modify accordingly####
+PRJ_DIR =  "/hits/fast/mcm/szablods/MD-IFP/RAMD-700-WT-BN-BS"      #insert the directory path containing all the mutants, "mut_name" will be specified in the bash file for running this script
+pdb = "/hits/fast/mcm/szablods/MD-IFP/BN-BS/mutants/WT/ref_with_segids.pdb"                 #insert the directory path containing the ref.pdb structure (prepared with tleap),
+top = "/hits/fast/mcm/szablods/MD-IFP/RAMD-700-WT-BN-BS/Gromacs-large/gromacs.top"             #insert the directory path containing the gromacs topology
 
-resi_lig = [1,109]                   #insert the residue index range for protein 1 (the one where the force is applied, named as lig)
-resi_target = [110,198]              #insert the residue index range for protein 2 (named as target)
+#create a folder for EQ outputs
+OUTPUT_DIR = "/hits/fast/mcm/szablods/MD-IFP/"
+os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-sel_lig = "(resid "+str(resi_lig[0])+"-"+str(resi_lig[1])+"  and (not name H*))"
-sel_target  = "(resid "+str(resi_target[0])+"-"+str(resi_target[1])+" and (not name H*))"
+#resi_lig = [1,109]                   #insert the residue index range for protein 1 (the one where the force is applied, named as lig)
+#resi_target = [110,198]              #insert the residue index range for protein 2 (named as target)
 
-selection = "protein and not name H* and not resname HOH"
+sel_lig = "segid PROA and (not name H*)"               # your ligand
+sel_target = "segid PROB and (not name H*)"  # receptor chains
+selection = "(segid PROA or segid PROB) and not name H*"  # for whole system reduced
 selection1 =  " not name H*"
 
-ramd_dir = "xxxx/"          #insert the directory path containing the GROMACS trajectories of interest
+ramd_dir = "/RAMD-700/"          #insert the directory path containing the GROMACS trajectories of interest
 ramd_trj = "traj_comp.xtc"
-ramd_tpr = "gromacs_eq.tpr"
+ramd_tpr = "gromacs_ramd.tpr"
 ramd_trj_fixed1 = "tr1.xtc"
 ramd_trj_fixed2 = "tr2.xtc"
 ramd_trj_fixed = "tr.xtc"
@@ -116,9 +122,7 @@ ramd_trj_fixed0 = "tr0.xtc"
 Trj_list = []
 for nn in range(1,20): Trj_list.append("Replica"+str(nn))   ##number of GROMACS equilibration replicas to analyse
 
-
-
-
+Trj_list = {"TRJ-1-1", "TRJ-1-2", "TRJ-1-3", "TRJ-1-4", "TRJ-1-5", "TRJ-1-6", "TRJ-1-7", "TRJ-1-8", "TRJ-1-9", "TRJ-1-10", "TRJ-2-1", "TRJ-2-2", "TRJ-2-3", "TRJ-2-4", "TRJ-2-5", "TRJ-2-6", "TRJ-2-7", "TRJ-2-8", "TRJ-2-9", "TRJ-2-10", "TRJ-3-1", "TRJ-3-2", "TRJ-3-3", "TRJ-3-4", "TRJ-3-5", "TRJ-3-6", "TRJ-3-7", "TRJ-3-8", "TRJ-3-9", "TRJ-3-10"}
 
 for Trj in Trj_list :
   print("============================================================")
@@ -143,8 +147,8 @@ for Trj in Trj_list :
   trj = ramd_dir+Trj+"/"+ramd_trj_fixed
   trj_wat = ramd_dir+Trj+"/"+ramd_trj_fixed0
 
-  ref = mda.Universe(PRJ_DIR+pdb)
-  u = mda.Universe(PRJ_DIR+pdb,PRJ_DIR+trj,guess_bonds=True)
+  ref = mda.Universe(pdb)
+  u = mda.Universe(pdb,PRJ_DIR+trj,guess_bonds=False)
 
 
 ###### COM-COM distance and PP-REs calculation
@@ -161,7 +165,7 @@ for Trj in Trj_list :
   print("total number of frames= %s; file size %s M" %(u_length,u_size))
   u_mem = mda.Merge(system_reduced).load_new(AnalysisFromFunction(lambda ag: ag.positions.copy(), system_reduced).run(start=start,stop=stop,step=step).results,format=MemoryReader)
   u = u_mem
-  dist_file = open(PRJ_DIR+"COM_distance-"+Trj+".dat",'w')
+  dist_file = open(os.path.join(OUTPUT_DIR, "COM_distance-"+Trj+".dat"), 'w')
   distance_COM_list = []
   matr_dist = []
   times_saved = []
@@ -188,29 +192,29 @@ for Trj in Trj_list :
   u_CA_target_BB_N = []
   u_CA_target_C = []
 
-  for l in range(resi_lig[0], resi_lig[1]+1 ):
-        u_CA_lig_IP.append(u.select_atoms("resid " +str(l)+" and "+at_positive , updating=True))
-        u_CA_lig_IN.append(u.select_atoms("resid " +str(l)+" and "+at_negative , updating=True))
-        u_CA_lig_HD.append(u.select_atoms("resid " +str(l)+" and "+at_Hdon, updating=True))
-        u_CA_lig_HA.append(u.select_atoms("resid " +str(l)+" and "+at_Hacc, updating=True))
-        u_CA_lig_AR.append(u.select_atoms("resid " +str(l)+" and "+at_aromatic, updating=True))
-        u_CA_lig_HY.append(u.select_atoms("resid " +str(l)+" and "+at_hydrophob, updating=True))
-        u_CA_lig_BB.append(u.select_atoms("resid " +str(l)+" and backbone", updating=True))
-        u_CA_lig_BB_N.append(u.select_atoms("resid " +str(l)+" and backbone and name O*", updating=True))
-        u_CA_lig_BB_P.append(u.select_atoms("resid " +str(l)+" and backbone and name N*", updating=True))
-        u_CA_lig_C.append(u.select_atoms("resid " +str(l)+" and name C* and not backbone", updating=True))
+  for res in u.select_atoms("segid PROC").residues:
+    u_CA_lig_IP.append(u.select_atoms(f"resid {res.resid} and {at_positive}", updating=False))
+    u_CA_lig_IN.append(u.select_atoms(f"resid {res.resid} and {at_negative}", updating=False))
+    u_CA_lig_HD.append(u.select_atoms(f"resid {res.resid} and {at_Hdon}", updating=False))
+    u_CA_lig_HA.append(u.select_atoms(f"resid {res.resid} and {at_Hacc}", updating=False))
+    u_CA_lig_AR.append(u.select_atoms(f"resid {res.resid} and {at_aromatic}", updating=False))
+    u_CA_lig_HY.append(u.select_atoms(f"resid {res.resid} and {at_hydrophob}", updating=False))
+    u_CA_lig_BB.append(u.select_atoms(f"resid {res.resid} and backbone", updating=False))
+    u_CA_lig_BB_N.append(u.select_atoms(f"resid {res.resid} and backbone and name O*", updating=False))
+    u_CA_lig_BB_P.append(u.select_atoms(f"resid {res.resid} and backbone and name N*", updating=False))
+    u_CA_lig_C.append(u.select_atoms(f"resid {res.resid} and name C* and not backbone", updating=False))
 
-  for t in range(resi_target[0], resi_target[1]+1):
-        u_CA_target_IP.append(u.select_atoms("resid " +str(t)+" and "+at_positive , updating=True))
-        u_CA_target_IN.append(u.select_atoms("resid " +str(t)+" and "+at_negative , updating=True))
-        u_CA_target_HD.append(u.select_atoms("resid " +str(t)+" and "+at_Hdon, updating=True))
-        u_CA_target_HA.append(u.select_atoms("resid " +str(t)+" and "+at_Hacc, updating=True))
-        u_CA_target_AR.append(u.select_atoms("resid " +str(t)+" and "+at_aromatic, updating=True))
-        u_CA_target_HY.append(u.select_atoms("resid " +str(t)+" and "+at_hydrophob, updating=True))
-        u_CA_target_BB.append(u.select_atoms("resid " +str(t)+" and backbone", updating=True))
-        u_CA_target_BB_N.append(u.select_atoms("resid " +str(t)+" and backbone and name O*", updating=True))
-        u_CA_target_BB_P.append(u.select_atoms("resid " +str(t)+" and backbone and name N*", updating=True))
-        u_CA_target_C.append(u.select_atoms("resid " +str(t)+" and name C* and not backbone", updating=True))
+  for res in u.select_atoms("(segid PROA or segid PROB)").residues:
+      u_CA_target_IP.append(u.select_atoms(f"resid {res.resid} and {at_positive}", updating=False))
+      u_CA_target_IN.append(u.select_atoms(f"resid {res.resid} and {at_negative}", updating=False))
+      u_CA_target_HD.append(u.select_atoms(f"resid {res.resid} and {at_Hdon}", updating=False))
+      u_CA_target_HA.append(u.select_atoms(f"resid {res.resid} and {at_Hacc}", updating=False))
+      u_CA_target_AR.append(u.select_atoms(f"resid {res.resid} and {at_aromatic}", updating=False))
+      u_CA_target_HY.append(u.select_atoms(f"resid {res.resid} and {at_hydrophob}", updating=False))
+      u_CA_target_BB.append(u.select_atoms(f"resid {res.resid} and backbone", updating=False))
+      u_CA_target_BB_N.append(u.select_atoms(f"resid {res.resid} and backbone and name O*", updating=False))
+      u_CA_target_BB_P.append(u.select_atoms(f"resid {res.resid} and backbone and name N*", updating=False))
+      u_CA_target_C.append(u.select_atoms(f"resid {res.resid} and name C* and not backbone", updating=False))
 
 
   for i in range(0,len(u.trajectory)):
@@ -278,14 +282,14 @@ for Trj in Trj_list :
                   d1 = int(10* LA.norm(u_CA_lig_HA[l].center_of_mass()- u_CA_target_BB_P[t].center_of_mass()))
                   tt.append("HA-BB"+str(d)+"-"+str(d1))
                   d = min(d1,d)
-             if(d < 35): print("FOUNT: ",l,t,tt,d,d1)
+             if d < 35: print("FOUND:", l, t, tt, d)             
              lt.append(d)
           #   if d < 50:
           #       print(l,t,"--",d,"--",len(u_CA_lig_NO),len(u_CA_target_NO), len(u_CA_lig_BB), len(u_CA_target_BB) , len(u_CA_lig_C), len(u_CA_target_C))
         matr.append(lt)
     matr_dist.append(matr)
     times_saved.append(i)
-  np.save(PRJ_DIR+"matrix_distance-"+Trj+".npy",np.asarray(matr_dist).astype(dtype = 'int16'))
+  np.save(os.path.join(OUTPUT_DIR, "matrix_distance-"+Trj+".npy"), np.asarray(matr_dist).astype(dtype='int16'))
   dist_file.close()
   print(np.asarray(matr_dist).astype(dtype ='int16').shape, len(distance_COM_list))
 ###### RMSD
@@ -307,50 +311,20 @@ for Trj in Trj_list :
   fig = plt.figure(figsize=(4,4),dpi=150)
   ax = fig.add_subplot(111)
 #ax.plot(time, rmsd[2], 'b-',  label="all")
-  ax.plot(time, rmsd[3], 'k-',  label="resi-"+str(resi_target[0]+1)+"-"+str(resi_target[1]+1))
-  ax.plot(time, rmsd[4], 'k--', label="resi-"+str(resi_target[0]+1)+"-"+str(resi_target[1]+1))
-  ax.plot(time, rmsd1[3], 'b-',  label="resi-"+str(resi_lig[0]+1)+"-"+str(resi_lig[1]+1))
-  ax.plot(time, rmsd1[4], 'b--', label="resi-"+str(resi_lig[0]+1)+"-"+str(resi_lig[1]+1))
+  lig_label = "PROC"  # your ligand segment
+  target_label = "PROA+PROB"  # your receptor segments
+  ax.plot(time, rmsd[3], 'k-',  label=f"segid-{target_label}")
+  ax.plot(time, rmsd[4], 'k--', label=f"segid-{target_label}")
+  ax.plot(time, rmsd1[3], 'b-',  label=f"segid-{lig_label}")
+  ax.plot(time, rmsd1[4], 'b--', label=f"segid-{lig_label}")
   ax.plot(time[np.array(times_saved)],distance_COM_list, 'r--', label="COM-COM")
   ax.legend(loc="best")
   ax.set_ylim(0,70)
   ax.set_xlabel("time (ps)")
   ax.set_ylabel("RMSD ($\AA$)")
-  fig.savefig(PRJ_DIR+Trj+".jpg")
+  fig.savefig(os.path.join(OUTPUT_DIR, Trj+".jpg"))
   
-  rmsd_file = open(PRJ_DIR+"RMSD-"+Trj+".dat",'w')
+  rmsd_file = open(os.path.join(OUTPUT_DIR, "RMSD-"+Trj+".dat"), 'w')
   for r0, r1,r2, r3, r4, r5, r6 in zip(time, rmsd1[2], rmsd1[3], rmsd1[4], rmsd[2] , rmsd[3],  rmsd[4]):
      rmsd_file.write("%6.1f %6.1f %6.1f %6.1f %6.1f %6.1f  %6.1f\n" %(r0,r1,r2,r3,r4,r5,r6))
   rmsd_file.close()
-
-
-###### water analysis 
-  u = mda.Universe(PRJ_DIR+pdb,PRJ_DIR+trj_wat,guess_bonds=True)
-  start = max(0,len(u.trajectory)-300)
-  step = 1
-  stop = len(u.trajectory)
-  system_reduced = u.select_atoms(selection1)
-  u_mem = mda.Merge(system_reduced).load_new(AnalysisFromFunction(lambda ag: ag.positions.copy(), system_reduced).run(start=start,stop=stop,step=step).results,format=MemoryReader)
-  u = u_mem
-  water_file = open(PRJ_DIR+"Water-"+Trj+".dat",'w')
-  wat = u.select_atoms("((resname WAT and name O*) and  around 3.5 (resid "+str(resi_lig[0])+"-"+str(resi_lig[1])+" and not name H*))  and  ((resname WAT and name O*)  and around 3.5 (resid "+str(resi_target[0])+"-"+str(resi_target[1])+"  and not name H*))" , updating=True)
-  #### below insert modify the residues for buried waters calculation based on your system
-  wat1 = u.select_atoms("((resname WAT and name O*) and  around 3.5 ( (resid 144 148 and name O*) or (resname 53 and name OD2)  or (name N* O* and backbone and resid 41 82 144 154 )))",updating=True)
-  wat2 = []
-  wat3 = []
-  wat4 = []
-  wat5 = []
-  wat6 = []
-  wat7 = []
-  try:
-    wat2 = u.select_atoms("((resname WAT and name O*) and  around 3.5 ( (resid 148 and name O*)))",updating=True)
-    wat3 = u.select_atoms("((resname WAT and name O*) and  around 3.5 ( (resname 53 and name OD2)))",updating=True)
-    wat4 = u.select_atoms("((resname WAT and name O*) and  around 3.5 ( (resid 144 and name O*) or (name N* O* and backbone and resid  144 )))",updating=True)
-    wat5 = u.select_atoms("((resname WAT and name O*) and  around 3.5 (name N* O* and backbone and resid 41 )))",updating=True)
-    wat6 = u.select_atoms("((resname WAT and name O*) and  around 3.5 (name N* O* and backbone and resid 154 )))",updating=True)
-    wat7 = u.select_atoms("((resname WAT and name O*) and  around 3.5 (name N* O* and backbone and resid 82 )))",updating=True)
-  except: pass
-  for i in range(0,len(u.trajectory)):
-    u.trajectory[i]
-    water_file.write("%i %i %i %i %i %i %i %i %i \n" %(i+start,len(wat),len(wat1), len(wat2),len(wat3),len(wat4),len(wat5),len(wat6),len(wat7)))
-  water_file.close()
