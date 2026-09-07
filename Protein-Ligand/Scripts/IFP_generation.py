@@ -628,7 +628,21 @@ def table_combine(df_HB,df_WB,df_prop,ligand_name,residues_name = [],start=0,sto
     df_prop_order_new = []
     for df_prop_order in df_prop.columns.tolist():
         if df_prop_order.find("_") > 0:
-            df_prop_order_new.append(int(df_prop_order[df_prop_order.find("_")+4:]))
+
+
+            
+            resid = df_prop_order[df_prop_order.find("_")+4:]
+            if resid.isdigit():
+                pass
+            else:
+                resid = df_prop_order[df_prop_order.find("_")+5:]
+                
+            
+            df_prop_order_new.append(int(resid))
+        
+
+            
+            # df_prop_order_new.append(int(df_prop_order[df_prop_order.find("_")+4:]))
         else: df_prop_order_new.append(0)            
     properties = np.asarray(df_prop.columns.tolist())[np.argsort(df_prop_order_new)]
     # then use order of the properties HY - HD - HA - IP - IN  
